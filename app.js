@@ -1864,7 +1864,7 @@ els.languageGrid.addEventListener("click", (event) => {
   }
 });
 
-els.listenButton.addEventListener("click", listen);
+els.listenButton?.addEventListener("click", listen);
 
 function submitTextInput() {
   const word = els.textWordInput.value.trim();
@@ -1926,8 +1926,8 @@ renderLanguages();
 renderQuickWords();
 loadVoices();
 if (!isLocalPrototype) {
-  els.listenLabel.textContent = "Voice is local only";
-  els.heardText.textContent = "Try typing a word or picking an emoji in the shared web version.";
+  if (els.listenLabel) els.listenLabel.textContent = "Voice is local only";
+  if (els.heardText) els.heardText.textContent = "Try typing a word or picking an emoji in the shared web version.";
 }
 if (window.speechSynthesis) {
   window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
