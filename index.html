@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <title>Alle Talen Thuis</title>
+    <link rel="stylesheet" href="styles.css?v=20260524-result-popup" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="panel intro-panel" aria-labelledby="app-title">
+        <div class="brand-row">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>Aa</strong>
+          </div>
+          <div>
+            <p class="eyebrow">All languages at home</p>
+            <h1 id="app-title">Alle Talen Thuis</h1>
+          </div>
+        </div>
+
+        <p class="intro-copy">
+          Speak a word from one family language and discover how it looks,
+          sounds, and feels in the others.
+        </p>
+
+        <div class="language-box" aria-labelledby="language-heading">
+          <div class="section-heading">
+            <h2 id="language-heading">Family languages</h2>
+            <span id="language-count">4 selected</span>
+          </div>
+          <div class="language-grid" id="language-grid"></div>
+        </div>
+
+        <div class="voice-input-section" aria-labelledby="voice-input-heading">
+          <div class="section-heading">
+            <h2 id="voice-input-heading">Speak a word</h2>
+          </div>
+          <div class="voice-card">
+            <div class="voice-orb" id="voice-orb" aria-hidden="true">
+              <span></span>
+            </div>
+            <div class="voice-copy">
+              <p class="listen-label" id="listen-label">Ready to listen</p>
+              <p id="heard-text">Try any of the visual words below.</p>
+            </div>
+            <button class="primary-button" id="listen-button" type="button">
+              <span class="button-icon" aria-hidden="true">●</span>
+              Listen
+            </button>
+          </div>
+        </div>
+
+        <div class="text-input-section" aria-labelledby="text-input-heading">
+          <div class="section-heading">
+            <h2 id="text-input-heading">Type a word</h2>
+          </div>
+          <form class="text-input-card" id="text-input-form" action="#">
+            <input id="text-word-input" type="text" autocomplete="off" placeholder="Type a word" aria-label="Type a word" />
+            <button class="secondary-button" id="text-submit-button" type="button">Find</button>
+          </form>
+        </div>
+
+        <div class="visual-input-section" aria-labelledby="visual-input-heading">
+          <div class="section-heading visual-heading">
+            <h2 id="visual-input-heading">Pick a word</h2>
+          </div>
+          <div class="quick-tries" aria-label="Try a word"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <div class="result-overlay is-hidden" id="result-overlay" role="dialog" aria-modal="true" aria-labelledby="result-title">
+      <div class="result-dialog">
+        <div class="loading-scene is-hidden" id="loading-scene">
+          <div class="bubble-word" aria-hidden="true">
+            <span>A</span>
+            <span>あ</span>
+            <span>б</span>
+            <span>字</span>
+          </div>
+          <p id="loading-text">Listening for the family word...</p>
+        </div>
+
+        <article class="result-view is-hidden" id="result-view">
+          <div class="result-topline">
+            <div>
+              <p class="eyebrow">Detected word</p>
+              <h2 id="result-title">Apple</h2>
+              <p id="detected-line">Recognized from English</p>
+            </div>
+            <div class="result-actions">
+              <div class="confidence-pill" id="confidence-pill">98%</div>
+              <button class="icon-button" id="expand-result-button" type="button" aria-label="Expand result" aria-pressed="false">⤢</button>
+              <button class="icon-button" id="close-result-button" type="button" aria-label="Close result">×</button>
+            </div>
+          </div>
+
+          <div class="hero-word">
+            <div class="word-art" id="word-art" role="img" aria-label="Illustration of apple"></div>
+            <div class="fact-stack">
+              <h3>Fun facts</h3>
+              <ul id="facts-list"></ul>
+            </div>
+          </div>
+
+          <div class="translations-header">
+            <h3>In your languages</h3>
+            <span>Tap sound to hear it</span>
+          </div>
+          <div class="translation-list" id="translation-list"></div>
+        </article>
+      </div>
+    </div>
+
+    <script src="app.js?v=20260524-github-pages"></script>
+  </body>
+</html>
