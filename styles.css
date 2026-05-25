@@ -9,6 +9,10 @@
   --blue: #3778c2;
   --yellow: #f6c85f;
   --shadow: 0 18px 48px rgba(38, 50, 56, 0.14);
+  --font-latin: "Nunito", system-ui, sans-serif;
+  --font-zh: "ZCOOL KuaiLe", "Noto Sans SC", system-ui, sans-serif;
+  --font-ru: "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-ja: "Mochiy Pop One", "Hiragino Maru Gothic ProN", "Yu Gothic", system-ui, sans-serif;
 }
 
 * {
@@ -19,7 +23,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--ink);
-  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-family: var(--font-latin);
   background:
     radial-gradient(circle at 12% 18%, rgba(246, 200, 95, 0.22), transparent 28%),
     radial-gradient(circle at 90% 12%, rgba(55, 120, 194, 0.14), transparent 24%),
@@ -167,7 +171,7 @@ button:disabled {
   display: grid;
   place-items: center;
   color: #ffffff;
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--font-latin);
   font-size: 24px;
   font-weight: 800;
   text-shadow: 0 2px 8px rgba(38, 50, 56, 0.32);
@@ -192,7 +196,7 @@ p {
 h1,
 h2,
 h3 {
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--font-latin);
   line-height: 1.02;
 }
 
@@ -203,7 +207,7 @@ h1 {
 }
 
 .intro-copy {
-  max-width: 42rem;
+  max-width: 100%;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 1.08rem;
@@ -241,20 +245,22 @@ h1 {
 }
 
 .language-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .language-tile {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
-  padding: 10px 12px;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   color: var(--ink);
+  font-size: 0.94rem;
   background: #fff;
   cursor: pointer;
 }
@@ -268,19 +274,40 @@ h1 {
   display: flex;
   align-items: center;
   min-width: 0;
-  gap: 9px;
+  gap: 7px;
   font-weight: 700;
 }
 
+.language-font-en,
+.language-font-nl {
+  font-family: var(--font-latin);
+}
+
+.language-font-zh {
+  font-family: var(--font-zh);
+  font-weight: 400;
+}
+
+.language-font-ru {
+  font-family: var(--font-ru);
+  font-weight: 700;
+}
+
+.language-font-ja {
+  font-family: var(--font-ja);
+  font-weight: 400;
+}
+
 .flag-dot {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
   border-radius: 50%;
 }
 
 .check-mark {
   color: var(--green);
+  font-size: 0.88rem;
   font-weight: 800;
 }
 
@@ -413,7 +440,7 @@ h1 {
 
 .emoji-category h3 {
   margin: 0;
-  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-family: var(--font-latin);
   font-size: 0.9rem;
   font-weight: 800;
 }
@@ -641,8 +668,26 @@ h1 {
 }
 
 .translation-word strong {
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--font-latin);
   font-size: 1.36rem;
+}
+
+.translation-word strong.language-font-zh {
+  font-family: var(--font-zh);
+  font-size: 1.44rem;
+  font-weight: 400;
+}
+
+.translation-word strong.language-font-ru {
+  font-family: var(--font-ru);
+  font-size: 1.42rem;
+  font-weight: 700;
+}
+
+.translation-word strong.language-font-ja {
+  font-family: var(--font-ja);
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
 .translation-word span,
@@ -690,7 +735,7 @@ h1 {
   height: 76px;
   border-radius: 50%;
   color: white;
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--font-latin);
   font-size: 2rem;
   font-weight: 800;
   animation: float 1.45s ease-in-out infinite;
@@ -784,10 +829,6 @@ h1 {
 
   .secondary-button {
     width: 100%;
-  }
-
-  .language-grid {
-    grid-template-columns: 1fr;
   }
 
   .result-topline {
