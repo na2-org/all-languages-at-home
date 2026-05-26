@@ -1161,6 +1161,10 @@ function renderQuickWords() {
   document.querySelector(".quick-tries").innerHTML = emojiCategories
     .map((category) => {
       const isExpanded = expandedVisualCategories.has(category.id);
+      const previewEmojis = category.words
+        .slice(0, 4)
+        .map((key) => displayEmoji(artIcons[words[key].art]))
+        .join("");
       return `
         <section class="emoji-category" aria-labelledby="${category.id}-heading">
           <h3 id="${category.id}-heading">
@@ -1171,7 +1175,11 @@ function renderQuickWords() {
               aria-expanded="${isExpanded}"
               aria-controls="${category.id}-grid"
             >
-              <span>${category.name}</span>
+              <span class="category-title">
+                <span>${category.name}</span>
+                <span class="category-count">${category.words.length} words</span>
+              </span>
+              <span class="category-preview" aria-hidden="true">${previewEmojis}</span>
               <span class="category-chevron" aria-hidden="true">${isExpanded ? "⌄" : "›"}</span>
             </button>
           </h3>
@@ -9541,6 +9549,96 @@ function travelFacts(english, subgroup) {
     "Children can use travel words to talk about where they go and what they see.",
   ];
 }
+
+const chinesePronunciationMap = {"一":"yī","丁":"dīng","七":"qī","三":"sān","上":"shàng","下":"xià","丑":"chǒu","世":"shì","业":"yè","东":"dōng","丝":"sī","个":"gè","中":"zhōng","丸":"wán","丽":"lì","举":"jǔ","乌":"wū","乐":"lè","乒":"pīng","乓":"pāng","书":"shū","乳":"rǔ","事":"shì","二":"èr","亏":"kuī","云":"yún","亚":"yà","交":"jiāo","京":"jīng","亮":"liàng","人":"rén","仓":"cāng","仔":"zǐ","他":"tā","仙":"xiān","仪":"yí","件":"jiàn","企":"qǐ","会":"huì","伞":"sǎn","伤":"shāng","位":"wèi","低":"dī","体":"tǐ","使":"shǐ","侦":"zhēn","便":"biàn","保":"bǎo","信":"xìn","倒":"dào","倾":"qīng","停":"tíng","偶":"ǒu","像":"xiàng","僵":"jiāng","元":"yuán","光":"guāng","克":"kè","兔":"tù","入":"rù","全":"quán","八":"bā","公":"gōng","兰":"lán","关":"guān","兵":"bīng","具":"jù","典":"diǎn","养":"yǎng","兽":"shòu","内":"nèi","军":"jūn","农":"nóng","冠":"guān","冰":"bīng","冲":"chōng","凉":"liáng","凸":"tū","出":"chū","击":"jī","刀":"dāo","分":"fēn","划":"huà","列":"liè","创":"chuàng","刨":"páo","利":"lì","别":"bié","制":"zhì","刷":"shuā","券":"quàn","刺":"cì","剃":"tì","剑":"jiàn","剪":"jiǎn","力":"lì","办":"bàn","功":"gōng","加":"jiā","务":"wù","动":"dòng","助":"zhù","勺":"sháo","包":"bāo","匕":"bǐ","北":"běi","匙":"shi","医":"yī","升":"shēng","华":"huá","卓":"zhuó","单":"dān","卖":"mài","南":"nán","卜":"bo","卡":"kǎ","卫":"wèi","印":"yìn","卷":"juǎn","厂":"chǎng","历":"lì","厢":"xiāng","厨":"chú","叉":"chā","双":"shuāng","反":"fǎn","发":"fā","口":"kǒu","古":"gǔ","可":"kě","台":"tái","右":"yòu","叶":"yè","号":"hào","司":"sī","合":"hé","吉":"jí","名":"míng","向":"xiàng","听":"tīng","吸":"xī","员":"yuán","和":"hé","咖":"kā","咬":"yǎo","品":"pǐn","哥":"gē","哺":"bǔ","唇":"chún","商":"shāng","啤":"pí","喂":"wèi","喱":"lí","喷":"pēn","嘴":"zuǐ","器":"qì","四":"sì","回":"huí","团":"tuán","园":"yuán","围":"wéi","国":"guó","图":"tú","圆":"yuán","圈":"quān","土":"tǔ","圣":"shèng","在":"zài","地":"de","场":"chǎng","坐":"zuò","块":"kuài","型":"xíng","垒":"lěi","城":"chéng","培":"péi","基":"jī","堂":"táng","堡":"bǎo","塔":"tǎ","墨":"mò","士":"shì","壮":"zhuàng","壶":"hú","备":"bèi","夕":"xī","外":"wài","多":"duō","夜":"yè","大":"dà","天":"tiān","太":"tài","夫":"fū","头":"tóu","夹":"jiā","奖":"jiǎng","套":"tào","女":"nǚ","奶":"nǎi","妈":"mā","姜":"jiāng","娃":"wá","娥":"é","婚":"hūn","子":"zǐ","孔":"kǒng","孕":"yùn","字":"zì","学":"xué","宇":"yǔ","安":"ān","官":"guān","宝":"bǎo","实":"shí","客":"kè","室":"shì","家":"jiā","富":"fù","察":"chá","对":"duì","寺":"sì","寿":"shòu","封":"fēng","射":"shè","将":"jiāng","小":"xiǎo","尔":"ěr","尖":"jiān","尸":"shī","尺":"chǐ","尼":"ní","尾":"wěi","局":"jú","屋":"wū","山":"shān","岛":"dǎo","岩":"yán","巢":"cháo","工":"gōng","左":"zuǒ","巧":"qiǎo","巨":"jù","巴":"bā","巾":"jīn","币":"bì","市":"shì","布":"bù","帆":"fān","师":"shī","帐":"zhàng","帚":"zhǒu","带":"dài","帧":"zhēn","常":"cháng","帽":"mào","干":"gàn","平":"píng","幸":"xìng","幼":"yòu","床":"chuáng","底":"dǐ","店":"diàn","庙":"miào","废":"fèi","度":"dù","座":"zuò","建":"jiàn","开":"kāi","弃":"qì","式":"shì","弓":"gōng","引":"yǐn","弦":"xián","弯":"wān","弹":"dàn","强":"qiáng","当":"dāng","录":"lù","彗":"huì","形":"xíng","彩":"cǎi","影":"yǐng","微":"wēi","心":"xīn","忍":"rěn","志":"zhì","忘":"wàng","快":"kuài","念":"niàn","怀":"huái","恐":"kǒng","恤":"xù","悠":"yōu","悬":"xuán","情":"qíng","惊":"jīng","意":"yì","懒":"lǎn","戏":"xì","戒":"jiè","戴":"dài","户":"hù","房":"fáng","扁":"biǎn","扇":"shàn","手":"shǒu","打":"dǎ","托":"tuō","扫":"sǎo","扳":"bān","技":"jì","折":"zhé","护":"hù","报":"bào","披":"pī","拉":"lā","拍":"pāi","拐":"guǎi","拖":"tuō","招":"zhāo","拳":"quán","拼":"pīn","拿":"ná","挂":"guà","指":"zhǐ","按":"àn","捕":"bǔ","据":"jù","掌":"zhǎng","排":"pái","探":"tàn","接":"jiē","控":"kòng","提":"tí","插":"chā","援":"yuán","搋":"chuāi","摄":"shè","摔":"shuāi","摩":"mó","撕":"sī","操":"cāo","攀":"pān","收":"shōu","放":"fàng","救":"jiù","教":"jiào","文":"wén","斑":"bān","斗":"dòu","料":"liào","斜":"xié","斧":"fǔ","断":"duàn","斯":"sī","新":"xīn","方":"fāng","施":"shī","旅":"lǚ","旋":"xuán","旗":"qí","无":"wú","日":"rì","旱":"hàn","明":"míng","昏":"hūn","星":"xīng","映":"yìng","显":"xiǎn","晚":"wǎn","景":"jǐng","晶":"jīng","曲":"qū","月":"yuè","有":"yǒu","服":"fú","望":"wàng","朝":"cháo","木":"mù","本":"běn","札":"zhá","术":"shù","朵":"duǒ","机":"jī","杂":"zá","杆":"gān","李":"lǐ","杖":"zhàng","束":"shù","条":"tiáo","来":"lái","杯":"bēi","松":"sōng","板":"bǎn","极":"jí","果":"guǒ","枪":"qiāng","枫":"fēng","枯":"kū","柜":"guì","柠":"níng","柱":"zhù","标":"biāo","树":"shù","栓":"shuān","栗":"lì","校":"xiào","根":"gēn","栽":"zāi","桃":"táo","框":"kuàng","桥":"qiáo","桶":"tǒng","梅":"méi","梨":"lí","梯":"tī","械":"xiè","梳":"shū","棍":"gùn","棒":"bàng","棕":"zōng","椅":"yǐ","植":"zhí","椒":"jiāo","椰":"yē","楼":"lóu","榄":"lǎn","榈":"lǘ","槟":"bīn","横":"héng","樱":"yīng","橄":"gǎn","橇":"qiāo","橘":"jú","橙":"chéng","檬":"méng","欧":"ōu","歌":"gē","正":"zhèng","步":"bù","武":"wǔ","残":"cán","母":"mǔ","比":"bǐ","毕":"bì","毛":"máo","民":"mín","气":"qì","水":"shuǐ","汁":"zhī","汉":"hàn","池":"chí","汤":"tāng","汽":"qì","沙":"shā","河":"hé","油":"yóu","治":"zhì","泉":"quán","法":"fǎ","泡":"pào","波":"bō","注":"zhù","泰":"tài","泳":"yǒng","泵":"bèng","洋":"yáng","洗":"xǐ","洞":"dòng","洲":"zhōu","派":"pài","流":"liú","浣":"huàn","浪":"làng","浮":"fú","浴":"yù","海":"hǎi","消":"xiāo","涨":"zhǎng","液":"yè","淇":"qí","淋":"lín","清":"qīng","渡":"dù","温":"wēn","游":"yóu","滑":"huá","满":"mǎn","滩":"tān","滴":"dī","漂":"piào","演":"yǎn","漠":"mò","潜":"qián","澡":"zǎo","澳":"ào","火":"huǒ","灭":"miè","灯":"dēng","灵":"líng","炮":"pào","炸":"zhà","烈":"liè","烛":"zhú","烟":"yān","烤":"kǎo","热":"rè","烹":"pēng","煎":"jiān","煮":"zhǔ","熊":"xióng","燕":"yàn","爆":"bào","爬":"pá","爱":"ài","爸":"bà","片":"piàn","牌":"pái","牙":"yá","牛":"niú","物":"wù","犀":"xī","状":"zhuàng","犸":"mǎ","犹":"yóu","狐":"hú","狗":"gǒu","独":"dú","狮":"shī","狸":"lí","狼":"láng","猕":"mí","猛":"měng","猩":"xīng","猪":"zhū","猫":"māo","猬":"wèi","猴":"hóu","獭":"tǎ","獾":"huān","玉":"yù","王":"wáng","玫":"méi","环":"huán","珊":"shān","珍":"zhēn","珠":"zhū","班":"bān","球":"qiú","理":"lǐ","琴":"qín","瑚":"hú","瑰":"guī","瓜":"guā","瓢":"piáo","瓶":"píng","甜":"tián","生":"shēng","用":"yòng","由":"yóu","甲":"jiǎ","电":"diàn","男":"nán","画":"huà","界":"jiè","番":"fān","登":"dēng","白":"bái","百":"bǎi","皂":"zào","的":"de","皇":"huáng","皮":"pí","皿":"mǐn","盆":"pén","盈":"yíng","盐":"yán","盒":"hé","盔":"kuī","盘":"pán","目":"mù","盲":"máng","直":"zhí","相":"xiāng","盾":"dùn","眉":"méi","真":"zhēn","眼":"yǎn","着":"zhe","睛":"jīng","睡":"shuì","短":"duǎn","石":"shí","砖":"zhuān","硬":"yìng","碗":"wǎn","碟":"dié","碰":"pèng","磁":"cí","礼":"lǐ","社":"shè","神":"shén","票":"piào","科":"kē","租":"zū","积":"jī","稻":"dào","穗":"suì","空":"kōng","穿":"chuān","窗":"chuāng","立":"lì","竖":"shù","站":"zhàn","章":"zhāng","竿":"gān","笑":"xiào","笔":"bǐ","笛":"dí","符":"fú","第":"dì","笼":"lóng","筋":"jīn","筑":"zhù","筒":"tǒng","筝":"zhēng","筷":"kuài","签":"qiān","算":"suàn","管":"guǎn","箭":"jiàn","箱":"xiāng","篓":"lǒu","篮":"lán","篷":"péng","米":"mǐ","粽":"zòng","精":"jīng","糕":"gāo","糖":"táng","索":"suǒ","红":"hóng","级":"jí","纪":"jì","纬":"wěi","纱":"shā","纳":"nà","纵":"zòng","纸":"zhǐ","线":"xiàn","经":"jīng","结":"jié","绵":"mián","绿":"lǜ","缆":"lǎn","缝":"fèng","缸":"gāng","罐":"guàn","网":"wǎng","罩":"zhào","羊":"yáng","美":"měi","羽":"yǔ","翅":"chì","翻":"fān","老":"lǎo","考":"kǎo","者":"zhě","耍":"shuǎ","耳":"ěr","职":"zhí","肉":"ròu","肥":"féi","育":"yù","肺":"fèi","背":"bèi","胡":"hú","胶":"jiāo","脏":"zàng","脑":"nǎo","脚":"jiǎo","脸":"liǎn","腿":"tuǐ","膀":"bǎng","臂":"bì","自":"zì","臭":"chòu","舌":"shé","舞":"wǔ","舟":"zhōu","航":"háng","船":"chuán","艇":"tǐng","色":"sè","艺":"yì","芒":"máng","芙":"fú","芭":"bā","花":"huā","苍":"cāng","苗":"miáo","英":"yīng","苹":"píng","茄":"jiā","茶":"chá","草":"cǎo","荒":"huāng","荚":"jiá","药":"yào","莓":"méi","莲":"lián","菇":"gū","菜":"cài","菠":"bō","萄":"táo","萎":"wěi","萝":"luó","营":"yíng","萨":"sà","落":"luò","葡":"pú","葱":"cōng","葵":"kuí","蒙":"méng","蒜":"suàn","蒸":"zhēng","蓉":"róng","蓝":"lán","蕉":"jiāo","蕾":"lěi","薯":"shǔ","蘑":"mó","虎":"hǔ","虫":"chóng","虹":"hóng","虾":"xiā","蚁":"yǐ","蚂":"mǎ","蚊":"wén","蚱":"zhà","蛇":"shé","蛋":"dàn","蛙":"wā","蛛":"zhū","蜂":"fēng","蜗":"wō","蜘":"zhī","蜜":"mì","蜡":"là","蜢":"měng","蜥":"xī","蜴":"yì","蝇":"yíng","蝎":"xiē","蝙":"biān","蝠":"fú","蝴":"hú","蝶":"dié","螂":"láng","螃":"páng","螺":"luó","蟑":"zhāng","蟹":"xiè","血":"xuè","行":"xíng","衣":"yī","表":"biǎo","袋":"dài","袜":"wà","装":"zhuāng","裙":"qún","裤":"kù","褐":"hè","西":"xī","观":"guān","视":"shì","觉":"jué","角":"jiǎo","警":"jǐng","计":"jì","记":"jì","讶":"yà","诊":"zhěn","试":"shì","话":"huà","诞":"dàn","调":"diào","谱":"pǔ","豆":"dòu","豌":"wān","豚":"tún","象":"xiàng","豹":"bào","贝":"bèi","账":"zhàng","货":"huò","购":"gòu","贴":"tiē","赏":"shǎng","赛":"sài","走":"zǒu","起":"qǐ","超":"chāo","足":"zú","跑":"pǎo","跟":"gēn","跤":"jiāo","跪":"guì","路":"lù","跳":"tiào","躺":"tǎng","车":"chē","轨":"guǐ","转":"zhuǎn","轮":"lún","软":"ruǎn","轴":"zhóu","轻":"qīng","辣":"là","边":"biān","过":"guò","迎":"yíng","运":"yùn","远":"yuǎn","连":"lián","迪":"dí","迹":"jì","送":"sòng","途":"tú","通":"tōng","速":"sù","道":"dào","邮":"yóu","郁":"yù","酒":"jiǔ","酪":"lào","里":"lǐ","重":"zhòng","野":"yě","量":"liàng","金":"jīn","针":"zhēn","钉":"dīng","钓":"diào","钟":"zhōng","钢":"gāng","钥":"yào","钩":"gōu","钮":"niǔ","钱":"qián","铁":"tiě","铃":"líng","铅":"qiān","铰":"jiǎo","铲":"chǎn","银":"yín","链":"liàn","锅":"guō","锚":"máo","锤":"chuí","键":"jiàn","锯":"jù","镐":"gǎo","镑":"bàng","镖":"biāo","镜":"jìng","长":"zhǎng","门":"mén","闪":"shǎn","间":"jiān","防":"fáng","阳":"yáng","降":"jiàng","院":"yuàn","隔":"gé","雀":"què","雄":"xióng","雨":"yǔ","雪":"xuě","雷":"léi","雾":"wù","露":"lù","青":"qīng","静":"jìng","非":"fēi","面":"miàn","靴":"xuē","靶":"bǎ","鞋":"xié","鞭":"biān","音":"yīn","页":"yè","须":"xū","领":"lǐng","颈":"jǐng","风":"fēng","飞":"fēi","食":"shí","餐":"cān","饪":"rèn","饭":"fàn","饮":"yǐn","饰":"shì","饺":"jiǎo","饼":"bǐng","馅":"xiàn","馆":"guǎn","馏":"liú","首":"shǒu","香":"xiāng","马":"mǎ","驴":"lǘ","驶":"shǐ","驼":"tuó","骆":"luò","验":"yàn","骑":"qí","骨":"gǔ","骰":"tóu","高":"gāo","鬼":"guǐ","魔":"mó","鱼":"yú","鱿":"yóu","鲤":"lǐ","鲨":"shā","鲸":"jīng","鳄":"è","鸟":"niǎo","鸡":"jī","鸦":"yā","鸭":"yā","鸽":"gē","鹅":"é","鹉":"wǔ","鹦":"yīng","鹰":"yīng","鹿":"lù","麦":"mài","麻":"má","黄":"huáng","黑":"hēi","黛":"dài","鼓":"gǔ","鼠":"shǔ","鼬":"yòu","鼻":"bí","齿":"chǐ","龄":"líng","龙":"lóng","龟":"guī"};
+
+const latinPronunciationOverrides = {
+  penguin: "PEN-gwin",
+  giraffe: "juh-RAF",
+  kangaroo: "kang-guh-ROO",
+  elephant: "EL-uh-funt",
+  rhinoceros: "ry-NOS-er-us",
+  hippopotamus: "hip-uh-POT-uh-mus",
+  crocodile: "KROK-uh-dyle",
+  octopus: "OK-tuh-pus",
+  butterfly: "BUT-er-fly",
+  mosquito: "muh-SKEE-toh",
+  dinosaur: "DYE-nuh-sor",
+  unicorn: "YOO-ni-korn",
+  bicycle: "BY-si-kul",
+  airplane: "AIR-plane",
+  umbrella: "um-BREL-uh",
+  computer: "kum-PYOO-ter",
+  camera: "KAM-er-uh",
+  sandwich: "SAND-wich",
+  chocolate: "CHOK-lut",
+  strawberry: "STRAW-bair-ee",
+  watermelon: "WAW-ter-mel-un",
+  pineapple: "PINE-ap-ul",
+  broccoli: "BROK-uh-lee",
+  spaghetti: "spuh-GET-ee",
+  birthday: "BURTH-day",
+  playground: "PLAY-ground",
+  mountain: "MOWN-tin",
+};
+
+const cyrillicPronunciationMap = {
+  а: "a", б: "b", в: "v", г: "g", д: "d", е: "ye", ё: "yo", ж: "zh", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts", ч: "ch", ш: "sh", щ: "shch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
+};
+
+const kanaPronunciationMap = {
+  ア: "a", イ: "i", ウ: "u", エ: "e", オ: "o", カ: "ka", キ: "ki", ク: "ku", ケ: "ke", コ: "ko", サ: "sa", シ: "shi", ス: "su", セ: "se", ソ: "so", タ: "ta", チ: "chi", ツ: "tsu", テ: "te", ト: "to", ナ: "na", ニ: "ni", ヌ: "nu", ネ: "ne", ノ: "no", ハ: "ha", ヒ: "hi", フ: "fu", ヘ: "he", ホ: "ho", マ: "ma", ミ: "mi", ム: "mu", メ: "me", モ: "mo", ヤ: "ya", ユ: "yu", ヨ: "yo", ラ: "ra", リ: "ri", ル: "ru", レ: "re", ロ: "ro", ワ: "wa", ヲ: "o", ン: "n",
+  ガ: "ga", ギ: "gi", グ: "gu", ゲ: "ge", ゴ: "go", ザ: "za", ジ: "ji", ズ: "zu", ゼ: "ze", ゾ: "zo", ダ: "da", ヂ: "ji", ヅ: "zu", デ: "de", ド: "do", バ: "ba", ビ: "bi", ブ: "bu", ベ: "be", ボ: "bo", パ: "pa", ピ: "pi", プ: "pu", ペ: "pe", ポ: "po",
+  キャ: "kya", キュ: "kyu", キョ: "kyo", シャ: "sha", シュ: "shu", ショ: "sho", チャ: "cha", チュ: "chu", チョ: "cho", ニャ: "nya", ニュ: "nyu", ニョ: "nyo", ヒャ: "hya", ヒュ: "hyu", ヒョ: "hyo", ミャ: "mya", ミュ: "myu", ミョ: "myo", リャ: "rya", リュ: "ryu", リョ: "ryo", ギャ: "gya", ギュ: "gyu", ギョ: "gyo", ジャ: "ja", ジュ: "ju", ジョ: "jo", ビャ: "bya", ビュ: "byu", ビョ: "byo", ピャ: "pya", ピュ: "pyu", ピョ: "pyo",
+  ァ: "a", ィ: "i", ゥ: "u", ェ: "e", ォ: "o", ャ: "ya", ュ: "yu", ョ: "yo", ッ: "", ー: "-",
+  あ: "a", い: "i", う: "u", え: "e", お: "o", か: "ka", き: "ki", く: "ku", け: "ke", こ: "ko", さ: "sa", し: "shi", す: "su", せ: "se", そ: "so", た: "ta", ち: "chi", つ: "tsu", て: "te", と: "to", な: "na", に: "ni", ぬ: "nu", ね: "ne", の: "no", は: "ha", ひ: "hi", ふ: "fu", へ: "he", ほ: "ho", ま: "ma", み: "mi", む: "mu", め: "me", も: "mo", や: "ya", ゆ: "yu", よ: "yo", ら: "ra", り: "ri", る: "ru", れ: "re", ろ: "ro", わ: "wa", を: "o", ん: "n",
+  が: "ga", ぎ: "gi", ぐ: "gu", げ: "ge", ご: "go", ざ: "za", じ: "ji", ず: "zu", ぜ: "ze", ぞ: "zo", だ: "da", ぢ: "ji", づ: "zu", で: "de", ど: "do", ば: "ba", び: "bi", ぶ: "bu", べ: "be", ぼ: "bo", ぱ: "pa", ぴ: "pi", ぷ: "pu", ぺ: "pe", ぽ: "po",
+  きゃ: "kya", きゅ: "kyu", きょ: "kyo", しゃ: "sha", しゅ: "shu", しょ: "sho", ちゃ: "cha", ちゅ: "chu", ちょ: "cho", にゃ: "nya", にゅ: "nyu", にょ: "nyo", ひゃ: "hya", ひゅ: "hyu", ひょ: "hyo", みゃ: "mya", みゅ: "myu", みょ: "myo", りゃ: "rya", りゅ: "ryu", りょ: "ryo", ぎゃ: "gya", ぎゅ: "gyu", ぎょ: "gyo", じゃ: "ja", じゅ: "ju", じょ: "jo", びゃ: "bya", びゅ: "byu", びょ: "byo", ぴゃ: "pya", ぴゅ: "pyu", ぴょ: "pyo",
+  ぁ: "a", ぃ: "i", ぅ: "u", ぇ: "e", ぉ: "o", ゃ: "ya", ゅ: "yu", ょ: "yo", っ: "",
+};
+
+function latinPronunciationGuide(word) {
+  const normalized = word.toLowerCase();
+  if (latinPronunciationOverrides[normalized]) return latinPronunciationOverrides[normalized];
+  return normalized.replace(/\s+/g, " ").trim();
+}
+
+function russianPronunciationGuide(word) {
+  return [...word.toLowerCase()].map((character) => cyrillicPronunciationMap[character] ?? character).join("").replace(/\s+/g, " ").trim();
+}
+
+function chinesePronunciationGuide(word) {
+  return [...word].map((character) => chinesePronunciationMap[character] ?? character).join(" ").replace(/\s+/g, " ").trim();
+}
+
+function japanesePronunciationGuide(word) {
+  let guide = "";
+  for (let index = 0; index < word.length; index += 1) {
+    const pair = word.slice(index, index + 2);
+    if (kanaPronunciationMap[pair]) {
+      guide += `${guide && !guide.endsWith("-") ? "-" : ""}${kanaPronunciationMap[pair]}`;
+      index += 1;
+      continue;
+    }
+    const single = word[index];
+    if (kanaPronunciationMap[single]) {
+      guide += `${guide && !guide.endsWith("-") ? "-" : ""}${kanaPronunciationMap[single]}`;
+    } else if (/\s/.test(single)) {
+      guide += " ";
+    } else {
+      guide += single;
+    }
+  }
+  return guide.replace(/-+/g, "-").replace(/\s+/g, " ").trim();
+}
+
+function pronunciationGuide(language, word, fallback = word) {
+  if (language === "zh") return chinesePronunciationGuide(word) || fallback;
+  if (language === "ru") return russianPronunciationGuide(word) || fallback;
+  if (language === "ja") return japanesePronunciationGuide(word) || fallback;
+  return latinPronunciationGuide(word) || fallback;
+}
+
 function wordFacts(emoji, english, dutch, chinese, russian, japanese) {
   const label = capitalize(english);
   const lower = english.toLowerCase();
@@ -9616,10 +9714,10 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
             ja: { word: japanese, phonetic: japanesePhonetic },
           },
           facts: animalFactTexts[id - 1],
@@ -9641,11 +9739,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: foodFactTexts[index],
           art: key,
@@ -9666,11 +9764,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: natureFactTexts[index],
           art: key,
@@ -9691,11 +9789,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: activityFacts(english, subgroup),
           art: key,
@@ -9716,11 +9814,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: peopleFacts(english, subgroup),
           art: key,
@@ -9741,11 +9839,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: objectFacts(english, subgroup),
           art: key,
@@ -9766,11 +9864,11 @@ Object.assign(
           aliases: [english, dutch, chinese, russian, japanese].map((value) => value.toLowerCase()),
           detected: { word: english, language: "English" },
           translations: {
-            nl: { word: dutch, phonetic: dutch },
-            ru: { word: russian, phonetic: russian },
-            zh: { word: chinese, phonetic: chinese },
-            en: { word: english, phonetic: english },
-            ja: { word: japanese, phonetic: japanese },
+            nl: { word: dutch, phonetic: pronunciationGuide("nl", dutch) },
+            ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
+            zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
+            en: { word: english, phonetic: pronunciationGuide("en", english) },
+            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
           },
           facts: travelFacts(english, subgroup),
           art: key,
