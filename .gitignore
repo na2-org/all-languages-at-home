@@ -1,0 +1,42 @@
+# IDE / Editor folders
+.vs/
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Node / Frontend (if you ever add npm)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Screenshots / temporary files (optional)
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Local environment / secrets
+.env
+*.local
+
+# Build / distribution
+dist/
+build/
