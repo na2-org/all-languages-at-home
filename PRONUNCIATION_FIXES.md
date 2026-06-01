@@ -330,6 +330,12 @@ All People entries now follow the 8-element data structure with authoritative ro
 - Fix: Added explicit romaji `"sotsugyōbō"`.
 - Added to overrides.
 
+**Next reported issue:** "Person feeding baby" (🧑‍🍼)
+- Japanese: "赤ちゃんに授乳する人"
+- Problem: Missing explicit romaji field (display was broken).
+- Fix: Added explicit romaji `"akachan ni junyū suru hito"`.
+- Added to overrides.
+
 **Systematic Pass Update (A + B + C completed):**
 - Computer section: Fixed battery, low battery, plug, laptop, desktop, printer, keyboard, mouse, trackball, disks, abacus.
 - Light & video: Fixed camera, TV, projector, film items, magnifying glasses, candle, bulb, flashlight.

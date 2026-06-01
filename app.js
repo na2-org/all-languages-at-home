@@ -5116,7 +5116,8 @@ const peopleEmojiItems = [
     "喂宝宝的人",
     "человек кормит ребёнка",
     "赤ちゃんに授乳する人",
-    "person-role"
+    "person-role",
+    "akachan ni junyū suru hito"
   ],
   [
     "👼",
@@ -10617,6 +10618,9 @@ const japanesePronunciationOverrides = {
   "はしご": "hashigo",
   "シャベル": "shaberu",
   "アランビック": "aranbikku",
+
+  // People (final)
+  "赤ちゃんに授乳する人": "akachan ni junyū suru hito",
 
   // Add more as discovered.
 };
