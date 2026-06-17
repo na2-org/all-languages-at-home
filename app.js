@@ -1135,7 +1135,14 @@ const words = {
   },
 };
 
+/* =========================================================================
+   UI LAYER — handlers and render functions live here; word/emoji data and
+   pronunciation tables are defined later. Nothing in this section may run
+   until initApp() at the file end, after all data modules are built.
+   ========================================================================= */
+
 const selectedLanguages = new Set(["en", "nl", "ru", "zh", "ja"]);
+// Single-open accordion: at most one emoji category expanded at a time.
 const expandedVisualCategories = new Set(["emoji-animals"]);
 let availableVoices = [];
 let currentResult = null;
@@ -1155,6 +1162,18 @@ const els = {
   factsList: document.querySelector("#facts-list"),
   translationList: document.querySelector("#translation-list"),
 };
+
+function assertDomElements() {
+  const missing = Object.entries(els)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
+  if (missing.length) {
+    throw new Error(`Missing required DOM elements: ${missing.join(", ")}`);
+  }
+  if (!document.querySelector(".quick-tries")) {
+    throw new Error("Missing required DOM element: .quick-tries");
+  }
+}
 
 function displayEmoji(emoji) {
   return emoji;
@@ -10803,7 +10822,12 @@ function pronunciationGuide(language, word, fallback = word) {
 
   // Absolute safety: never allow helper text or empty values in the UI
   if (!result || /listen|approx|fallback/i.test(result)) {
-    return word.toLowerCase().replace(/[^a-z\s\-]/gi, "").replace(/\s+/g, "-").trim() || word.toLowerCase();
+    const safeFallback = String(fallback ?? word)
+      .toLowerCase()
+      .replace(/[^a-z\s\-]/gi, "")
+      .replace(/\s+/g, "-")
+      .trim();
+    return safeFallback || latinPronunciationGuide(word);
   }
   return result;
 }
@@ -11083,6 +11107,11 @@ Object.assign(
   Object.fromEntries(travelEmojiItems.map(([emoji, english], index) => [makeTravelKey(english, index), emoji]))
 );
 
+/* =========================================================================
+   DATA LAYER — emoji arrays, words, artIcons, and emojiCategories. Must be
+   fully initialized before initApp() runs at the file end.
+   ========================================================================= */
+
 const emojiCategories = [
   {
     id: "emoji-animals",
@@ -11135,113 +11164,68 @@ function symbolArt(key) {
   `;
 }
 
-const artTemplates = {
-  apple: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="18" y="172" width="244" height="28" rx="14" fill="#dceee8"/>
-      <path d="M142 70c30-34 88-10 86 52-2 62-39 96-80 76-5-2-11-2-16 0-42 20-78-14-80-76-2-62 56-86 86-52z" fill="#f06d5e"/>
-      <path d="M141 72c4-28 18-43 43-48" fill="none" stroke="#7f4b2d" stroke-width="10" stroke-linecap="round"/>
-      <path d="M162 42c22-18 48-12 64 7-24 9-47 9-64-7z" fill="#2f9d74"/>
-      <circle cx="108" cy="118" r="13" fill="#fff4ef" opacity=".78"/>
-    </svg>
-  `,
-  dog: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="28" y="178" width="224" height="28" rx="14" fill="#e6eef7"/>
-      <path d="M76 106c2-48 35-74 72-74s70 26 72 74v42c0 41-31 68-72 68s-72-27-72-68z" fill="#ecb15f"/>
-      <path d="M80 98c-30-28-42-62-30-76 29 7 50 32 58 70zM200 98c30-28 42-62 30-76-29 7-50 32-58 70z" fill="#8a5b35"/>
-      <circle cx="119" cy="112" r="9" fill="#263238"/>
-      <circle cx="161" cy="112" r="9" fill="#263238"/>
-      <path d="M134 142h28l-14 16z" fill="#263238"/>
-      <path d="M124 168c13 12 35 12 48 0" fill="none" stroke="#263238" stroke-width="7" stroke-linecap="round"/>
-    </svg>
-  `,
-  moon: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="24" y="24" width="232" height="184" rx="22" fill="#263238"/>
-      <circle cx="190" cy="82" r="4" fill="#fffaf0"/>
-      <circle cx="72" cy="74" r="3" fill="#fffaf0"/>
-      <circle cx="218" cy="144" r="3" fill="#fffaf0"/>
-      <circle cx="132" cy="116" r="62" fill="#f6c85f"/>
-      <circle cx="158" cy="94" r="62" fill="#263238"/>
-      <path d="M72 180c36 14 91 14 136 0" fill="none" stroke="#fffaf0" stroke-width="8" stroke-linecap="round" opacity=".45"/>
-    </svg>
-  `,
-  water: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="22" y="168" width="236" height="34" rx="17" fill="#dceee8"/>
-      <path d="M140 28c42 54 72 91 72 128 0 42-32 70-72 70s-72-28-72-70c0-37 30-74 72-128z" fill="#3778c2"/>
-      <path d="M104 150c0 22 16 38 38 38" fill="none" stroke="#d7efff" stroke-width="12" stroke-linecap="round"/>
-      <circle cx="116" cy="118" r="12" fill="#d7efff" opacity=".8"/>
-    </svg>
-  `,
-  window: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="40" y="180" width="200" height="24" rx="12" fill="#dceee8"/>
-      <rect x="66" y="42" width="148" height="138" rx="12" fill="#3778c2"/>
-      <rect x="78" y="54" width="124" height="114" rx="6" fill="#d7efff"/>
-      <path d="M140 54v114M78 111h124" stroke="#3778c2" stroke-width="10" stroke-linecap="round"/>
-      <circle cx="102" cy="84" r="14" fill="#f6c85f"/>
-      <path d="M98 146c20-24 39-24 58 0 15-17 31-17 48 0" fill="none" stroke="#2f9d74" stroke-width="9" stroke-linecap="round"/>
-    </svg>
-  `,
-};
-
-els.languageGrid.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-language]");
-  if (!button) return;
-  const id = button.dataset.language;
-  if (selectedLanguages.has(id) && selectedLanguages.size > 1) {
-    selectedLanguages.delete(id);
-  } else {
-    selectedLanguages.add(id);
-  }
+function initApp() {
+  assertDomElements();
+  validateEmojiArraySchemas();
   renderLanguages();
-  if (currentResult && !els.resultOverlay.classList.contains("is-hidden")) {
-    renderResult(currentResult.entry);
-  }
-});
+  renderQuickWords();
+  loadVoices();
 
-document.querySelector(".quick-tries").addEventListener("click", (event) => {
-  const categoryButton = event.target.closest("[data-category]");
-  if (categoryButton) {
-    const categoryId = categoryButton.dataset.category;
-    if (expandedVisualCategories.has(categoryId)) {
-      expandedVisualCategories.delete(categoryId);
+  els.languageGrid.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-language]");
+    if (!button) return;
+    const id = button.dataset.language;
+    if (selectedLanguages.has(id) && selectedLanguages.size > 1) {
+      selectedLanguages.delete(id);
     } else {
-      expandedVisualCategories.clear();
-      expandedVisualCategories.add(categoryId);
+      selectedLanguages.add(id);
     }
-    syncExpandedCategories();
-    return;
+    renderLanguages();
+    if (currentResult && !els.resultOverlay.classList.contains("is-hidden")) {
+      renderResult(currentResult.entry);
+    }
+  });
+
+  document.querySelector(".quick-tries").addEventListener("click", (event) => {
+    const categoryButton = event.target.closest("[data-category]");
+    if (categoryButton) {
+      const categoryId = categoryButton.dataset.category;
+      if (expandedVisualCategories.has(categoryId)) {
+        expandedVisualCategories.delete(categoryId);
+      } else {
+        // Single-open accordion: opening one category collapses all others.
+        expandedVisualCategories.clear();
+        expandedVisualCategories.add(categoryId);
+      }
+      syncExpandedCategories();
+      return;
+    }
+
+    const button = event.target.closest("[data-key]");
+    if (button) handleVisualWord(button.dataset.key);
+  });
+
+  els.closeResultButton.addEventListener("click", closeResult);
+  els.expandResultButton.addEventListener("click", toggleExpandedResult);
+
+  els.resultOverlay.addEventListener("click", (event) => {
+    if (event.target === els.resultOverlay) closeResult();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !els.resultOverlay.classList.contains("is-hidden")) {
+      closeResult();
+    }
+  });
+
+  els.translationList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-speak]");
+    if (button) speak(button.dataset.speak, button.dataset.locale);
+  });
+
+  if (window.speechSynthesis) {
+    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
   }
-
-  const button = event.target.closest("[data-key]");
-  if (button) handleVisualWord(button.dataset.key);
-});
-
-els.closeResultButton.addEventListener("click", closeResult);
-els.expandResultButton.addEventListener("click", toggleExpandedResult);
-
-els.resultOverlay.addEventListener("click", (event) => {
-  if (event.target === els.resultOverlay) closeResult();
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !els.resultOverlay.classList.contains("is-hidden")) {
-    closeResult();
-  }
-});
-
-els.translationList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-speak]");
-  if (button) speak(button.dataset.speak, button.dataset.locale);
-});
-
-validateEmojiArraySchemas();
-renderLanguages();
-renderQuickWords();
-loadVoices();
-if (window.speechSynthesis) {
-  window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
 }
+
+initApp();
