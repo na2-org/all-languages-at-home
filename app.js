@@ -1160,15 +1160,24 @@ function displayEmoji(emoji) {
   return emoji;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function renderLanguages() {
   els.languageGrid.innerHTML = languages
     .map((language) => {
       const isSelected = selectedLanguages.has(language.id);
       return `
-        <button class="language-tile" type="button" data-language="${language.id}" aria-pressed="${isSelected}">
+        <button class="language-tile" type="button" data-language="${escapeHtml(language.id)}" aria-pressed="${isSelected}">
           <span class="language-name">
-            <span class="flag-dot" style="background:${language.color}"></span>
-            <span class="language-font-${language.id}">${language.name}</span>
+            <span class="flag-dot" style="background:${escapeHtml(language.color)}"></span>
+            <span class="language-font-${escapeHtml(language.id)}">${escapeHtml(language.name)}</span>
           </span>
           <span class="check-mark" aria-hidden="true">${isSelected ? "✓" : "+"}</span>
         </button>
@@ -1186,30 +1195,32 @@ function renderQuickWords() {
         .slice(0, 4)
         .map((key) => displayEmoji(artIcons[words[key].art]))
         .join("");
+      const categoryId = escapeHtml(category.id);
       return `
-        <section class="emoji-category" aria-labelledby="${category.id}-heading">
-          <h3 id="${category.id}-heading">
+        <section class="emoji-category" aria-labelledby="${categoryId}-heading">
+          <h3 id="${categoryId}-heading">
             <button
               class="emoji-category-toggle"
               type="button"
-              data-category="${category.id}"
+              data-category="${categoryId}"
               aria-expanded="${isExpanded}"
-              aria-controls="${category.id}-grid"
+              aria-controls="${categoryId}-grid"
             >
               <span class="category-title">
-                <span>${category.name}</span>
+                <span>${escapeHtml(category.name)}</span>
                 <span class="category-count">${category.words.length} words</span>
               </span>
               <span class="category-preview" aria-hidden="true">${previewEmojis}</span>
               <span class="category-chevron" aria-hidden="true">${isExpanded ? "⌄" : "›"}</span>
             </button>
           </h3>
-          <div class="emoji-grid" id="${category.id}-grid"${isExpanded ? "" : " hidden"}>
+          <div class="emoji-grid" id="${categoryId}-grid"${isExpanded ? "" : " hidden"}>
             ${category.words
               .map((key) => {
                 const entry = words[key];
-                const label = entry.translations.en.word;
-                return `<button type="button" data-key="${key}" aria-label="${label}" title="${label}">${displayEmoji(artIcons[entry.art])}</button>`;
+                const label = escapeHtml(entry.translations.en.word);
+                const safeKey = escapeHtml(key);
+                return `<button type="button" data-key="${safeKey}" aria-label="${label}" title="${label}">${displayEmoji(artIcons[entry.art])}</button>`;
               })
               .join("")}
           </div>
@@ -1329,7 +1340,9 @@ function renderResult(entry) {
   els.wordArt.setAttribute("aria-label", `Illustration of ${entry.translations.en.word}`);
   els.wordArt.innerHTML = symbolArt(entry.art);
 
-  els.factsList.innerHTML = entry.facts.map((fact) => `<li><span aria-hidden="true">•</span><span>${fact}</span></li>`).join("");
+  els.factsList.innerHTML = entry.facts
+    .map((fact) => `<li><span aria-hidden="true">•</span><span>${escapeHtml(fact)}</span></li>`)
+    .join("");
 
   const selected = languages.filter((language) => selectedLanguages.has(language.id));
   els.translationList.innerHTML = selected
@@ -1339,16 +1352,21 @@ function renderResult(entry) {
       let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
       if (!phonetic) phonetic = pronunciationGuide(language.id, translation.word);
 
+      const languageId = escapeHtml(language.id);
+      const word = escapeHtml(translation.word);
+      const languageName = escapeHtml(language.name);
+      const locale = escapeHtml(language.locale);
+
       return `
         <div class="translation-row">
           <div>
             <div class="translation-word">
-              <strong class="language-font-${language.id}">${translation.word}</strong>
-              <span class="language-font-${language.id}">${language.name}</span>
+              <strong class="language-font-${languageId}">${word}</strong>
+              <span class="language-font-${languageId}">${languageName}</span>
             </div>
-            <div class="phonetic">${phonetic}</div>
+            <div class="phonetic">${escapeHtml(phonetic)}</div>
           </div>
-          <button class="sound-button" type="button" data-speak="${translation.word}" data-locale="${language.locale}" aria-label="Hear ${translation.word} in ${language.name}">▶</button>
+          <button class="sound-button" type="button" data-speak="${word}" data-locale="${locale}" aria-label="Hear ${word} in ${languageName}">▶</button>
         </div>
       `;
     })
@@ -11239,7 +11257,7 @@ function symbolArt(key) {
       <circle cx="92" cy="82" r="28" fill="#f06d5e" opacity=".65"/>
       <circle cx="196" cy="92" r="24" fill="#2f9d74" opacity=".65"/>
       <circle cx="190" cy="166" r="18" fill="#3778c2" opacity=".55"/>
-      <text x="140" y="143" text-anchor="middle" font-size="92" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, system-ui, sans-serif">${symbol}</text>
+      <text x="140" y="143" text-anchor="middle" font-size="92" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, system-ui, sans-serif">${escapeHtml(symbol)}</text>
     </svg>
   `;
 }
