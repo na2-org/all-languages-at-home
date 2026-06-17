@@ -1337,7 +1337,7 @@ function renderResult(entry) {
       const translation = entry.translations[language.id];
       // Final safety: strip any accidental helper/fallback text from pronunciation
       let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
-      if (!phonetic) phonetic = (japanesePronunciationOverrides[translation.word] || translation.word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"").replace(/\s+/g,"-")).trim() || translation.word.toLowerCase();
+      if (!phonetic) phonetic = pronunciationGuide(language.id, translation.word);
 
       return `
         <div class="translation-row">
