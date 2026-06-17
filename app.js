@@ -130,7 +130,7 @@ const words = {
     aliases: ["moon", "maan", "луна", "luna", "月亮", "yueliang", "tsuki", "月"],
     detected: { word: "moon", language: "English" },
     translations: {
-      en: { word: "moon", phonetic: "moon" },
+      en: { word: "moon", phonetic: "mewn" },
       nl: { word: "maan", phonetic: "mahn" },
       ru: { word: "луна", phonetic: "loo-NA" },
       zh: { word: "月亮", phonetic: "yuè liang" },
@@ -147,8 +147,8 @@ const words = {
     aliases: ["sun", "zon", "солнце", "solntse", "太阳", "taiyang", "taiyou", "太陽"],
     detected: { word: "sun", language: "English" },
     translations: {
-      en: { word: "sun", phonetic: "sun" },
-      nl: { word: "zon", phonetic: "zon" },
+      en: { word: "sun", phonetic: "suhn" },
+      nl: { word: "zon", phonetic: "zohn" },
       ru: { word: "солнце", phonetic: "SOLN-tse" },
       zh: { word: "太阳", phonetic: "tài yáng" },
       ja: { word: "太陽", phonetic: "tai-yoh" },
@@ -164,7 +164,7 @@ const words = {
     aliases: ["star", "ster", "звезда", "zvezda", "星星", "xingxing", "hoshi", "星"],
     detected: { word: "star", language: "English" },
     translations: {
-      en: { word: "star", phonetic: "star" },
+      en: { word: "star", phonetic: "stahr" },
       nl: { word: "ster", phonetic: "stehr" },
       ru: { word: "звезда", phonetic: "zvez-DA" },
       zh: { word: "星星", phonetic: "xīng xing" },
@@ -181,7 +181,7 @@ const words = {
     aliases: ["tree", "boom", "дерево", "derevo", "树", "shu", "ki", "木"],
     detected: { word: "tree", language: "English" },
     translations: {
-      en: { word: "tree", phonetic: "tree" },
+      en: { word: "tree", phonetic: "treh" },
       nl: { word: "boom", phonetic: "bohm" },
       ru: { word: "дерево", phonetic: "DYE-rye-va" },
       zh: { word: "树", phonetic: "shù" },
@@ -297,7 +297,7 @@ const words = {
     aliases: ["fish", "vis", "рыба", "ryba", "鱼", "yu", "sakana", "魚"],
     detected: { word: "fish", language: "English" },
     translations: {
-      en: { word: "fish", phonetic: "FISH" },
+      en: { word: "fish", phonetic: "fihsh" },
       nl: { word: "vis", phonetic: "fis" },
       ru: { word: "рыба", phonetic: "RY-ba" },
       zh: { word: "鱼", phonetic: "yú" },
@@ -401,7 +401,7 @@ const words = {
     aliases: ["hand", "рука", "ruka", "手", "shou", "te"],
     detected: { word: "hand", language: "English" },
     translations: {
-      en: { word: "hand", phonetic: "HAND" },
+      en: { word: "hand", phonetic: "hahnd" },
       nl: { word: "hand", phonetic: "hant" },
       ru: { word: "рука", phonetic: "roo-KA" },
       zh: { word: "手", phonetic: "shǒu" },
@@ -414,7 +414,7 @@ const words = {
     aliases: ["eye", "oog", "глаз", "glaz", "眼睛", "yanjing", "me", "目"],
     detected: { word: "eye", language: "English" },
     translations: {
-      en: { word: "eye", phonetic: "EYE" },
+      en: { word: "eye", phonetic: "igh" },
       nl: { word: "oog", phonetic: "ohkh" },
       ru: { word: "глаз", phonetic: "glaz" },
       zh: { word: "眼睛", phonetic: "yǎn jing" },
@@ -440,7 +440,7 @@ const words = {
     aliases: ["hat", "hoed", "шапка", "shapka", "帽子", "maozi", "boushi", "帽子"],
     detected: { word: "hat", language: "English" },
     translations: {
-      en: { word: "hat", phonetic: "HAT" },
+      en: { word: "hat", phonetic: "haht" },
       nl: { word: "hoed", phonetic: "hoot" },
       ru: { word: "шапка", phonetic: "SHAP-ka" },
       zh: { word: "帽子", phonetic: "mào zi" },
@@ -453,7 +453,7 @@ const words = {
     aliases: ["book", "boek", "книга", "kniga", "书", "shu", "hon", "本"],
     detected: { word: "book", language: "English" },
     translations: {
-      en: { word: "book", phonetic: "book" },
+      en: { word: "book", phonetic: "buhk" },
       nl: { word: "boek", phonetic: "bewk" },
       ru: { word: "книга", phonetic: "KNEE-ga" },
       zh: { word: "书", phonetic: "shū" },
@@ -538,7 +538,7 @@ const words = {
     aliases: ["bed", "кровать", "krovat", "床", "chuang", "beddo", "ベッド"],
     detected: { word: "bed", language: "English" },
     translations: {
-      en: { word: "bed", phonetic: "bed" },
+      en: { word: "bed", phonetic: "bedd" },
       nl: { word: "bed", phonetic: "bet" },
       ru: { word: "кровать", phonetic: "kra-VAT" },
       zh: { word: "床", phonetic: "chuáng" },
@@ -555,7 +555,7 @@ const words = {
     aliases: ["chair", "stoel", "стул", "stul", "椅子", "yizi", "isu", "椅子"],
     detected: { word: "chair", language: "English" },
     translations: {
-      en: { word: "chair", phonetic: "chair" },
+      en: { word: "chair", phonetic: "chayr" },
       nl: { word: "stoel", phonetic: "stool" },
       ru: { word: "стул", phonetic: "stool" },
       zh: { word: "椅子", phonetic: "yǐ zi" },
@@ -607,7 +607,7 @@ const words = {
     aliases: ["lamp", "лампа", "lampa", "灯", "deng", "ranpu", "ランプ"],
     detected: { word: "lamp", language: "English" },
     translations: {
-      en: { word: "lamp", phonetic: "lamp" },
+      en: { word: "lamp", phonetic: "lahmp" },
       nl: { word: "lamp", phonetic: "lahmp" },
       ru: { word: "лампа", phonetic: "LAM-pa" },
       zh: { word: "灯", phonetic: "dēng" },
@@ -621,7 +621,7 @@ const words = {
     detected: { word: "doll", language: "English" },
     translations: {
       en: { word: "doll", phonetic: "dahl" },
-      nl: { word: "pop", phonetic: "pop" },
+      nl: { word: "pop", phonetic: "pohp" },
       ru: { word: "кукла", phonetic: "KOOK-la" },
       zh: { word: "娃娃", phonetic: "wá wa" },
       ja: { word: "人形", phonetic: "nin-gyoh" },
@@ -646,7 +646,7 @@ const words = {
     aliases: ["kite", "vlieger", "воздушный змей", "zmei", "风筝", "fengzheng", "tako", "凧"],
     detected: { word: "kite", language: "English" },
     translations: {
-      en: { word: "kite", phonetic: "kite" },
+      en: { word: "kite", phonetic: "kyt" },
       nl: { word: "vlieger", phonetic: "VLEE-gher" },
       ru: { word: "воздушный змей", phonetic: "vaz-DOOSH-ny zmey" },
       zh: { word: "风筝", phonetic: "fēng zheng" },
@@ -672,7 +672,7 @@ const words = {
     aliases: ["bag", "tas", "сумка", "sumka", "包", "bao", "kaban", "かばん"],
     detected: { word: "bag", language: "English" },
     translations: {
-      en: { word: "bag", phonetic: "bag" },
+      en: { word: "bag", phonetic: "bahg" },
       nl: { word: "tas", phonetic: "tahs" },
       ru: { word: "сумка", phonetic: "SOOM-ka" },
       zh: { word: "包", phonetic: "bāo" },
@@ -736,7 +736,7 @@ const words = {
     aliases: ["sad", "verdrietig", "грустный", "grustny", "伤心", "shangxin", "kanashii", "悲しい"],
     detected: { word: "sad", language: "English" },
     translations: {
-      en: { word: "sad", phonetic: "sad" },
+      en: { word: "sad", phonetic: "sad-d" },
       nl: { word: "verdrietig", phonetic: "ver-DREE-tukh" },
       ru: { word: "грустный", phonetic: "GROOST-ny" },
       zh: { word: "伤心", phonetic: "shāng xīn" },
@@ -749,7 +749,7 @@ const words = {
     aliases: ["sleep", "slapen", "спать", "spat", "睡觉", "shuijiao", "neru", "寝る"],
     detected: { word: "sleep", language: "English" },
     translations: {
-      en: { word: "sleep", phonetic: "sleep" },
+      en: { word: "sleep", phonetic: "sleap" },
       nl: { word: "slapen", phonetic: "SLAH-pun" },
       ru: { word: "спать", phonetic: "spat" },
       zh: { word: "睡觉", phonetic: "shuì jiào" },
@@ -762,7 +762,7 @@ const words = {
     aliases: ["jump", "springen", "прыгать", "prygat", "跳", "tiao", "tobu", "跳ぶ"],
     detected: { word: "jump", language: "English" },
     translations: {
-      en: { word: "jump", phonetic: "jump" },
+      en: { word: "jump", phonetic: "juhmp" },
       nl: { word: "springen", phonetic: "SPRING-un" },
       ru: { word: "прыгать", phonetic: "PRY-gat" },
       zh: { word: "跳", phonetic: "tiào" },
@@ -816,7 +816,7 @@ const words = {
   cake: {
     aliases: ["cake", "taart", "торт", "tort", "蛋糕", "dangao", "keeki", "ケーキ"],
     detected: { word: "cake", language: "English" },
-    translations: { en: { word: "cake", phonetic: "kayk" }, nl: { word: "taart", phonetic: "taart" }, ru: { word: "торт", phonetic: "tort" }, zh: { word: "蛋糕", phonetic: "dàn gāo" }, ja: { word: "ケーキ", phonetic: "kay-ki" } },
+    translations: { en: { word: "cake", phonetic: "kayk" }, nl: { word: "taart", phonetic: "tahrt" }, ru: { word: "торт", phonetic: "tort" }, zh: { word: "蛋糕", phonetic: "dàn gāo" }, ja: { word: "ケーキ", phonetic: "kay-ki" } },
     facts: ["Cake is often shared at parties.", "Birthday cakes can have candles.", "Cakes come in many flavors."],
     art: "cake",
   },
@@ -873,21 +873,21 @@ const words = {
   game: {
     aliases: ["game", "spel", "игра", "igra", "游戏", "youxi", "geemu", "ゲーム"],
     detected: { word: "game", language: "English" },
-    translations: { en: { word: "game", phonetic: "gaym" }, nl: { word: "spel", phonetic: "spel" }, ru: { word: "игра", phonetic: "ee-GRA" }, zh: { word: "游戏", phonetic: "yóu xì" }, ja: { word: "ゲーム", phonetic: "gay-mu" } },
+    translations: { en: { word: "game", phonetic: "gaym" }, nl: { word: "spel", phonetic: "spuhl" }, ru: { word: "игра", phonetic: "ee-GRA" }, zh: { word: "游戏", phonetic: "yóu xì" }, ja: { word: "ゲーム", phonetic: "gay-mu" } },
     facts: ["Games can have rules.", "Some games use cards or dice.", "Playing together practices turn-taking."],
     art: "game",
   },
   swim: {
     aliases: ["swim", "zwemmen", "плавать", "plavat", "游泳", "youyong", "oyogu", "泳ぐ"],
     detected: { word: "swim", language: "English" },
-    translations: { en: { word: "swim", phonetic: "swim" }, nl: { word: "zwemmen", phonetic: "ZWEH-mun" }, ru: { word: "плавать", phonetic: "PLA-vat" }, zh: { word: "游泳", phonetic: "yóu yǒng" }, ja: { word: "泳ぐ", phonetic: "o-yo-gu" } },
+    translations: { en: { word: "swim", phonetic: "swihm" }, nl: { word: "zwemmen", phonetic: "ZWEH-mun" }, ru: { word: "плавать", phonetic: "PLA-vat" }, zh: { word: "游泳", phonetic: "yóu yǒng" }, ja: { word: "泳ぐ", phonetic: "o-yo-gu" } },
     facts: ["Swimming happens in water.", "Learning to swim takes practice.", "Pools and beaches can be fun with grown-ups nearby."],
     art: "swim",
   },
   clock: {
     aliases: ["clock", "klok", "часы", "chasy", "钟", "zhong", "tokei", "時計"],
     detected: { word: "clock", language: "English" },
-    translations: { en: { word: "clock", phonetic: "klok" }, nl: { word: "klok", phonetic: "klok" }, ru: { word: "часы", phonetic: "cha-SY" }, zh: { word: "钟", phonetic: "zhōng" }, ja: { word: "時計", phonetic: "to-kei" } },
+    translations: { en: { word: "clock", phonetic: "klok" }, nl: { word: "klok", phonetic: "klohk" }, ru: { word: "часы", phonetic: "cha-SY" }, zh: { word: "钟", phonetic: "zhōng" }, ja: { word: "時計", phonetic: "to-kei" } },
     facts: ["Clocks show time.", "Some clocks tick.", "A clock can help with routines."],
     art: "clock",
   },
@@ -957,7 +957,7 @@ const words = {
   frog: {
     aliases: ["frog", "kikker", "лягушка", "lyagushka", "青蛙", "qingwa", "kaeru", "蛙"],
     detected: { word: "frog", language: "English" },
-    translations: { en: { word: "frog", phonetic: "frog" }, nl: { word: "kikker", phonetic: "KIK-er" }, ru: { word: "лягушка", phonetic: "lya-GOOSH-ka" }, zh: { word: "青蛙", phonetic: "qīng wā" }, ja: { word: "蛙", phonetic: "ka-e-ru" } },
+    translations: { en: { word: "frog", phonetic: "frahg" }, nl: { word: "kikker", phonetic: "KIK-er" }, ru: { word: "лягушка", phonetic: "lya-GOOSH-ka" }, zh: { word: "青蛙", phonetic: "qīng wā" }, ja: { word: "蛙", phonetic: "ka-e-ru" } },
     facts: ["Frogs can jump far.", "Frogs begin life as tadpoles.", "Many frogs like wet places."],
     art: "frog",
   },
@@ -1092,7 +1092,7 @@ const words = {
     detected: { word: "ice", language: "English" },
     // CHANGED (Quality Audit): nl phonetic was literally the English word "ice".
     // Now provides a simple Dutch-friendly guide ("eys") and no longer duplicates.
-    translations: { en: { word: "ice", phonetic: "ice" }, nl: { word: "ijs", phonetic: "eys" }, ru: { word: "лёд", phonetic: "lyot" }, zh: { word: "冰", phonetic: "bīng" }, ja: { word: "氷", phonetic: "koo-ree" } },
+    translations: { en: { word: "ice", phonetic: "eyss" }, nl: { word: "ijs", phonetic: "eys" }, ru: { word: "лёд", phonetic: "lyot" }, zh: { word: "冰", phonetic: "bīng" }, ja: { word: "氷", phonetic: "koo-ree" } },
     facts: ["Ice is frozen water.", "Ice feels cold.", "Ice cubes can melt into water."],
     art: "ice",
   },
@@ -1106,7 +1106,7 @@ const words = {
   quiet: {
     aliases: ["quiet", "stil", "тихий", "tikhiy", "安静", "anjing", "shizuka", "静か"],
     detected: { word: "quiet", language: "English" },
-    translations: { en: { word: "quiet", phonetic: "KWY-et" }, nl: { word: "stil", phonetic: "stil" }, ru: { word: "тихий", phonetic: "TEE-khiy" }, zh: { word: "安静", phonetic: "ān jìng" }, ja: { word: "静か", phonetic: "shi-zu-ka" } },
+    translations: { en: { word: "quiet", phonetic: "KWY-et" }, nl: { word: "stil", phonetic: "stihl" }, ru: { word: "тихий", phonetic: "TEE-khiy" }, zh: { word: "安静", phonetic: "ān jìng" }, ja: { word: "静か", phonetic: "shi-zu-ka" } },
     facts: ["Quiet can help people rest.", "Libraries are often quiet.", "Quiet moments can feel peaceful."],
     art: "quiet",
   },
@@ -1185,6 +1185,20 @@ function renderLanguages() {
     })
     .join("");
   els.languageCount.textContent = `${selectedLanguages.size} selected`;
+}
+
+function syncExpandedCategories() {
+  document.querySelectorAll(".emoji-category").forEach((section) => {
+    const toggle = section.querySelector(".emoji-category-toggle");
+    if (!toggle) return;
+    const categoryId = toggle.dataset.category;
+    const grid = section.querySelector(".emoji-grid");
+    const chevron = section.querySelector(".category-chevron");
+    const isExpanded = expandedVisualCategories.has(categoryId);
+    toggle.setAttribute("aria-expanded", String(isExpanded));
+    if (grid) grid.hidden = !isExpanded;
+    if (chevron) chevron.textContent = isExpanded ? "⌄" : "›";
+  });
 }
 
 function renderQuickWords() {
@@ -7602,6 +7616,30 @@ function makeTravelKey(english, index) {
   return `travel${index + 1}_${slug}`;
 }
 
+function validateEmojiArraySchemas() {
+  const errors = [];
+
+  const expectLength = (name, items, length) => {
+    items.forEach((entry, index) => {
+      if (!Array.isArray(entry) || entry.length !== length) {
+        errors.push(`${name}[${index}]: expected ${length} fields, got ${Array.isArray(entry) ? entry.length : typeof entry}`);
+      }
+    });
+  };
+
+  expectLength("foodEmojiItems", foodEmojiItems, 7);
+  expectLength("natureEmojiItems", natureEmojiItems, 7);
+  expectLength("activityEmojiItems", activityEmojiItems, 8);
+  expectLength("travelEmojiItems", travelEmojiItems, 8);
+  expectLength("peopleEmojiItems", peopleEmojiItems, 8);
+  expectLength("objectEmojiItems", objectEmojiItems, 8);
+  expectLength("animalItems", animalItems, 8);
+
+  if (errors.length) {
+    throw new Error(`Emoji array schema validation failed:\n${errors.join("\n")}`);
+  }
+}
+
 const animalCategoryWords = animalItems.map(([id]) => `animal${id}`);
 const foodCategoryWords = foodEmojiItems.map(([, english], index) => makeFoodKey(english, index));
 const natureCategoryWords = natureEmojiItems.map(([, english], index) => makeNatureKey(english, index));
@@ -10024,19 +10062,28 @@ const latinPronunciationOverrides = {
   snow: "snoh",
   cloud: "klowd",
   sea: "see",
-  hand: "hand",
-  eye: "eye",
+  moon: "mewn",
+  sun: "suhn",
+  star: "stahr",
+  tree: "treh",
+  hand: "hahnd",
+  eye: "igh",
   shoe: "shoo",
-  hat: "hat",
+  hat: "haht",
   book: "buhk",
   car: "kar",
   train: "trayn",
   house: "hows",
-  bed: "bed",
-  chair: "chair",
+  bed: "bedd",
+  chair: "chayr",
   door: "dor",
   window: "WIN-doh",
-  lamp: "lamp",
+  lamp: "lahmp",
+  kite: "kyt",
+  bag: "bahg",
+  sad: "sad-d",
+  sleep: "sleap",
+  jump: "juhmp",
   doll: "dahl",
   cow: "kow",
   fire: "fyr",
@@ -10046,7 +10093,7 @@ const latinPronunciationOverrides = {
   school: "skool",
   music: "MYOO-zik",
   game: "gaym",
-  swim: "swim",
+  swim: "swihm",
   clock: "klok",
   key: "kee",
   phone: "fohn",
@@ -10102,17 +10149,17 @@ const latinPronunciationOverrides = {
   bord: "bort",
   deur: "dur",
   raam: "rahm",
-  pop: "pop",
+  pop: "pohp",
   koe: "koo",
   vlinder: "VLIN-der",
   vuur: "fuur",
-  taart: "taart",
+  taart: "tahrt",
   sap: "sahp",
   fiets: "feets",
   vliegtuig: "VLEEK-toykh",
   muziek: "muu-ZEEK",
-  spel: "spel",
-  klok: "klok",
+  spel: "spuhl",
+  klok: "klohk",
   sleutel: "SLUH-tul",
   telefoon: "tay-luh-FOHN",
   liefde: "LEEF-duh",
@@ -10129,7 +10176,7 @@ const latinPronunciationOverrides = {
   camera: "KA-muh-ra",
   schaap: "skharp",
   ijs: "eys",
-  stil: "stil",
+  stil: "stihl",
   zeep: "zayp",
   sjaal: "shahl",
   park: "pahrk",
@@ -10235,7 +10282,6 @@ const latinPronunciationOverrides = {
    (e.g. 稲妻). This is the proper place to define correct romaji for
    specific words that appear in the dynamic emoji data. */
 const japanesePronunciationOverrides = {
-  // Nature (most affected category)
   "花束": "hanataba",
   "桜": "sakura",
   "蓮": "hasu",
@@ -10263,8 +10309,6 @@ const japanesePronunciationOverrides = {
   "雲": "kumo",
   "虹": "niji",
   "傘": "kasa",
-
-  // Moon-related (Nature section) - corrected romaji
   "新月": "shingetsu",
   "三日月": "mikazuki",
   "上弦の月": "jōgen no tsuki",
@@ -10277,13 +10321,9 @@ const japanesePronunciationOverrides = {
   "上弦の月の顔": "jōgen no tsuki no kao",
   "下弦の月の顔": "kagen no tsuki no kao",
   "満月の顔": "mangetsu no kao",
-
-  // Nature descriptive "と" phrases (common source of partial romaji extraction)
   "小さな雲と太陽": "chiisana kumo to taiyō",
   "大きな雲と太陽": "ōkina kumo to taiyō",
   "雨雲と太陽": "u kumo to taiyō",
-
-  // Food (some kanji)
   "梨": "nashi",
   "栗": "kuri",
   "豆": "mame",
@@ -10295,106 +10335,46 @@ const japanesePronunciationOverrides = {
   "おにぎり": "onigiri",
   "ご飯": "gohan",
   "ラーメン": "rāmen",
-
-  // Food descriptive "と" phrases
   "皿とナイフとフォーク": "sara to naifu to fōku",
   "ナイフとフォーク": "naifu to fōku",
-
-  // Activity / Events (many have kanji)
   "花火": "hanabi",
   "爆竹": "bakuchiku",
   "七夕飾り": "tanabata kazari",
   "門松": "kadomatsu",
-  "南瓜灯": "kabocha tōrō", // jack-o-lantern
-
-  // People (common kanji)
-  "人形": "ningyō",   // doll / figure
-  "人魚": "ningyō",   // merperson
-  "吸血鬼": "kyūketsuki", // vampire
-  "ランプの精": "ranpu no sei", // genie
+  "南瓜灯": "kabocha tōrō",
+  "人形": "ningyō",
+  "人魚": "ningyō",
+  "吸血鬼": "kyūketsuki",
+  "ランプの精": "ranpu no sei",
   "王冠": "ōkan",
   "天使": "tenshi",
   "悪魔": "akuma",
   "幽霊": "yūrei",
-  "サンタ": "santa", // already mostly kana but sometimes mixed
-
-  // Objects
+  "サンタ": "santa",
   "城": "shiro",
   "学校": "gakkō",
   "本": "hon",
   "鍵": "kagi",
   "時計": "tokei",
-  "傘": "kasa",
   "はさみ": "hasami",
-
-  // Thermometer / temperature related (common in nature/objects)
   "温度計": "on-do-kei",
-
-  // Additional fixes from full 7-category audit (food, nature, activity, people, objects, travel)
-  "花束": "hanataba",
-  "桜": "sakura",
-  "蓮": "hasu",
-  "バラ": "bara",
-  "花": "hana",
-  "芽": "me",
-  "鉢植え": "hachiue",
-  "常緑樹": "jōryokuju",
-  "落葉樹": "rakuyōju",
-  "ヤシの木": "yashi no ki",
-  "稲穂": "inaho",
-  "もみじ": "momiji",
-  "落ち葉": "ochiba",
-  "キノコ": "kinoko",
-  "彗星": "suisei",
   "太陽": "taiyō",
   "風の顔": "kaze no kao",
-  "雷雨雲": "raiuun",
-  "雷雲": "raiuun",
-  "天の川": "ama no kawa",
-  "雲": "kumo",
-  "虹": "niji",
   "閉じた傘": "tojita kasa",
-  "傘": "kasa",
   "雨傘": "ama kasa",
   "ビーチパラソル": "bīchi parasoru",
-
-  // Food category kanji
   "葡萄": "budō",
   "西瓜": "suika",
-  "梨": "nashi",
   "桃": "momo",
-  "栗": "kuri",
-  "豆": "mame",
   "姜": "shōga",
   "えんどう豆": "endō mame",
   "茶色いキノコ": "chairoi kinoko",
   "根菜": "konsai",
-  "餃子": "gyōza",
-  "月餅": "geppei",
-  "弁当": "bentō",
-  "ご飯": "gohan",
-  "焼き芋": "yaki imo",
-  "せんべい": "senbei",
-  "おにぎり": "onigiri",
-
-  // People / body
   "力こぶ": "rikikobu",
   "義手": "gishu",
   "義足": "gisoku",
   "脚": "ashi",
   "足": "ashi",
-
-  // Activity
-  "花火": "hanabi",
-  "爆竹": "bakuchiku",
-  "七夕飾り": "tanabata kazari",
-  "門松": "kadomatsu",
-
-  // Objects
-  "城": "shiro",
-  "学校": "gakkō",
-  "鍵": "kagi",
-  "時計": "tokei",
   "眼鏡": "megane",
   "サングラス": "sangurasu",
   "ゴーグル": "gōguru",
@@ -10402,8 +10382,6 @@ const japanesePronunciationOverrides = {
   "婦人服": "fujinfuku",
   "扇子": "sensu",
   "財布": "saifu",
-
-  // Travel kanji (very common)
   "ヨーロッパとアフリカの地球": "yōroppa to afurika no chikyū",
   "アメリカ大陸の地球": "amerika tairiku no chikyū",
   "アジアとオーストラリアの地球": "ajia to ōsutoraria no chikyū",
@@ -10414,16 +10392,12 @@ const japanesePronunciationOverrides = {
   "コンパス": "konpasu",
   "雪山": "yukiyama",
   "山": "yama",
-
-  // More People
   "耳": "mimi",
   "目": "me",
   "鼻": "hana",
   "口": "kuchi",
-  "瓶": "bin",           // jar
-  "手袋": "tebukuro",    // gloves
-
-  // New People activity phrases (from full category romaji expansion)
+  "瓶": "bin",
+  "手袋": "tebukuro",
   "自転車に乗る人": "jitensha ni noru hito",
   "マウンテンバイクに乗る人": "maunten baiku ni noru hito",
   "ゴルフする人": "gorufu suru hito",
@@ -10435,85 +10409,51 @@ const japanesePronunciationOverrides = {
   "側転する人": "sokuten suru hito",
   "レスリングする人たち": "resuringu suru hitotachi",
   "水球をする人": "suikyū o suru hito",
-
-  // Additional People resting / final entries
   "ジャグリングする人": "jaguringu suru hito",
   "蓮華座の人": "rengeza no hito",
   "入浴する人": "nyūyoku suru hito",
   "ベッドにいる人": "beddo ni iru hito",
-
-  // Wheelchair people (more complete phrases)
   "手動車いすの人": "shudō kuruma isu no hito",
   "電動車いすの人": "dendō kuruma isu no hito",
-
-  // Activity people
   "踊る女性": "odoru josei",
   "踊る男性": "odoru dansei",
   "白杖を持つ人": "hakujō o motsu hito",
   "白杖": "hakujō",
-
-  // More activity people (walking/standing/kneeling)
   "歩く人": "aruku hito",
   "立つ人": "tatsu hito",
   "ひざまずく人": "hizamazuku hito",
-
-  // Fantasy people (mage and related)
   "魔法使い": "mahōtsukai",
   "スーパーヒーロー": "sūpāhīrō",
   "スーパーヴィラン": "sūpāviran",
   "妖精": "yōsei",
   "天使の赤ちゃん": "tenshi no akachan",
   "サンタクロース": "santakurōsu",
-
-  // People with bunny ears (corrupted data fix)
   "ウサ耳の人": "usagi mimi no hito",
-
-  // More activity people
   "サウナに入る人": "sauna ni iru hito",
   "登る人": "noboru hito",
-
-  // Sport people
   "競馬": "keiba",
   "スキーヤー": "sukīyā",
   "スノーボーダー": "sunōbōdā",
-
-  // Objects / light
   "赤い提灯": "akai chōchin",
-
-  // Objects / paper
   "新聞": "shinbun",
   "丸めた新聞": "marumeta shinbun",
-
-  // Writing tools
   "万年筆": "mannenhitsu",
   "ペン先": "pen saki",
-
-  // Clothing / graduation
   "卒業帽": "sotsugyōbō",
-
-  // Clothing (large remaining block - batch 1)
-  "眼鏡": "megane",
-  "サングラス": "sangurasu",
-  "ゴーグル": "gōguru",
   "白衣": "hakui",
   "安全ベスト": "anzen besuto",
   "ネクタイ": "nekutai",
   "Tシャツ": "tīshatsu",
   "ジーンズ": "jīnzu",
   "マフラー": "mafuraa",
-  "手袋": "tebukuro",
   "コート": "kōto",
   "靴下": "kutsushita",
   "ドレス": "doresu",
-  "着物": "kimono",
   "サリー": "sarī",
   "ワンピース水着": "wanpīsu mizugi",
   "ブリーフ": "burīfu",
   "半ズボン": "hanzubon",
   "ビキニ": "bikini",
-  "婦人服": "fujinfuku",
-  "扇子": "sensu",
-  "財布": "saifu",
   "ハンドバッグ": "handobaggu",
   "クラッチバッグ": "kuratchi baggu",
   "買い物袋": "kaimono bukuro",
@@ -10528,15 +10468,12 @@ const japanesePronunciationOverrides = {
   "バレエシューズ": "barē shūzu",
   "女性用ブーツ": "josei yō būtsu",
   "ヘアピック": "hea pikku",
-  "王冠": "ōkan",
   "女性用帽子": "josei yō bōshi",
   "シルクハット": "shiruku hatto",
   "キャップ": "kyappu",
   "軍用ヘルメット": "gun'yō herumetto",
   "救助隊員のヘルメット": "kyūjotaiin no herumetto",
   "数珠": "juzu",
-
-  // Computer (A)
   "電池": "denchi",
   "電池残量低下": "denchi zanryō teika",
   "電源プラグ": "denshi puragu",
@@ -10549,8 +10486,6 @@ const japanesePronunciationOverrides = {
   "光ディスク": "kōgaku disuku",
   "DVD": "dībuidī",
   "そろばん": "soroban",
-
-  // Light & video (A)
   "映画カメラ": "eiga kamera",
   "フィルム": "firumu",
   "映写機": "eisha ki",
@@ -10565,15 +10500,12 @@ const japanesePronunciationOverrides = {
   "ろうそく": "rōsoku",
   "電球": "denkyū",
   "懐中電灯": "kaichū dentō",
-
-  // Book-paper (B)
   "表紙付きノート": "hyōshi tsuki nōto",
   "閉じた本": "tojita hon",
   "開いた本": "hiraita hon",
   "緑の本": "midori no hon",
   "青い本": "aoi hon",
   "オレンジの本": "orenji no hon",
-  "本": "hon",
   "ノート": "nōto",
   "帳簿": "chōbo",
   "丸まったページ": "marumatta pēji",
@@ -10582,14 +10514,10 @@ const japanesePronunciationOverrides = {
   "付箋": "fushin",
   "しおり": "shiori",
   "ラベル": "raberu",
-
-  // Writing tools (C)
   "ペン": "pen",
   "絵筆": "efude",
   "クレヨン": "kureyon",
   "メモ": "memo",
-
-  // Tools (C)
   "ハンマー": "hanmā",
   "斧": "ono",
   "つるはし": "tsuruhashi",
@@ -10601,8 +10529,6 @@ const japanesePronunciationOverrides = {
   "ブーメラン": "būmeran",
   "弓矢": "yumi ya",
   "盾": "tate",
-
-  // Tools (final batch)
   "のこぎり": "nokogiri",
   "レンチ": "renchi",
   "ドライバー": "doraibā",
@@ -10619,20 +10545,10 @@ const japanesePronunciationOverrides = {
   "はしご": "hashigo",
   "シャベル": "shaberu",
   "アランビック": "aranbikku",
-
-  // People (final)
   "赤ちゃんに授乳する人": "akachan ni junyū suru hito",
-
-  // Additional for incomplete categories (Activities/Objects/Travel)
   "風鈴": "fūrin",
   "鉛筆": "enpitsu",
   "建設工事": "kensetsu-kōji",
-
-  // Activities (common missing)
-  "花火": "hanabi",
-  "爆竹": "bakuchiku",
-  "七夕飾り": "tanabata kazari",
-  "門松": "kadomatsu",
   "お正月": "o-shōgatsu",
   "雛祭り": "hinamatsuri",
   "鯉のぼり": "koinobori",
@@ -10641,12 +10557,8 @@ const japanesePronunciationOverrides = {
   "お月見": "o-tsukimi",
   "お祭り": "o-matsuri",
   "盆踊り": "bon odori",
-
-  // Objects (pencils, construction, maps, etc.)
   "消しゴム": "keshigomu",
   "定規": "jōgi",
-  "世界地図": "sekai chizu",
-  "日本地図": "nihon chizu",
   "クレーン車": "kurēnsha",
   "ショベルカー": "shoberukā",
   "ヘルメット": "herumetto",
@@ -10659,9 +10571,6 @@ const japanesePronunciationOverrides = {
   "黒板": "kokuban",
   "チョーク": "chōku",
   "ホワイトボード": "howaito bōdo",
-  "コンパス": "konpasu",
-
-  // Travel / Places
   "風車": "kazaguruma",
   "灯台": "tōdai",
   "お寺": "o-tera",
@@ -10683,54 +10592,28 @@ const japanesePronunciationOverrides = {
   "お菓子": "o-kashi",
   "お守り": "o-mamori",
   "おみくじ": "o-mikuji",
-
-  // More Activities / Events
   "お花見": "o-hanami",
   "お祭り屋台": "o-matsuri yatai",
   "おみやげ屋": "o-miyage-ya",
   "お土産物": "o-miyage mono",
-
-  // Objects / Tools
-  "定規": "jōgi",
   "分度器": "bundogi",
-  "消しゴム": "keshigomu",
-  "ノート": "nōto",
   "教科書": "kyōkasho",
   "辞典": "jiten",
   "地図帳": "chizuchō",
-
-  // Travel / Places continued
-  "お城": "o-shiro",
-  "お寺": "o-tera",
   "神社": "jinja",
   "鳥居": "torii",
-  "温泉": "onsen",
-  "旅館": "ryokan",
   "ホテル": "hoteru",
-  "空港": "kūkō",
-  "駅": "eki",
-  "新幹線": "shinkansen",
   "飛行機": "hikōki",
   "船": "fune",
   "バス停": "basu tei",
   "タクシー": "takushī",
   "レンタカー": "rentakā",
   "キャンプ場": "kyanpu jō",
-  "山": "yama",
   "川": "kawa",
   "湖": "mizuumi",
   "海": "umi",
   "ビーチ": "bīchi",
   "山頂": "sanchō",
-  "展望台": "tenbōdai",
-  "遊園地": "yūenchi",
-  "動物園": "dōbutsuen",
-  "水族館": "suizokukan",
-  "美術館": "bijutsukan",
-  "博物館": "hakubutsukan",
-  "お土産": "o-miyage",
-  "お守り": "o-mamori",
-
   "フェンシングする人": "fenshingu suru hito",
   "ハンドボールをする人": "handobōru o suru hito",
   "ビリヤードの8ボール": "biriyādo no 8 bōru",
@@ -10788,7 +10671,6 @@ const japanesePronunciationOverrides = {
   "地下鉄": "chikatetsu",
   "路面電車": "romendensha",
   "登山鉄道": "tōzan tetsudō",
-  // Add more as discovered.
 };
 
 const cyrillicPronunciationMap = {
@@ -10828,34 +10710,23 @@ function latinPronunciationGuide(word) {
 
 function russianPronunciationGuide(word) {
   /* Consistent structure rule:
-     Always return a clean transliteration. Never output helper text. */
-  let guide = [...word.toLowerCase()].map((character) => cyrillicPronunciationMap[character] ?? character).join("").replace(/\s+/g, " ").trim();
-  // Remove any remaining Cyrillic letters to keep the field clean
+     Always return a clean transliteration. Never output helper text or Cyrillic. */
+  let guide = [...word.toLowerCase()]
+    .map((character) => cyrillicPronunciationMap[character] ?? "")
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
   guide = guide.replace(/[а-яё]/gi, "").replace(/\s+/g, " ").trim();
-  if (!guide) {
-    // Last resort: produce a basic readable version from the original word
-    guide = word.toLowerCase().replace(/[^a-z\s]/gi, "").trim() || word.toLowerCase();
-  }
-  return guide;
+  return guide.replace(/[^a-z\s\-]/gi, "").replace(/\s+/g, " ").trim();
 }
 
 function chinesePronunciationGuide(word) {
   /* Consistent structure rule:
-     Always return pinyin (with tones when available). Never output helper text. */
+     Always return pinyin (with tones when available). Never output helper text or hanzi. */
   const parts = [...word].map((character) => chinesePronunciationMap[character] ?? null);
-  let guide = parts.map((p) => p || "").join(" ").replace(/\s+/g, " ").trim();
-
-  // Remove any remaining hanzi
-  if (/[\u4E00-\u9FFF]/.test(guide)) {
-    guide = guide.replace(/[\u4E00-\u9FFF\u3000-\u303F]/g, "").replace(/\s+/g, " ").trim();
-  }
-
-  if (!guide) {
-    // Last resort: produce a basic pinyin-style string from the characters we know
-    guide = [...word].map(ch => chinesePronunciationMap[ch] || ch).join(" ").toLowerCase();
-  }
-
-  return guide || word.toLowerCase();
+  let guide = parts.filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  guide = guide.replace(/[\u4E00-\u9FFF\u3000-\u303F]/g, "").replace(/\s+/g, " ").trim();
+  return guide;
 }
 
 function japanesePronunciationGuide(word) {
@@ -11341,7 +11212,7 @@ document.querySelector(".quick-tries").addEventListener("click", (event) => {
       expandedVisualCategories.clear();
       expandedVisualCategories.add(categoryId);
     }
-    renderQuickWords();
+    syncExpandedCategories();
     return;
   }
 
@@ -11367,6 +11238,7 @@ els.translationList.addEventListener("click", (event) => {
   if (button) speak(button.dataset.speak, button.dataset.locale);
 });
 
+validateEmojiArraySchemas();
 renderLanguages();
 renderQuickWords();
 loadVoices();
