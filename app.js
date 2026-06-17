@@ -2230,7 +2230,8 @@ const activityEmojiItems = [
     "日本人偶",
     "японские куклы",
     "ひな人形",
-    "event"
+    "event",
+    "hinaningyō"
   ],
   [
     "🎏",
@@ -2239,27 +2240,28 @@ const activityEmojiItems = [
     "鲤鱼旗",
     "карповый флаг",
     "こいのぼり",
-    "event"
+    "event",
+    "koinobori"
   ],
   [
-    "[ "🎐",
+    "🎐",
     "wind chime",
     "windgong",
     "风铃",
     "ветряной колокольчик",
     "風鈴",
-    "fūrin",
-    "event" ]"
+    "event",
+    "fūrin"
   ],
   [
-    "[ "🎑",
+    "🎑",
     "moon viewing ceremony",
     "maan-kijkceremonie",
     "赏月",
     "церемония любования луной",
     "お月見",
-    "o-tsukimi",
-    "event" ]"
+    "event",
+    "o-tsukimi"
   ],
   [
     "🧧",
@@ -2268,7 +2270,8 @@ const activityEmojiItems = [
     "红包",
     "красный конверт",
     "赤い封筒",
-    "event"
+    "event",
+    "akai fūtō"
   ],
   [
     "🎀",
@@ -2277,7 +2280,8 @@ const activityEmojiItems = [
     "丝带",
     "лента",
     "リボン",
-    "event"
+    "event",
+    "ri-bo-n"
   ],
   [
     "🎁",
@@ -2286,7 +2290,8 @@ const activityEmojiItems = [
     "礼物",
     "подарок в упаковке",
     "包まれたプレゼント",
-    "event"
+    "event",
+    "tsutsumareta purezento"
   ],
   [
     "🎗️",
@@ -2295,7 +2300,8 @@ const activityEmojiItems = [
     "纪念丝带",
     "памятная лента",
     "リマインダーリボン",
-    "event"
+    "event",
+    "ri-ma-i-n-da-ri-bo-n"
   ],
   [
     "🎟️",
@@ -2304,7 +2310,8 @@ const activityEmojiItems = [
     "入场券",
     "входные билеты",
     "入場券",
-    "event"
+    "event",
+    "nyūjōken"
   ],
   [
     "🎫",
@@ -2313,7 +2320,8 @@ const activityEmojiItems = [
     "票",
     "билет",
     "チケット",
-    "event"
+    "event",
+    "chi-ke-to"
   ],
   [
     "🎖️",
@@ -2322,7 +2330,8 @@ const activityEmojiItems = [
     "军功章",
     "военная медаль",
     "勲章",
-    "award-medal"
+    "award-medal",
+    "kunshō"
   ],
   [
     "🏆",
@@ -2331,7 +2340,8 @@ const activityEmojiItems = [
     "奖杯",
     "трофей",
     "トロフィー",
-    "award-medal"
+    "award-medal",
+    "to-ro-fu-i-"
   ],
   [
     "🏅",
@@ -2340,7 +2350,8 @@ const activityEmojiItems = [
     "体育奖牌",
     "спортивная медаль",
     "スポーツメダル",
-    "award-medal"
+    "award-medal",
+    "su-po-tsu-me-da-ru"
   ],
   [
     "🥇",
@@ -2349,7 +2360,8 @@ const activityEmojiItems = [
     "第一名奖牌",
     "медаль за первое место",
     "金メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "🥈",
@@ -2358,7 +2370,8 @@ const activityEmojiItems = [
     "第二名奖牌",
     "медаль за второе место",
     "銀メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "🥉",
@@ -2367,7 +2380,8 @@ const activityEmojiItems = [
     "第三名奖牌",
     "медаль за третье место",
     "銅メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "⚽",
@@ -2376,7 +2390,8 @@ const activityEmojiItems = [
     "足球",
     "футбольный мяч",
     "サッカーボール",
-    "sport"
+    "sport",
+    "sa-ka-bo-ru"
   ],
   [
     "⚾",
@@ -2385,7 +2400,8 @@ const activityEmojiItems = [
     "棒球",
     "бейсбольный мяч",
     "野球ボール",
-    "sport"
+    "sport",
+    "bo-ru"
   ],
   [
     "🥎",
@@ -2394,7 +2410,8 @@ const activityEmojiItems = [
     "垒球",
     "софтбол",
     "ソフトボール",
-    "sport"
+    "sport",
+    "so-fu-to-bo-ru"
   ],
   [
     "🏀",
@@ -2403,7 +2420,8 @@ const activityEmojiItems = [
     "篮球",
     "баскетбольный мяч",
     "バスケットボール",
-    "sport"
+    "sport",
+    "ba-su-ke-to-bo-ru"
   ],
   [
     "🏐",
@@ -2412,7 +2430,8 @@ const activityEmojiItems = [
     "排球",
     "волейбольный мяч",
     "バレーボール",
-    "sport"
+    "sport",
+    "ba-re-bo-ru"
   ],
   [
     "🏈",
@@ -2421,7 +2440,8 @@ const activityEmojiItems = [
     "美式橄榄球",
     "мяч для американского футбола",
     "アメリカンフットボール",
-    "sport"
+    "sport",
+    "a-me-ri-ka-n-fu-to-bo-ru"
   ],
   [
     "🏉",
@@ -2430,7 +2450,8 @@ const activityEmojiItems = [
     "橄榄球",
     "мяч для регби",
     "ラグビーボール",
-    "sport"
+    "sport",
+    "ra-gu-bi-bo-ru"
   ],
   [
     "🎾",
@@ -2439,7 +2460,8 @@ const activityEmojiItems = [
     "网球",
     "теннис",
     "テニス",
-    "sport"
+    "sport",
+    "te-ni-su"
   ],
   [
     "🥏",
@@ -2448,7 +2470,8 @@ const activityEmojiItems = [
     "飞盘",
     "летающий диск",
     "フライングディスク",
-    "sport"
+    "sport",
+    "fu-ra-i-n-gu-de-i-su-ku"
   ],
   [
     "🎳",
@@ -2457,7 +2480,8 @@ const activityEmojiItems = [
     "保龄球",
     "боулинг",
     "ボウリング",
-    "sport"
+    "sport",
+    "bo-u-ri-n-gu"
   ],
   [
     "🏏",
@@ -2466,7 +2490,8 @@ const activityEmojiItems = [
     "板球",
     "крикет",
     "クリケット",
-    "sport"
+    "sport",
+    "ku-ri-ke-to"
   ],
   [
     "🏑",
@@ -2475,7 +2500,8 @@ const activityEmojiItems = [
     "曲棍球",
     "хоккей на траве",
     "フィールドホッケー",
-    "sport"
+    "sport",
+    "fu-i-ru-do-ho-ke-"
   ],
   [
     "🏒",
@@ -2484,7 +2510,8 @@ const activityEmojiItems = [
     "冰球",
     "хоккей с шайбой",
     "アイスホッケー",
-    "sport"
+    "sport",
+    "a-i-su-ho-ke-"
   ],
   [
     "🥍",
@@ -2493,7 +2520,8 @@ const activityEmojiItems = [
     "长曲棍球",
     "лакросс",
     "ラクロス",
-    "sport"
+    "sport",
+    "ra-ku-ro-su"
   ],
   [
     "🏓",
@@ -2502,7 +2530,8 @@ const activityEmojiItems = [
     "乒乓球",
     "настольный теннис",
     "卓球",
-    "sport"
+    "sport",
+    "takkyū"
   ],
   [
     "🏸",
@@ -2511,7 +2540,8 @@ const activityEmojiItems = [
     "羽毛球",
     "бадминтон",
     "バドミントン",
-    "sport"
+    "sport",
+    "ba-do-mi-n-to-n"
   ],
   [
     "🥊",
@@ -2520,7 +2550,8 @@ const activityEmojiItems = [
     "拳击手套",
     "боксёрская перчатка",
     "ボクシンググローブ",
-    "sport"
+    "sport",
+    "bo-ku-shi-n-gu-gu-ro-bu"
   ],
   [
     "🥋",
@@ -2529,7 +2560,8 @@ const activityEmojiItems = [
     "武术服",
     "форма для боевых искусств",
     "武道着",
-    "sport"
+    "sport",
+    "budōgi"
   ],
   [
     "🥅",
@@ -2538,7 +2570,8 @@ const activityEmojiItems = [
     "球门",
     "ворота с сеткой",
     "ゴールネット",
-    "sport"
+    "sport",
+    "go-ru-ne-to"
   ],
   [
     "⛳",
@@ -2547,7 +2580,8 @@ const activityEmojiItems = [
     "高尔夫球洞旗",
     "флажок в лунке",
     "ゴルフの旗",
-    "sport"
+    "sport",
+    "go-ru-fu-no"
   ],
   [
     "⛸️",
@@ -2556,7 +2590,8 @@ const activityEmojiItems = [
     "冰鞋",
     "конёк",
     "アイススケート",
-    "sport"
+    "sport",
+    "a-i-su-su-ke-to"
   ],
   [
     "🎣",
@@ -2565,7 +2600,8 @@ const activityEmojiItems = [
     "钓竿",
     "удочка",
     "釣り竿",
-    "sport"
+    "sport",
+    "ri"
   ],
   [
     "🤿",
@@ -2574,7 +2610,8 @@ const activityEmojiItems = [
     "潜水面罩",
     "маска для дайвинга",
     "ダイビングマスク",
-    "sport"
+    "sport",
+    "da-i-bi-n-gu-ma-su-ku"
   ],
   [
     "🎽",
@@ -2583,7 +2620,8 @@ const activityEmojiItems = [
     "跑步背心",
     "беговая майка",
     "ランニングシャツ",
-    "sport"
+    "sport",
+    "ra-n-ni-n-gu-sha-tsu"
   ],
   [
     "🎿",
@@ -2592,7 +2630,8 @@ const activityEmojiItems = [
     "滑雪板",
     "лыжи",
     "スキー",
-    "sport"
+    "sport",
+    "su-ki-"
   ],
   [
     "🛷",
@@ -2601,7 +2640,8 @@ const activityEmojiItems = [
     "雪橇",
     "санки",
     "そり",
-    "sport"
+    "sport",
+    "so-ri"
   ],
   [
     "🥌",
@@ -2610,7 +2650,8 @@ const activityEmojiItems = [
     "冰壶",
     "камень для кёрлинга",
     "カーリングストーン",
-    "sport"
+    "sport",
+    "ka-ri-n-gu-su-to-n"
   ],
   [
     "🎯",
@@ -2619,7 +2660,8 @@ const activityEmojiItems = [
     "靶心",
     "яблочко мишени",
     "的",
-    "game"
+    "game",
+    "mato"
   ],
   [
     "🪀",
@@ -2628,7 +2670,8 @@ const activityEmojiItems = [
     "悠悠球",
     "йо-йо",
     "ヨーヨー",
-    "game"
+    "game",
+    "yo-yo-"
   ],
   [
     "🪁",
@@ -2637,7 +2680,8 @@ const activityEmojiItems = [
     "风筝",
     "воздушный змей",
     "凧",
-    "game"
+    "game",
+    "tako"
   ],
   [
     "🔫",
@@ -2646,17 +2690,18 @@ const activityEmojiItems = [
     "水枪",
     "водяной пистолет",
     "水鉄砲",
-    "game"
+    "game",
+    "mizuteppō"
   ],
   [
-    "[ "🎱",
+    "🎱",
     "pool 8 ball",
     "biljartbal acht",
     "八号球",
     "бильярдный шар 8",
     "ビリヤードの8ボール",
-    "8",
-    "game" ]"
+    "game",
+    "8"
   ],
   [
     "🔮",
@@ -2665,7 +2710,8 @@ const activityEmojiItems = [
     "水晶球",
     "хрустальный шар",
     "水晶玉",
-    "game"
+    "game",
+    "suishō dama"
   ],
   [
     "🪄",
@@ -2674,7 +2720,8 @@ const activityEmojiItems = [
     "魔法棒",
     "волшебная палочка",
     "魔法の杖",
-    "game"
+    "game",
+    "no"
   ],
   [
     "🎮",
@@ -2683,7 +2730,8 @@ const activityEmojiItems = [
     "电子游戏",
     "видеоигра",
     "ビデオゲーム",
-    "game"
+    "game",
+    "bi-de-o-ge-mu"
   ],
   [
     "🕹️",
@@ -2692,7 +2740,8 @@ const activityEmojiItems = [
     "操纵杆",
     "джойстик",
     "ジョイスティック",
-    "game"
+    "game",
+    "jo-i-su-te-i-ku"
   ],
   [
     "🎰",
@@ -2701,7 +2750,8 @@ const activityEmojiItems = [
     "老虎机",
     "игровой автомат",
     "スロットマシン",
-    "game"
+    "game",
+    "su-ro-to-ma-shi-n"
   ],
   [
     "🎲",
@@ -2710,7 +2760,8 @@ const activityEmojiItems = [
     "骰子",
     "игральная кость",
     "サイコロ",
-    "game"
+    "game",
+    "sa-i-ko-ro"
   ],
   [
     "🧩",
@@ -2719,7 +2770,8 @@ const activityEmojiItems = [
     "拼图块",
     "кусочек пазла",
     "パズルピース",
-    "game"
+    "game",
+    "pa-zu-ru-pi-su"
   ],
   [
     "🧸",
@@ -2728,7 +2780,8 @@ const activityEmojiItems = [
     "泰迪熊",
     "плюшевый мишка",
     "テディベア",
-    "game"
+    "game",
+    "te-de-i-be-a"
   ],
   [
     "🪅",
@@ -2737,7 +2790,8 @@ const activityEmojiItems = [
     "皮纳塔",
     "пиньята",
     "ピニャータ",
-    "game"
+    "game",
+    "pi-nya-ta"
   ],
   [
     "🪩",
@@ -2746,7 +2800,8 @@ const activityEmojiItems = [
     "迪斯科球",
     "зеркальный шар",
     "ミラーボール",
-    "game"
+    "game",
+    "mi-ra-bo-ru"
   ],
   [
     "🪆",
@@ -2755,7 +2810,8 @@ const activityEmojiItems = [
     "套娃",
     "матрёшки",
     "マトリョーシカ",
-    "game"
+    "game",
+    "ma-to-ryo-shi-ka"
   ],
   [
     "♠️",
@@ -2764,7 +2820,8 @@ const activityEmojiItems = [
     "黑桃",
     "пики",
     "スペード",
-    "game"
+    "game",
+    "su-pe-do"
   ],
   [
     "♥️",
@@ -2773,7 +2830,8 @@ const activityEmojiItems = [
     "红心",
     "червы",
     "ハート",
-    "game"
+    "game",
+    "ha-to"
   ],
   [
     "♦️",
@@ -2782,7 +2840,8 @@ const activityEmojiItems = [
     "方块",
     "бубны",
     "ダイヤ",
-    "game"
+    "game",
+    "da-i-ya"
   ],
   [
     "♣️",
@@ -2791,7 +2850,8 @@ const activityEmojiItems = [
     "梅花",
     "трефы",
     "クラブ",
-    "game"
+    "game",
+    "ku-ra-bu"
   ],
   [
     "♟️",
@@ -2800,7 +2860,8 @@ const activityEmojiItems = [
     "兵",
     "шахматная пешка",
     "チェスのポーン",
-    "game"
+    "game",
+    "chi-e-su-no-po-n"
   ],
   [
     "🃏",
@@ -2809,7 +2870,8 @@ const activityEmojiItems = [
     "小丑牌",
     "джокер",
     "ジョーカー",
-    "game"
+    "game",
+    "jo-ka-"
   ],
   [
     "🀄",
@@ -2818,7 +2880,8 @@ const activityEmojiItems = [
     "麻将红中",
     "маджонг красный дракон",
     "麻雀の中",
-    "game"
+    "game",
+    "no"
   ],
   [
     "🎴",
@@ -2827,7 +2890,8 @@ const activityEmojiItems = [
     "花札",
     "карты ханафуда",
     "花札",
-    "game"
+    "game",
+    "hanafuda"
   ],
   [
     "🎭",
@@ -2836,7 +2900,8 @@ const activityEmojiItems = [
     "表演艺术",
     "сценическое искусство",
     "舞台芸術",
-    "arts & crafts"
+    "arts & crafts",
+    "butai geijutsu"
   ],
   [
     "🖼️",
@@ -2845,7 +2910,8 @@ const activityEmojiItems = [
     "带框画",
     "картина в рамке",
     "額入りの絵",
-    "arts & crafts"
+    "arts & crafts",
+    "ri-no"
   ],
   [
     "🎨",
@@ -2854,7 +2920,8 @@ const activityEmojiItems = [
     "调色板",
     "палитра художника",
     "絵の具パレット",
-    "arts & crafts"
+    "arts & crafts",
+    "no-pa-re-to"
   ],
   [
     "🧵",
@@ -2863,7 +2930,8 @@ const activityEmojiItems = [
     "线",
     "нитка",
     "糸",
-    "arts & crafts"
+    "arts & crafts",
+    "ito"
   ],
   [
     "🪡",
@@ -2872,7 +2940,8 @@ const activityEmojiItems = [
     "缝衣针",
     "швейная игла",
     "縫い針",
-    "arts & crafts"
+    "arts & crafts",
+    "i"
   ],
   [
     "🧶",
@@ -2881,7 +2950,8 @@ const activityEmojiItems = [
     "毛线",
     "пряжа",
     "毛糸",
-    "arts & crafts"
+    "arts & crafts",
+    "keito"
   ],
   [
     "🪢",
@@ -2890,7 +2960,8 @@ const activityEmojiItems = [
     "结",
     "узел",
     "結び目",
-    "arts & crafts"
+    "arts & crafts",
+    "bi"
   ],
   [
     "🎼",
@@ -2899,7 +2970,8 @@ const activityEmojiItems = [
     "乐谱",
     "нотная запись",
     "楽譜",
-    "music"
+    "music",
+    "gakufu"
   ],
   [
     "🎵",
@@ -2908,7 +2980,8 @@ const activityEmojiItems = [
     "音符",
     "нота",
     "音符",
-    "music"
+    "music",
+    "onpu"
   ],
   [
     "🎶",
@@ -2917,7 +2990,8 @@ const activityEmojiItems = [
     "多个音符",
     "ноты",
     "複数の音符",
-    "music"
+    "music",
+    "no"
   ],
   [
     "🎙️",
@@ -2926,7 +3000,8 @@ const activityEmojiItems = [
     "录音室麦克风",
     "студийный микрофон",
     "スタジオマイク",
-    "music"
+    "music",
+    "su-ta-ji-o-ma-i-ku"
   ],
   [
     "🎚️",
@@ -2935,7 +3010,8 @@ const activityEmojiItems = [
     "电平滑块",
     "ползунок уровня",
     "レベルスライダー",
-    "music"
+    "music",
+    "re-be-ru-su-ra-i-da-"
   ],
   [
     "🎛️",
@@ -2944,7 +3020,8 @@ const activityEmojiItems = [
     "控制旋钮",
     "ручки управления",
     "コントロールノブ",
-    "music"
+    "music",
+    "ko-n-to-ro-ru-no-bu"
   ],
   [
     "🎤",
@@ -2953,7 +3030,8 @@ const activityEmojiItems = [
     "麦克风",
     "микрофон",
     "マイク",
-    "music"
+    "music",
+    "ma-i-ku"
   ],
   [
     "🎧",
@@ -2962,7 +3040,8 @@ const activityEmojiItems = [
     "耳机",
     "наушники",
     "ヘッドホン",
-    "music"
+    "music",
+    "he-do-ho-n"
   ],
   [
     "📻",
@@ -2971,7 +3050,8 @@ const activityEmojiItems = [
     "收音机",
     "радио",
     "ラジオ",
-    "music"
+    "music",
+    "ra-ji-o"
   ],
   [
     "🎷",
@@ -2980,7 +3060,8 @@ const activityEmojiItems = [
     "萨克斯管",
     "саксофон",
     "サックス",
-    "musical-instrument"
+    "musical-instrument",
+    "sa-ku-su"
   ],
   [
     "🎺",
@@ -2989,7 +3070,8 @@ const activityEmojiItems = [
     "小号",
     "труба",
     "トランペット",
-    "musical-instrument"
+    "musical-instrument",
+    "to-ra-n-pe-to"
   ],
   [
     "🪗",
@@ -2998,7 +3080,8 @@ const activityEmojiItems = [
     "手风琴",
     "аккордеон",
     "アコーディオン",
-    "musical-instrument"
+    "musical-instrument",
+    "a-ko-de-i-o-n"
   ],
   [
     "🎸",
@@ -3007,7 +3090,8 @@ const activityEmojiItems = [
     "吉他",
     "гитара",
     "ギター",
-    "musical-instrument"
+    "musical-instrument",
+    "gi-ta-"
   ],
   [
     "🎹",
@@ -3016,7 +3100,8 @@ const activityEmojiItems = [
     "电子琴",
     "клавишный инструмент",
     "鍵盤",
-    "musical-instrument"
+    "musical-instrument",
+    "kenban"
   ],
   [
     "🎻",
@@ -3025,7 +3110,8 @@ const activityEmojiItems = [
     "小提琴",
     "скрипка",
     "バイオリン",
-    "musical-instrument"
+    "musical-instrument",
+    "ba-i-o-ri-n"
   ],
   [
     "🪕",
@@ -3034,7 +3120,8 @@ const activityEmojiItems = [
     "班卓琴",
     "банджо",
     "バンジョー",
-    "musical-instrument"
+    "musical-instrument",
+    "ba-n-jo-"
   ],
   [
     "🥁",
@@ -3043,7 +3130,8 @@ const activityEmojiItems = [
     "鼓",
     "барабан",
     "ドラム",
-    "musical-instrument"
+    "musical-instrument",
+    "do-ra-mu"
   ],
   [
     "🪘",
@@ -3052,7 +3140,8 @@ const activityEmojiItems = [
     "长鼓",
     "длинный барабан",
     "長太鼓",
-    "musical-instrument"
+    "musical-instrument",
+    "nagadaiko"
   ],
   [
     "🪇",
@@ -3061,7 +3150,8 @@ const activityEmojiItems = [
     "沙锤",
     "маракасы",
     "マラカス",
-    "musical-instrument"
+    "musical-instrument",
+    "ma-ra-ka-su"
   ],
   [
     "🪈",
@@ -3070,7 +3160,8 @@ const activityEmojiItems = [
     "长笛",
     "флейта",
     "フルート",
-    "musical-instrument"
+    "musical-instrument",
+    "fu-ru-to"
   ],
   [
     "🪉",
@@ -3079,8 +3170,9 @@ const activityEmojiItems = [
     "竖琴",
     "арфа",
     "ハープ",
-    "musical-instrument"
-  ]
+    "musical-instrument",
+    "ha-pu"
+  ],
 ];
 
 const travelEmojiItems = [
@@ -3265,14 +3357,14 @@ const travelEmojiItems = [
     "kotenteki na tatemono"
   ],
   [
-    "[ "🏗️",
+    "🏗️",
     "building construction",
     "bouwplaats",
     "建筑施工",
     "строительство здания",
     "建設工事",
-    "kensetsu-kōji",
-    "place-building" ]"
+    "place-building",
+    "kensetsu-kōji"
   ],
   [
     "🧱",
@@ -3281,7 +3373,8 @@ const travelEmojiItems = [
     "砖",
     "кирпич",
     "レンガ",
-    "place-building"
+    "place-building",
+    "renga"
   ],
   [
     "🪨",
@@ -3290,7 +3383,8 @@ const travelEmojiItems = [
     "岩石",
     "камень",
     "岩",
-    "place-building"
+    "place-building",
+    "iwa"
   ],
   [
     "🪵",
@@ -3299,7 +3393,8 @@ const travelEmojiItems = [
     "木头",
     "дерево",
     "木材",
-    "place-building"
+    "place-building",
+    "mokuzai"
   ],
   [
     "🛖",
@@ -3308,7 +3403,8 @@ const travelEmojiItems = [
     "小屋",
     "хижина",
     "小屋",
-    "place-building"
+    "place-building",
+    "koya"
   ],
   [
     "🏘️",
@@ -3317,7 +3413,8 @@ const travelEmojiItems = [
     "房屋",
     "дома",
     "家々",
-    "place-building"
+    "place-building",
+    "ieie"
   ],
   [
     "🏚️",
@@ -3326,7 +3423,8 @@ const travelEmojiItems = [
     "废弃房屋",
     "заброшенный дом",
     "廃屋",
-    "place-building"
+    "place-building",
+    "haioku"
   ],
   [
     "🏠",
@@ -3335,7 +3433,8 @@ const travelEmojiItems = [
     "房子",
     "дом",
     "家",
-    "place-building"
+    "place-building",
+    "ie"
   ],
   [
     "🏡",
@@ -3344,7 +3443,8 @@ const travelEmojiItems = [
     "带花园的房子",
     "дом с садом",
     "庭付きの家",
-    "place-building"
+    "place-building",
+    "ki-no"
   ],
   [
     "🏢",
@@ -3353,7 +3453,8 @@ const travelEmojiItems = [
     "办公楼",
     "офисное здание",
     "オフィスビル",
-    "place-building"
+    "place-building",
+    "o-fu-i-su-bi-ru"
   ],
   [
     "🏣",
@@ -3362,7 +3463,8 @@ const travelEmojiItems = [
     "日本邮局",
     "японское почтовое отделение",
     "日本の郵便局",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
     "🏤",
@@ -3371,7 +3473,8 @@ const travelEmojiItems = [
     "邮局",
     "почтовое отделение",
     "郵便局",
-    "place-building"
+    "place-building",
+    "yūbinkyoku"
   ],
   [
     "🏥",
@@ -3380,7 +3483,8 @@ const travelEmojiItems = [
     "医院",
     "больница",
     "病院",
-    "place-building"
+    "place-building",
+    "byōin"
   ],
   [
     "🏦",
@@ -3389,17 +3493,18 @@ const travelEmojiItems = [
     "银行",
     "банк",
     "銀行",
-    "place-building"
+    "place-building",
+    "ginkō"
   ],
   [
-    "[ "🏨",
+    "🏨",
     "hotel",
     "hotel",
     "酒店",
     "отель",
     "ホテル",
-    "hoteru",
-    "place-building" ]"
+    "place-building",
+    "hoteru"
   ],
   [
     "🏩",
@@ -3408,7 +3513,8 @@ const travelEmojiItems = [
     "爱情旅馆",
     "лав-отель",
     "ラブホテル",
-    "place-building"
+    "place-building",
+    "ra-bu-ho-te-ru"
   ],
   [
     "🏪",
@@ -3417,17 +3523,18 @@ const travelEmojiItems = [
     "便利店",
     "магазин у дома",
     "コンビニ",
-    "place-building"
+    "place-building",
+    "ko-n-bi-ni"
   ],
   [
-    "[ "🏫",
+    "🏫",
     "school",
     "school",
     "学校",
     "школа",
     "学校",
-    "gakkō",
-    "place-building" ]"
+    "place-building",
+    "gakkō"
   ],
   [
     "🏬",
@@ -3436,7 +3543,8 @@ const travelEmojiItems = [
     "百货商店",
     "универмаг",
     "デパート",
-    "place-building"
+    "place-building",
+    "de-pa-to"
   ],
   [
     "🏭",
@@ -3445,7 +3553,8 @@ const travelEmojiItems = [
     "工厂",
     "фабрика",
     "工場",
-    "place-building"
+    "place-building",
+    "kōjō"
   ],
   [
     "🏯",
@@ -3454,17 +3563,18 @@ const travelEmojiItems = [
     "日本城堡",
     "японский замок",
     "日本の城",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
-    "[ "🏰",
+    "🏰",
     "castle",
     "kasteel",
     "城堡",
     "замок",
     "城",
-    "shiro",
-    "place-building" ]"
+    "place-building",
+    "shiro"
   ],
   [
     "💒",
@@ -3473,7 +3583,8 @@ const travelEmojiItems = [
     "婚礼",
     "свадьба",
     "結婚式",
-    "place-building"
+    "place-building",
+    "kekkonshiki"
   ],
   [
     "🗼",
@@ -3482,7 +3593,8 @@ const travelEmojiItems = [
     "东京塔",
     "Токийская башня",
     "東京タワー",
-    "place-building"
+    "place-building",
+    "ta-wa-"
   ],
   [
     "🗽",
@@ -3491,7 +3603,8 @@ const travelEmojiItems = [
     "自由女神像",
     "Статуя Свободы",
     "自由の女神",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
     "⛪",
@@ -3500,7 +3613,8 @@ const travelEmojiItems = [
     "教堂",
     "церковь",
     "教会",
-    "place-religious"
+    "place-religious",
+    "kyōkai"
   ],
   [
     "🕌",
@@ -3509,7 +3623,8 @@ const travelEmojiItems = [
     "清真寺",
     "мечеть",
     "モスク",
-    "place-religious"
+    "place-religious",
+    "mo-su-ku"
   ],
   [
     "🛕",
@@ -3518,7 +3633,8 @@ const travelEmojiItems = [
     "印度教寺庙",
     "индуистский храм",
     "ヒンドゥー寺院",
-    "place-religious"
+    "place-religious",
+    "hi-n-do-u-"
   ],
   [
     "🕍",
@@ -3527,17 +3643,18 @@ const travelEmojiItems = [
     "犹太会堂",
     "синагога",
     "シナゴーグ",
-    "place-religious"
+    "place-religious",
+    "shi-na-go-gu"
   ],
   [
-    "[ "⛩️",
+    "⛩️",
     "shinto shrine",
     "shintoheiligdom",
     "神社",
     "синтоистское святилище",
     "神社",
-    "jinja",
-    "place-religious" ]"
+    "place-religious",
+    "jinja"
   ],
   [
     "🕋",
@@ -3546,7 +3663,8 @@ const travelEmojiItems = [
     "克尔白",
     "Кааба",
     "カーバ神殿",
-    "place-religious"
+    "place-religious",
+    "ka-ba"
   ],
   [
     "⛲",
@@ -3555,17 +3673,18 @@ const travelEmojiItems = [
     "喷泉",
     "фонтан",
     "噴水",
-    "place-other"
+    "place-other",
+    "funsui"
   ],
   [
-    "[ "⛺",
+    "⛺",
     "tent",
     "tent",
     "帐篷",
     "палатка",
     "テント",
-    "tento",
-    "place-other" ]"
+    "place-other",
+    "tento"
   ],
   [
     "🌁",
@@ -3574,7 +3693,8 @@ const travelEmojiItems = [
     "雾蒙蒙",
     "туман",
     "霧",
-    "place-other"
+    "place-other",
+    "kiri"
   ],
   [
     "🌃",
@@ -3583,7 +3703,8 @@ const travelEmojiItems = [
     "星夜",
     "ночь со звёздами",
     "星空の夜",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🏙️",
@@ -3592,7 +3713,8 @@ const travelEmojiItems = [
     "城市景观",
     "городской пейзаж",
     "都市の風景",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🌄",
@@ -3601,7 +3723,8 @@ const travelEmojiItems = [
     "山间日出",
     "восход над горами",
     "山からの日の出",
-    "place-other"
+    "place-other",
+    "ka-ra-no-no"
   ],
   [
     "🌅",
@@ -3610,7 +3733,8 @@ const travelEmojiItems = [
     "日出",
     "восход",
     "日の出",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🌆",
@@ -3619,7 +3743,8 @@ const travelEmojiItems = [
     "黄昏城市",
     "город в сумерках",
     "夕暮れの都市",
-    "place-other"
+    "place-other",
+    "re-no"
   ],
   [
     "🌇",
@@ -3628,7 +3753,8 @@ const travelEmojiItems = [
     "日落",
     "закат",
     "夕日",
-    "place-other"
+    "place-other",
+    "yūhi"
   ],
   [
     "🌉",
@@ -3637,17 +3763,18 @@ const travelEmojiItems = [
     "夜晚的桥",
     "мост ночью",
     "夜の橋",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
-    "[ "♨️",
+    "♨️",
     "hot springs",
     "warmwaterbronnen",
     "温泉",
     "горячие источники",
     "温泉",
-    "onsen",
-    "place-other" ]"
+    "place-other",
+    "onsen"
   ],
   [
     "🎠",
@@ -3656,7 +3783,8 @@ const travelEmojiItems = [
     "旋转木马",
     "карусельная лошадка",
     "メリーゴーランドの馬",
-    "place-other"
+    "place-other",
+    "me-ri-go-ra-n-do-no"
   ],
   [
     "🛝",
@@ -3665,7 +3793,8 @@ const travelEmojiItems = [
     "滑梯",
     "горка",
     "すべり台",
-    "place-other"
+    "place-other",
+    "su-be-ri"
   ],
   [
     "🎡",
@@ -3674,7 +3803,8 @@ const travelEmojiItems = [
     "摩天轮",
     "колесо обозрения",
     "観覧車",
-    "place-other"
+    "place-other",
+    "kanransha"
   ],
   [
     "🎢",
@@ -3683,7 +3813,8 @@ const travelEmojiItems = [
     "过山车",
     "американские горки",
     "ジェットコースター",
-    "place-other"
+    "place-other",
+    "ji-e-to-ko-su-ta-"
   ],
   [
     "💈",
@@ -3692,7 +3823,8 @@ const travelEmojiItems = [
     "理发店招牌柱",
     "парикмахерский столб",
     "床屋のサインポール",
-    "place-other"
+    "place-other",
+    "no-sa-i-n-po-ru"
   ],
   [
     "🎪",
@@ -3701,7 +3833,8 @@ const travelEmojiItems = [
     "马戏团帐篷",
     "цирковой шатёр",
     "サーカステント",
-    "place-other"
+    "place-other",
+    "sa-ka-su-te-n-to"
   ],
   [
     "🚂",
@@ -3710,7 +3843,8 @@ const travelEmojiItems = [
     "蒸汽机车",
     "локомотив",
     "機関車",
-    "transport-ground"
+    "transport-ground",
+    "kikansha"
   ],
   [
     "🚃",
@@ -3719,7 +3853,8 @@ const travelEmojiItems = [
     "火车车厢",
     "железнодорожный вагон",
     "鉄道車両",
-    "transport-ground"
+    "transport-ground",
+    "tetsudō sharyō"
   ],
   [
     "🚄",
@@ -3728,17 +3863,18 @@ const travelEmojiItems = [
     "高速列车",
     "скоростной поезд",
     "高速鉄道",
-    "transport-ground"
+    "transport-ground",
+    "kōsoku tetsudō"
   ],
   [
-    "[ "🚅",
+    "🚅",
     "bullet train",
     "kogeltrein",
     "子弹头列车",
     "поезд-пуля",
     "新幹線",
-    "shinkansen",
-    "transport-ground" ]"
+    "transport-ground",
+    "shinkansen"
   ],
   [
     "🚆",
@@ -3747,7 +3883,8 @@ const travelEmojiItems = [
     "火车",
     "поезд",
     "電車",
-    "transport-ground"
+    "transport-ground",
+    "densha"
   ],
   [
     "🚇",
@@ -3756,7 +3893,8 @@ const travelEmojiItems = [
     "地铁",
     "метро",
     "地下鉄",
-    "transport-ground"
+    "transport-ground",
+    "chikatetsu"
   ],
   [
     "🚈",
@@ -3765,17 +3903,18 @@ const travelEmojiItems = [
     "轻轨",
     "лёгкое метро",
     "ライトレール",
-    "transport-ground"
+    "transport-ground",
+    "ra-i-to-re-ru"
   ],
   [
-    "[ "🚉",
+    "🚉",
     "station",
     "station",
     "车站",
     "станция",
     "駅",
-    "eki",
-    "transport-ground" ]"
+    "transport-ground",
+    "eki"
   ],
   [
     "🚊",
@@ -3784,7 +3923,8 @@ const travelEmojiItems = [
     "有轨电车",
     "трамвай",
     "路面電車",
-    "transport-ground"
+    "transport-ground",
+    "romendensha"
   ],
   [
     "🚝",
@@ -3793,7 +3933,8 @@ const travelEmojiItems = [
     "单轨列车",
     "монорельс",
     "モノレール",
-    "transport-ground"
+    "transport-ground",
+    "mo-no-re-ru"
   ],
   [
     "🚞",
@@ -3802,7 +3943,8 @@ const travelEmojiItems = [
     "登山铁路",
     "горная железная дорога",
     "登山鉄道",
-    "transport-ground"
+    "transport-ground",
+    "tōzan tetsudō"
   ],
   [
     "🚋",
@@ -3811,7 +3953,8 @@ const travelEmojiItems = [
     "电车车厢",
     "трамвайный вагон",
     "路面電車の車両",
-    "transport-ground"
+    "transport-ground",
+    "no"
   ],
   [
     "🚌",
@@ -3820,7 +3963,8 @@ const travelEmojiItems = [
     "公交车",
     "автобус",
     "バス",
-    "transport-ground"
+    "transport-ground",
+    "ba-su"
   ],
   [
     "🚍",
@@ -3829,7 +3973,8 @@ const travelEmojiItems = [
     "迎面驶来的公交车",
     "автобус спереди",
     "前から来るバス",
-    "transport-ground"
+    "transport-ground",
+    "ka-ra-ru-ba-su"
   ],
   [
     "🚎",
@@ -4430,7 +4575,7 @@ const travelEmojiItems = [
     "荷物",
     "hotel",
     "nimotsu"
-  ]
+  ],
 ];
 
 const peopleEmojiItems = [
@@ -5191,7 +5336,8 @@ const peopleEmojiItems = [
     "击剑的人",
     "фехтовальщик",
     "フェンシングする人",
-    "person-sport"
+    "person-sport",
+    "fenshingu suru hito"
   ],
   [
     "🏇",
@@ -5340,7 +5486,8 @@ const peopleEmojiItems = [
     "打手球的人",
     "человек играет в гандбол",
     "ハンドボールをする人",
-    "person-sport"
+    "person-sport",
+    "handobōru o suru hito"
   ],
   [
     "🤹",
@@ -5381,7 +5528,7 @@ const peopleEmojiItems = [
     "ベッドにいる人",
     "person-resting",
     "beddo ni iru hito"
-  ]
+  ],
 ];
 
 const objectEmojiItems = [
@@ -6426,14 +6573,14 @@ const objectEmojiItems = [
     "en taka gurafu"
   ],
   [
-    "[ "✏️",
+    "✏️",
     "pencil",
     "potlood",
     "铅笔",
     "карандаш",
     "鉛筆",
-    "enpitsu",
-    "writing" ]"
+    "writing",
+    "enpitsu"
   ],
   [
     "✒️",
@@ -7012,7 +7159,8 @@ const objectEmojiItems = [
     "试管",
     "пробирка",
     "試験管",
-    "science"
+    "science",
+    "shikenkan"
   ],
   [
     "🧫",
@@ -7021,37 +7169,38 @@ const objectEmojiItems = [
     "培养皿",
     "чашка Петри",
     "シャーレ",
-    "science"
+    "science",
+    "shāre"
   ],
   [
-    "[ "🧬",
+    "🧬",
     "dna",
     "DNA",
     "DNA",
     "ДНК",
     "DNA",
-    "dna",
-    "science" ]"
+    "science",
+    "dna"
   ],
   [
-    "[ "🔬",
+    "🔬",
     "microscope",
     "microscoop",
     "显微镜",
     "микроскоп",
     "顕微鏡",
-    "kenbikyō",
-    "science" ]"
+    "science",
+    "kenbikyō"
   ],
   [
-    "[ "🔭",
+    "🔭",
     "telescope",
     "telescoop",
     "望远镜",
     "телескоп",
     "望遠鏡",
-    "bōenkyō",
-    "science" ]"
+    "science",
+    "bōenkyō"
   ],
   [
     "📡",
@@ -7060,7 +7209,8 @@ const objectEmojiItems = [
     "卫星天线",
     "спутниковая антенна",
     "衛星アンテナ",
-    "science"
+    "science",
+    "eisei antena"
   ],
   [
     "💉",
@@ -7069,7 +7219,8 @@ const objectEmojiItems = [
     "注射器",
     "шприц",
     "注射器",
-    "medical"
+    "medical",
+    "chūshaki"
   ],
   [
     "🩸",
@@ -7078,7 +7229,8 @@ const objectEmojiItems = [
     "血滴",
     "капля крови",
     "血のしずく",
-    "medical"
+    "medical",
+    "chi no shizuku"
   ],
   [
     "💊",
@@ -7087,7 +7239,8 @@ const objectEmojiItems = [
     "药丸",
     "таблетка",
     "錠剤",
-    "medical"
+    "medical",
+    "jōzai"
   ],
   [
     "🩹",
@@ -7096,7 +7249,8 @@ const objectEmojiItems = [
     "创可贴",
     "пластырь",
     "ばんそうこう",
-    "medical"
+    "medical",
+    "ba-n-so-u-ko-u"
   ],
   [
     "🩼",
@@ -7105,7 +7259,8 @@ const objectEmojiItems = [
     "拐杖",
     "костыль",
     "松葉杖",
-    "medical"
+    "medical",
+    "matsubazue"
   ],
   [
     "🩺",
@@ -7114,7 +7269,8 @@ const objectEmojiItems = [
     "听诊器",
     "стетоскоп",
     "聴診器",
-    "medical"
+    "medical",
+    "chōshinki"
   ],
   [
     "🩻",
@@ -7123,7 +7279,8 @@ const objectEmojiItems = [
     "X光片",
     "рентген",
     "レントゲン",
-    "medical"
+    "medical",
+    "re-n-to-ge-n"
   ],
   [
     "🚪",
@@ -7132,7 +7289,8 @@ const objectEmojiItems = [
     "门",
     "дверь",
     "ドア",
-    "household"
+    "household",
+    "do-a"
   ],
   [
     "🛗",
@@ -7141,7 +7299,8 @@ const objectEmojiItems = [
     "电梯",
     "лифт",
     "エレベーター",
-    "household"
+    "household",
+    "e-re-be-ta-"
   ],
   [
     "🪞",
@@ -7150,7 +7309,8 @@ const objectEmojiItems = [
     "镜子",
     "зеркало",
     "鏡",
-    "household"
+    "household",
+    "kagami"
   ],
   [
     "🪟",
@@ -7159,7 +7319,8 @@ const objectEmojiItems = [
     "窗户",
     "окно",
     "窓",
-    "household"
+    "household",
+    "mado"
   ],
   [
     "🛏️",
@@ -7168,7 +7329,8 @@ const objectEmojiItems = [
     "床",
     "кровать",
     "ベッド",
-    "household"
+    "household",
+    "be-do"
   ],
   [
     "🛋️",
@@ -7177,7 +7339,8 @@ const objectEmojiItems = [
     "沙发和灯",
     "диван и лампа",
     "ソファとランプ",
-    "household"
+    "household",
+    "so-fu-a-to-ra-n-pu"
   ],
   [
     "🪑",
@@ -7186,7 +7349,8 @@ const objectEmojiItems = [
     "椅子",
     "стул",
     "椅子",
-    "household"
+    "household",
+    "isu"
   ],
   [
     "🚽",
@@ -7195,7 +7359,8 @@ const objectEmojiItems = [
     "马桶",
     "туалет",
     "トイレ",
-    "household"
+    "household",
+    "to-i-re"
   ],
   [
     "🪠",
@@ -7204,7 +7369,8 @@ const objectEmojiItems = [
     "皮搋子",
     "вантуз",
     "ラバーカップ",
-    "household"
+    "household",
+    "ra-ba-ka-pu"
   ],
   [
     "🚿",
@@ -7213,7 +7379,8 @@ const objectEmojiItems = [
     "淋浴",
     "душ",
     "シャワー",
-    "household"
+    "household",
+    "sha-wa-"
   ],
   [
     "🛁",
@@ -7222,7 +7389,8 @@ const objectEmojiItems = [
     "浴缸",
     "ванна",
     "浴槽",
-    "household"
+    "household",
+    "yokusō"
   ],
   [
     "🪤",
@@ -7231,7 +7399,8 @@ const objectEmojiItems = [
     "捕鼠器",
     "мышеловка",
     "ネズミ捕り",
-    "household"
+    "household",
+    "ne-zu-mi-ri"
   ],
   [
     "🪒",
@@ -7240,7 +7409,8 @@ const objectEmojiItems = [
     "剃须刀",
     "бритва",
     "かみそり",
-    "household"
+    "household",
+    "ka-mi-so-ri"
   ],
   [
     "🧴",
@@ -7249,7 +7419,8 @@ const objectEmojiItems = [
     "乳液瓶",
     "бутылка лосьона",
     "ローションボトル",
-    "household"
+    "household",
+    "ro-sho-n-bo-to-ru"
   ],
   [
     "🧷",
@@ -7258,7 +7429,8 @@ const objectEmojiItems = [
     "安全别针",
     "английская булавка",
     "安全ピン",
-    "household"
+    "household",
+    "pi-n"
   ],
   [
     "🧹",
@@ -7267,7 +7439,8 @@ const objectEmojiItems = [
     "扫帚",
     "метла",
     "ほうき",
-    "household"
+    "household",
+    "ho-u-ki"
   ],
   [
     "🧺",
@@ -7276,7 +7449,8 @@ const objectEmojiItems = [
     "篮子",
     "корзина",
     "かご",
-    "household"
+    "household",
+    "ka-go"
   ],
   [
     "🧻",
@@ -7285,7 +7459,8 @@ const objectEmojiItems = [
     "纸卷",
     "рулон бумаги",
     "紙ロール",
-    "household"
+    "household",
+    "ro-ru"
   ],
   [
     "🪣",
@@ -7294,7 +7469,8 @@ const objectEmojiItems = [
     "桶",
     "ведро",
     "バケツ",
-    "household"
+    "household",
+    "ba-ke-tsu"
   ],
   [
     "🧼",
@@ -7303,7 +7479,8 @@ const objectEmojiItems = [
     "肥皂",
     "мыло",
     "せっけん",
-    "household"
+    "household",
+    "se-ke-n"
   ],
   [
     "🫧",
@@ -7312,7 +7489,8 @@ const objectEmojiItems = [
     "泡泡",
     "пузыри",
     "泡",
-    "household"
+    "household",
+    "awa"
   ],
   [
     "🪥",
@@ -7321,7 +7499,8 @@ const objectEmojiItems = [
     "牙刷",
     "зубная щётка",
     "歯ブラシ",
-    "household"
+    "household",
+    "bu-ra-shi"
   ],
   [
     "🧽",
@@ -7330,7 +7509,8 @@ const objectEmojiItems = [
     "海绵",
     "губка",
     "スポンジ",
-    "household"
+    "household",
+    "su-po-n-ji"
   ],
   [
     "🧯",
@@ -7339,7 +7519,8 @@ const objectEmojiItems = [
     "灭火器",
     "огнетушитель",
     "消火器",
-    "household"
+    "household",
+    "shōkaki"
   ],
   [
     "🛒",
@@ -7348,8 +7529,9 @@ const objectEmojiItems = [
     "购物车",
     "тележка для покупок",
     "ショッピングカート",
-    "household"
-  ]
+    "household",
+    "sho-pi-n-gu-ka-to"
+  ],
 ];
 
 function makePeopleKey(english, index) {
@@ -10529,6 +10711,63 @@ const japanesePronunciationOverrides = {
   "お土産": "o-miyage",
   "お守り": "o-mamori",
 
+  "フェンシングする人": "fenshingu suru hito",
+  "ハンドボールをする人": "handobōru o suru hito",
+  "ビリヤードの8ボール": "biriyādo no 8 bōru",
+  "ひな人形": "hinaningyō",
+  "こいのぼり": "koinobori",
+  "赤い封筒": "akai fūtō",
+  "包まれたプレゼント": "tsutsumareta purezento",
+  "試験管": "shikenkan",
+  "シャーレ": "shāre",
+  "衛星アンテナ": "eisei antena",
+  "注射器": "chūshaki",
+  "血のしずく": "chi no shizuku",
+  "レンガ": "renga",
+  "木材": "mokuzai",
+  "小屋": "koya",
+  "家々": "ieie",
+  "入場券": "nyūjōken",
+  "勲章": "kunshō",
+  "卓球": "takkyū",
+  "武道着": "budōgi",
+  "凧": "tako",
+  "水鉄砲": "mizuteppō",
+  "水晶玉": "suishō dama",
+  "花札": "hanafuda",
+  "舞台芸術": "butai geijutsu",
+  "糸": "ito",
+  "毛糸": "keito",
+  "楽譜": "gakufu",
+  "音符": "onpu",
+  "鍵盤": "kenban",
+  "長太鼓": "nagadaiko",
+  "錠剤": "jōzai",
+  "松葉杖": "matsubazue",
+  "聴診器": "chōshinki",
+  "鏡": "kagami",
+  "窓": "mado",
+  "椅子": "isu",
+  "浴槽": "yokusō",
+  "消火器": "shōkaki",
+  "廃屋": "haioku",
+  "郵便局": "yūbinkyoku",
+  "病院": "byōin",
+  "銀行": "ginkō",
+  "工場": "kōjō",
+  "結婚式": "kekkonshiki",
+  "教会": "kyōkai",
+  "噴水": "funsui",
+  "霧": "kiri",
+  "夕日": "yūhi",
+  "観覧車": "kanransha",
+  "機関車": "kikansha",
+  "鉄道車両": "tetsudō sharyō",
+  "高速鉄道": "kōsoku tetsudō",
+  "電車": "densha",
+  "地下鉄": "chikatetsu",
+  "路面電車": "romendensha",
+  "登山鉄道": "tōzan tetsudō",
   // Add more as discovered.
 };
 
