@@ -1337,7 +1337,7 @@ function renderResult(entry) {
       const translation = entry.translations[language.id];
       // Final safety: strip any accidental helper/fallback text from pronunciation
       let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
-      if (!phonetic) phonetic = "???";
+      if (!phonetic) phonetic = translation.word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"");
 
       return `
         <div class="translation-row">
@@ -10625,7 +10625,7 @@ function japanesePronunciationGuide(word) {
     }
     // Ultimate fallback: never return the original Japanese word/kanji
     const stripped = word.replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g, "").toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-").trim();
-    return stripped || "???";
+    return stripped || word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"");
   }
 
   return cleaned;
