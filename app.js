@@ -1241,7 +1241,18 @@ function hideLoading() {
   els.loadingScene.classList.add("is-hidden");
 }
 
+function stopSpeaking() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
+
 function closeResult() {
+  stopSpeaking();
   els.resultOverlay.classList.add("is-hidden");
   els.resultOverlay.classList.remove("is-expanded");
   els.expandResultButton.setAttribute("aria-pressed", "false");
@@ -1259,12 +1270,7 @@ function toggleExpandedResult() {
 function speak(text, locale) {
   if (!window.speechSynthesis) return;
 
-  // Stop any currently playing Japanese audio
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
-  window.speechSynthesis.cancel();
+  stopSpeaking();
 
   // Special handling for Japanese: Use Google Translate TTS for natural native speaker sound
   if (locale.startsWith("ja")) {
@@ -1287,11 +1293,7 @@ function speak(text, locale) {
  * Falls back to browser speechSynthesis if the request fails.
  */
 function playJapaneseNativeAudio(japaneseText) {
-  // Stop previous Japanese audio to prevent overlapping
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
+  stopSpeaking();
 
   const encodedText = encodeURIComponent(japaneseText);
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodedText}`;
