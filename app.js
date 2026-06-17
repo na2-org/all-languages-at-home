@@ -1337,7 +1337,7 @@ function renderResult(entry) {
       const translation = entry.translations[language.id];
       // Final safety: strip any accidental helper/fallback text from pronunciation
       let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
-      if (!phonetic) phonetic = translation.word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"");
+      if (!phonetic) phonetic = (japanesePronunciationOverrides[translation.word] || translation.word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"").replace(/\s+/g,"-")).trim() || translation.word.toLowerCase();
 
       return `
         <div class="translation-row">
@@ -2242,22 +2242,24 @@ const activityEmojiItems = [
     "event"
   ],
   [
-    "🎐",
+    "[ "🎐",
     "wind chime",
     "windgong",
     "风铃",
     "ветряной колокольчик",
     "風鈴",
-    "event"
+    "fūrin",
+    "event" ]"
   ],
   [
-    "🎑",
+    "[ "🎑",
     "moon viewing ceremony",
     "maan-kijkceremonie",
     "赏月",
     "церемония любования луной",
     "お月見",
-    "event"
+    "o-tsukimi",
+    "event" ]"
   ],
   [
     "🧧",
@@ -2647,13 +2649,14 @@ const activityEmojiItems = [
     "game"
   ],
   [
-    "🎱",
+    "[ "🎱",
     "pool 8 ball",
     "biljartbal acht",
     "八号球",
     "бильярдный шар 8",
     "ビリヤードの8ボール",
-    "game"
+    "8",
+    "game" ]"
   ],
   [
     "🔮",
@@ -3262,13 +3265,14 @@ const travelEmojiItems = [
     "kotenteki na tatemono"
   ],
   [
-    "🏗️",
+    "[ "🏗️",
     "building construction",
     "bouwplaats",
     "建筑施工",
     "строительство здания",
     "建設工事",
-    "place-building"
+    "kensetsu-kōji",
+    "place-building" ]"
   ],
   [
     "🧱",
@@ -3388,13 +3392,14 @@ const travelEmojiItems = [
     "place-building"
   ],
   [
-    "🏨",
+    "[ "🏨",
     "hotel",
     "hotel",
     "酒店",
     "отель",
     "ホテル",
-    "place-building"
+    "hoteru",
+    "place-building" ]"
   ],
   [
     "🏩",
@@ -3415,13 +3420,14 @@ const travelEmojiItems = [
     "place-building"
   ],
   [
-    "🏫",
+    "[ "🏫",
     "school",
     "school",
     "学校",
     "школа",
     "学校",
-    "place-building"
+    "gakkō",
+    "place-building" ]"
   ],
   [
     "🏬",
@@ -3451,13 +3457,14 @@ const travelEmojiItems = [
     "place-building"
   ],
   [
-    "🏰",
+    "[ "🏰",
     "castle",
     "kasteel",
     "城堡",
     "замок",
     "城",
-    "place-building"
+    "shiro",
+    "place-building" ]"
   ],
   [
     "💒",
@@ -3523,13 +3530,14 @@ const travelEmojiItems = [
     "place-religious"
   ],
   [
-    "⛩️",
+    "[ "⛩️",
     "shinto shrine",
     "shintoheiligdom",
     "神社",
     "синтоистское святилище",
     "神社",
-    "place-religious"
+    "jinja",
+    "place-religious" ]"
   ],
   [
     "🕋",
@@ -3550,13 +3558,14 @@ const travelEmojiItems = [
     "place-other"
   ],
   [
-    "⛺",
+    "[ "⛺",
     "tent",
     "tent",
     "帐篷",
     "палатка",
     "テント",
-    "place-other"
+    "tento",
+    "place-other" ]"
   ],
   [
     "🌁",
@@ -3631,13 +3640,14 @@ const travelEmojiItems = [
     "place-other"
   ],
   [
-    "♨️",
+    "[ "♨️",
     "hot springs",
     "warmwaterbronnen",
     "温泉",
     "горячие источники",
     "温泉",
-    "place-other"
+    "onsen",
+    "place-other" ]"
   ],
   [
     "🎠",
@@ -3721,13 +3731,14 @@ const travelEmojiItems = [
     "transport-ground"
   ],
   [
-    "🚅",
+    "[ "🚅",
     "bullet train",
     "kogeltrein",
     "子弹头列车",
     "поезд-пуля",
     "新幹線",
-    "transport-ground"
+    "shinkansen",
+    "transport-ground" ]"
   ],
   [
     "🚆",
@@ -3757,13 +3768,14 @@ const travelEmojiItems = [
     "transport-ground"
   ],
   [
-    "🚉",
+    "[ "🚉",
     "station",
     "station",
     "车站",
     "станция",
     "駅",
-    "transport-ground"
+    "eki",
+    "transport-ground" ]"
   ],
   [
     "🚊",
@@ -6414,13 +6426,14 @@ const objectEmojiItems = [
     "en taka gurafu"
   ],
   [
-    "✏️",
+    "[ "✏️",
     "pencil",
     "potlood",
     "铅笔",
     "карандаш",
     "鉛筆",
-    "writing"
+    "enpitsu",
+    "writing" ]"
   ],
   [
     "✒️",
@@ -7011,31 +7024,34 @@ const objectEmojiItems = [
     "science"
   ],
   [
-    "🧬",
+    "[ "🧬",
     "dna",
     "DNA",
     "DNA",
     "ДНК",
     "DNA",
-    "science"
+    "dna",
+    "science" ]"
   ],
   [
-    "🔬",
+    "[ "🔬",
     "microscope",
     "microscoop",
     "显微镜",
     "микроскоп",
     "顕微鏡",
-    "science"
+    "kenbikyō",
+    "science" ]"
   ],
   [
-    "🔭",
+    "[ "🔭",
     "telescope",
     "telescoop",
     "望远镜",
     "телескоп",
     "望遠鏡",
-    "science"
+    "bōenkyō",
+    "science" ]"
   ],
   [
     "📡",
@@ -10625,7 +10641,7 @@ function japanesePronunciationGuide(word) {
     }
     // Ultimate fallback: never return the original Japanese word/kanji
     const stripped = word.replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g, "").toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-").trim();
-    return stripped || word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"");
+    return stripped || japanesePronunciationOverrides[word] || word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"").replace(/\s+/g,"-");
   }
 
   return cleaned;
