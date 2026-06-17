@@ -1139,6 +1139,7 @@ const selectedLanguages = new Set(["en", "nl", "ru", "zh", "ja"]);
 const expandedVisualCategories = new Set(["emoji-animals"]);
 let availableVoices = [];
 let currentResult = null;
+let currentAudio = null;
 
 const els = {
   languageGrid: document.querySelector("#language-grid"),
@@ -1246,6 +1247,12 @@ function toggleExpandedResult() {
 
 function speak(text, locale) {
   if (!window.speechSynthesis) return;
+
+  // Stop any currently playing Japanese audio
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
   window.speechSynthesis.cancel();
 
   // Special handling for Japanese: Use Google Translate TTS for natural native speaker sound
@@ -1269,12 +1276,20 @@ function speak(text, locale) {
  * Falls back to browser speechSynthesis if the request fails.
  */
 function playJapaneseNativeAudio(japaneseText) {
+  // Stop previous Japanese audio to prevent overlapping
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+
   const encodedText = encodeURIComponent(japaneseText);
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodedText}`;
 
   const audio = new Audio(url);
+  currentAudio = audio;
 
   audio.play().catch(() => {
+    currentAudio = null;
     // Fallback to browser TTS (will speak the Japanese text directly)
     const utterance = new SpeechSynthesisUtterance(japaneseText);
     utterance.lang = "ja-JP";
@@ -1322,7 +1337,7 @@ function renderResult(entry) {
       const translation = entry.translations[language.id];
       // Final safety: strip any accidental helper/fallback text from pronunciation
       let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
-      if (!phonetic) phonetic = translation.word.toLowerCase();
+      if (!phonetic) phonetic = "???";
 
       return `
         <div class="translation-row">
@@ -9784,7 +9799,7 @@ const latinPronunciationOverrides = {
   egg: "eg",
   rice: "rise",
   soup: "soop",
-  fish: "fish",
+  fish: "fihsh",
   rabbit: "RA-bit",
   bear: "bair",
   rain: "rayn",
@@ -9795,7 +9810,7 @@ const latinPronunciationOverrides = {
   eye: "eye",
   shoe: "shoo",
   hat: "hat",
-  book: "book",
+  book: "buhk",
   car: "kar",
   train: "trayn",
   house: "hows",
@@ -9806,10 +9821,10 @@ const latinPronunciationOverrides = {
   lamp: "lamp",
   doll: "dahl",
   cow: "kow",
-  fire: "fire",
+  fire: "fyr",
   cake: "kayk",
   juice: "joos",
-  bus: "bus",
+  bus: "buhs",
   school: "skool",
   music: "MYOO-zik",
   game: "gaym",
@@ -9820,7 +9835,7 @@ const latinPronunciationOverrides = {
   love: "luv",
   laugh: "laf",
   lion: "LY-un",
-  frog: "frog",
+  frog: "frahg",
   cookie: "KOO-kee",
   boat: "boht",
   rocket: "ROK-it",
@@ -9829,8 +9844,8 @@ const latinPronunciationOverrides = {
   soccer: "SAH-ker",
   robot: "ROH-bot",
   scarf: "skarf",
-  ice: "ice",
-  park: "park",
+  ice: "eyss",
+  park: "pahrk",
   soap: "sohp",
   quiet: "KWY-et",
   // Dutch (approximate kid-friendly guides, never raw word)
@@ -9838,7 +9853,7 @@ const latinPronunciationOverrides = {
   kat: "kaht",
   vogel: "VO-gul",
   maan: "mahn",
-  zon: "zon",
+  zon: "zohn",
   ster: "stehr",
   boom: "bohm",
   bloem: "bloom",
@@ -9872,7 +9887,7 @@ const latinPronunciationOverrides = {
   pop: "pop",
   koe: "koo",
   vlinder: "VLIN-der",
-  vuur: "vuur",
+  vuur: "fuur",
   taart: "taart",
   sap: "sahp",
   fiets: "feets",
@@ -9899,7 +9914,7 @@ const latinPronunciationOverrides = {
   stil: "stil",
   zeep: "zayp",
   sjaal: "shahl",
-  park: "park",
+  park: "pahrk",
   // Common activity / nature words that appear in dynamic data
   "high voltage": "HIGH VOL-tij", // legacy safety net
   lightning: "LYT-ning",
@@ -9961,7 +9976,7 @@ const latinPronunciationOverrides = {
   "kimono": "ki-MOH-noh",
   "sari": "SAH-ree",
   "bikini": "bi-KEE-nee",
-  "shorts": "shorts",
+  "shorts": "shohrts",
   "scarf": "skarf",
   "gloves": "gluvz",
   "necktie": "NEK-ty",
@@ -10390,6 +10405,11 @@ const japanesePronunciationOverrides = {
   // People (final)
   "赤ちゃんに授乳する人": "akachan ni junyū suru hito",
 
+  // Additional for incomplete categories (Activities/Objects/Travel)
+  "風鈴": "fūrin",
+  "鉛筆": "enpitsu",
+  "建設工事": "kensetsu-kōji",
+
   // Add more as discovered.
 };
 
@@ -10500,8 +10520,9 @@ function japanesePronunciationGuide(word) {
     if (romajiOnly && romajiOnly.length > 0) {
       return romajiOnly;
     }
-    // Ultimate fallback: produce a simple readable romaji-style string without helper words
-    return word.replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g, "").toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-").trim() || word.toLowerCase();
+    // Ultimate fallback: never return the original Japanese word/kanji
+    const stripped = word.replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g, "").toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-").trim();
+    return stripped || "???";
   }
 
   return cleaned;
@@ -10643,7 +10664,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: foodFactTexts[index],
           art: key,
@@ -10668,7 +10689,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: natureFactTexts[index],
           art: key,
@@ -10693,7 +10714,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: activityFacts(english, subgroup),
           art: key,
@@ -10718,7 +10739,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: peopleFacts(english, subgroup),
           art: key,
@@ -10743,7 +10764,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: objectFacts(english, subgroup),
           art: key,
@@ -10768,7 +10789,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: romaji || pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: travelFacts(english, subgroup),
           art: key,
