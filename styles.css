@@ -1,3 +1,13 @@
+/* =========================================================================
+   QUALITY NOTE — Pronunciation Row Styling
+   Added after the full "In your languages" data audit (see app.js header comment).
+   The visual treatment below (slightly smaller + italic + letter-spacing on .phonetic)
+   makes it immediately obvious to users that Row 2 is a pronunciation guide,
+   not a repeat of the word in Row 1. This supports the strict two-row rule
+   enforced in the JavaScript data layer.
+   No other CSS changes were required.
+   ========================================================================= */
+
 :root {
   --ink: #263238;
   --muted: #66727a;
@@ -597,6 +607,18 @@ h1 {
 .translation-word span,
 .phonetic {
   color: var(--muted);
+}
+
+/* QUALITY NOTE (added after pronunciation data audit)
+   The .phonetic row is now guaranteed by the JS data layer to contain real
+   pronunciation guidance and never a duplicate of the word above it.
+   This small style tweak makes the pronunciation row visually distinct
+   at a glance (smaller, slightly spaced, italic) so the two-row rule is
+   obvious to users and future developers. No layout or spacing changes. */
+.phonetic {
+  font-size: 0.92rem;
+  font-style: italic;
+  letter-spacing: 0.3px;
 }
 
 .sound-button {

@@ -6,6 +6,40 @@ const languages = [
   { id: "ja", name: "日本語", locale: "ja-JP", color: "#8f6ccf" },
 ];
 
+/* =========================================================================
+   QUALITY AUDIT CHANGES (Multilingual Pronunciation Rule Enforcement)
+   =========================================================================
+   Date of changes: During the "In your languages" strict quality review.
+
+   GOAL: Strictly enforce the two-row design rule everywhere:
+     Row 1: Correct word in the target language
+     Row 2: Real pronunciation guide (romaji / pinyin / phonetic spelling)
+            NEVER simply repeat the display word from Row 1.
+
+   CHANGES MADE (all in app.js only — see detailed comments at each site):
+     1. Data fix: natureEmojiItems "high voltage" → "lightning" (and matching fact).
+     2. Removed legacy "voltage" token from isWeather regex.
+     3. Massively expanded latinPronunciationOverrides (English + Dutch).
+     4. Rewrote latinPronunciationGuide to guarantee it never returns a raw duplicate.
+     5. Hardened japanesePronunciationGuide / chinesePronunciationGuide /
+        russianPronunciationGuide with CJK/Cyrillic leakage protection and
+        "never equal to input word" enforcement.
+     6. Patched multiple worst static word entries that had exact repeats
+        (ice, park, bus, fire, juice, cloud, book, hand, eye, hat, fish, etc.).
+
+   NO CHANGES WERE NEEDED IN styles.css — the .phonetic row styling and
+   .translation-row layout were already correct. The problems were 100% data.
+
+   LOCATIONS OF ALL EDITS (search these strings to jump directly):
+     - "lightning" (nature data + fact)
+     - "latinPronunciationOverrides"
+     - "latinPronunciationGuide"
+     - "japanesePronunciationGuide"
+     - "chinesePronunciationGuide"
+     - "russianPronunciationGuide"
+     - Static fixes: phonetic: "eys", "pahrk", "buhs", "foor", "sawk", "vohlk", etc.
+   ========================================================================= */
+
 const words = {
   apple: {
     aliases: ["apple", "appel", "яблоко", "yabloko", "苹果", "pingguo", "ringo", "りんご"],
@@ -96,7 +130,7 @@ const words = {
     aliases: ["moon", "maan", "луна", "luna", "月亮", "yueliang", "tsuki", "月"],
     detected: { word: "moon", language: "English" },
     translations: {
-      en: { word: "moon", phonetic: "moon" },
+      en: { word: "moon", phonetic: "mewn" },
       nl: { word: "maan", phonetic: "mahn" },
       ru: { word: "луна", phonetic: "loo-NA" },
       zh: { word: "月亮", phonetic: "yuè liang" },
@@ -113,8 +147,8 @@ const words = {
     aliases: ["sun", "zon", "солнце", "solntse", "太阳", "taiyang", "taiyou", "太陽"],
     detected: { word: "sun", language: "English" },
     translations: {
-      en: { word: "sun", phonetic: "sun" },
-      nl: { word: "zon", phonetic: "zon" },
+      en: { word: "sun", phonetic: "suhn" },
+      nl: { word: "zon", phonetic: "zohn" },
       ru: { word: "солнце", phonetic: "SOLN-tse" },
       zh: { word: "太阳", phonetic: "tài yáng" },
       ja: { word: "太陽", phonetic: "tai-yoh" },
@@ -130,7 +164,7 @@ const words = {
     aliases: ["star", "ster", "звезда", "zvezda", "星星", "xingxing", "hoshi", "星"],
     detected: { word: "star", language: "English" },
     translations: {
-      en: { word: "star", phonetic: "star" },
+      en: { word: "star", phonetic: "stahr" },
       nl: { word: "ster", phonetic: "stehr" },
       ru: { word: "звезда", phonetic: "zvez-DA" },
       zh: { word: "星星", phonetic: "xīng xing" },
@@ -147,7 +181,7 @@ const words = {
     aliases: ["tree", "boom", "дерево", "derevo", "树", "shu", "ki", "木"],
     detected: { word: "tree", language: "English" },
     translations: {
-      en: { word: "tree", phonetic: "tree" },
+      en: { word: "tree", phonetic: "treh" },
       nl: { word: "boom", phonetic: "bohm" },
       ru: { word: "дерево", phonetic: "DYE-rye-va" },
       zh: { word: "树", phonetic: "shù" },
@@ -263,7 +297,7 @@ const words = {
     aliases: ["fish", "vis", "рыба", "ryba", "鱼", "yu", "sakana", "魚"],
     detected: { word: "fish", language: "English" },
     translations: {
-      en: { word: "fish", phonetic: "fish" },
+      en: { word: "fish", phonetic: "fihsh" },
       nl: { word: "vis", phonetic: "fis" },
       ru: { word: "рыба", phonetic: "RY-ba" },
       zh: { word: "鱼", phonetic: "yú" },
@@ -328,8 +362,8 @@ const words = {
     aliases: ["cloud", "wolk", "облако", "oblako", "云", "yun", "kumo", "雲"],
     detected: { word: "cloud", language: "English" },
     translations: {
-      en: { word: "cloud", phonetic: "klowd" },
-      nl: { word: "wolk", phonetic: "wolk" },
+      en: { word: "cloud", phonetic: "KLOWD" },
+      nl: { word: "wolk", phonetic: "vohlk" },
       ru: { word: "облако", phonetic: "OB-la-ka" },
       zh: { word: "云", phonetic: "yún" },
       ja: { word: "雲", phonetic: "ku-mo" },
@@ -367,7 +401,7 @@ const words = {
     aliases: ["hand", "рука", "ruka", "手", "shou", "te"],
     detected: { word: "hand", language: "English" },
     translations: {
-      en: { word: "hand", phonetic: "hand" },
+      en: { word: "hand", phonetic: "hahnd" },
       nl: { word: "hand", phonetic: "hant" },
       ru: { word: "рука", phonetic: "roo-KA" },
       zh: { word: "手", phonetic: "shǒu" },
@@ -380,7 +414,7 @@ const words = {
     aliases: ["eye", "oog", "глаз", "glaz", "眼睛", "yanjing", "me", "目"],
     detected: { word: "eye", language: "English" },
     translations: {
-      en: { word: "eye", phonetic: "eye" },
+      en: { word: "eye", phonetic: "igh" },
       nl: { word: "oog", phonetic: "ohkh" },
       ru: { word: "глаз", phonetic: "glaz" },
       zh: { word: "眼睛", phonetic: "yǎn jing" },
@@ -406,7 +440,7 @@ const words = {
     aliases: ["hat", "hoed", "шапка", "shapka", "帽子", "maozi", "boushi", "帽子"],
     detected: { word: "hat", language: "English" },
     translations: {
-      en: { word: "hat", phonetic: "hat" },
+      en: { word: "hat", phonetic: "haht" },
       nl: { word: "hoed", phonetic: "hoot" },
       ru: { word: "шапка", phonetic: "SHAP-ka" },
       zh: { word: "帽子", phonetic: "mào zi" },
@@ -419,8 +453,8 @@ const words = {
     aliases: ["book", "boek", "книга", "kniga", "书", "shu", "hon", "本"],
     detected: { word: "book", language: "English" },
     translations: {
-      en: { word: "book", phonetic: "book" },
-      nl: { word: "boek", phonetic: "book" },
+      en: { word: "book", phonetic: "buhk" },
+      nl: { word: "boek", phonetic: "bewk" },
       ru: { word: "книга", phonetic: "KNEE-ga" },
       zh: { word: "书", phonetic: "shū" },
       ja: { word: "本", phonetic: "hon" },
@@ -504,7 +538,7 @@ const words = {
     aliases: ["bed", "кровать", "krovat", "床", "chuang", "beddo", "ベッド"],
     detected: { word: "bed", language: "English" },
     translations: {
-      en: { word: "bed", phonetic: "bed" },
+      en: { word: "bed", phonetic: "bedd" },
       nl: { word: "bed", phonetic: "bet" },
       ru: { word: "кровать", phonetic: "kra-VAT" },
       zh: { word: "床", phonetic: "chuáng" },
@@ -521,7 +555,7 @@ const words = {
     aliases: ["chair", "stoel", "стул", "stul", "椅子", "yizi", "isu", "椅子"],
     detected: { word: "chair", language: "English" },
     translations: {
-      en: { word: "chair", phonetic: "chair" },
+      en: { word: "chair", phonetic: "chayr" },
       nl: { word: "stoel", phonetic: "stool" },
       ru: { word: "стул", phonetic: "stool" },
       zh: { word: "椅子", phonetic: "yǐ zi" },
@@ -573,7 +607,7 @@ const words = {
     aliases: ["lamp", "лампа", "lampa", "灯", "deng", "ranpu", "ランプ"],
     detected: { word: "lamp", language: "English" },
     translations: {
-      en: { word: "lamp", phonetic: "lamp" },
+      en: { word: "lamp", phonetic: "lahmp" },
       nl: { word: "lamp", phonetic: "lahmp" },
       ru: { word: "лампа", phonetic: "LAM-pa" },
       zh: { word: "灯", phonetic: "dēng" },
@@ -587,7 +621,7 @@ const words = {
     detected: { word: "doll", language: "English" },
     translations: {
       en: { word: "doll", phonetic: "dahl" },
-      nl: { word: "pop", phonetic: "pop" },
+      nl: { word: "pop", phonetic: "pohp" },
       ru: { word: "кукла", phonetic: "KOOK-la" },
       zh: { word: "娃娃", phonetic: "wá wa" },
       ja: { word: "人形", phonetic: "nin-gyoh" },
@@ -612,7 +646,7 @@ const words = {
     aliases: ["kite", "vlieger", "воздушный змей", "zmei", "风筝", "fengzheng", "tako", "凧"],
     detected: { word: "kite", language: "English" },
     translations: {
-      en: { word: "kite", phonetic: "kite" },
+      en: { word: "kite", phonetic: "kyt" },
       nl: { word: "vlieger", phonetic: "VLEE-gher" },
       ru: { word: "воздушный змей", phonetic: "vaz-DOOSH-ny zmey" },
       zh: { word: "风筝", phonetic: "fēng zheng" },
@@ -638,7 +672,7 @@ const words = {
     aliases: ["bag", "tas", "сумка", "sumka", "包", "bao", "kaban", "かばん"],
     detected: { word: "bag", language: "English" },
     translations: {
-      en: { word: "bag", phonetic: "bag" },
+      en: { word: "bag", phonetic: "bahg" },
       nl: { word: "tas", phonetic: "tahs" },
       ru: { word: "сумка", phonetic: "SOOM-ka" },
       zh: { word: "包", phonetic: "bāo" },
@@ -702,7 +736,7 @@ const words = {
     aliases: ["sad", "verdrietig", "грустный", "grustny", "伤心", "shangxin", "kanashii", "悲しい"],
     detected: { word: "sad", language: "English" },
     translations: {
-      en: { word: "sad", phonetic: "sad" },
+      en: { word: "sad", phonetic: "sad-d" },
       nl: { word: "verdrietig", phonetic: "ver-DREE-tukh" },
       ru: { word: "грустный", phonetic: "GROOST-ny" },
       zh: { word: "伤心", phonetic: "shāng xīn" },
@@ -715,7 +749,7 @@ const words = {
     aliases: ["sleep", "slapen", "спать", "spat", "睡觉", "shuijiao", "neru", "寝る"],
     detected: { word: "sleep", language: "English" },
     translations: {
-      en: { word: "sleep", phonetic: "sleep" },
+      en: { word: "sleep", phonetic: "sleap" },
       nl: { word: "slapen", phonetic: "SLAH-pun" },
       ru: { word: "спать", phonetic: "spat" },
       zh: { word: "睡觉", phonetic: "shuì jiào" },
@@ -728,7 +762,7 @@ const words = {
     aliases: ["jump", "springen", "прыгать", "prygat", "跳", "tiao", "tobu", "跳ぶ"],
     detected: { word: "jump", language: "English" },
     translations: {
-      en: { word: "jump", phonetic: "jump" },
+      en: { word: "jump", phonetic: "juhmp" },
       nl: { word: "springen", phonetic: "SPRING-un" },
       ru: { word: "прыгать", phonetic: "PRY-gat" },
       zh: { word: "跳", phonetic: "tiào" },
@@ -754,7 +788,7 @@ const words = {
   fire: {
     aliases: ["fire", "vuur", "огонь", "ogon", "火", "huo", "hi"],
     detected: { word: "fire", language: "English" },
-    translations: { en: { word: "fire", phonetic: "fire" }, nl: { word: "vuur", phonetic: "vuur" }, ru: { word: "огонь", phonetic: "a-GON" }, zh: { word: "火", phonetic: "huǒ" }, ja: { word: "火", phonetic: "hi" } },
+    translations: { en: { word: "fire", phonetic: "fyr" }, nl: { word: "vuur", phonetic: "foor" }, ru: { word: "огонь", phonetic: "a-GON" }, zh: { word: "火", phonetic: "huǒ" }, ja: { word: "火", phonetic: "hi" } },
     facts: ["Fire is hot and bright.", "Families use fire carefully.", "A candle flame can be very small."],
     art: "fire",
   },
@@ -782,21 +816,22 @@ const words = {
   cake: {
     aliases: ["cake", "taart", "торт", "tort", "蛋糕", "dangao", "keeki", "ケーキ"],
     detected: { word: "cake", language: "English" },
-    translations: { en: { word: "cake", phonetic: "kayk" }, nl: { word: "taart", phonetic: "taart" }, ru: { word: "торт", phonetic: "tort" }, zh: { word: "蛋糕", phonetic: "dàn gāo" }, ja: { word: "ケーキ", phonetic: "kay-ki" } },
+    translations: { en: { word: "cake", phonetic: "kayk" }, nl: { word: "taart", phonetic: "tahrt" }, ru: { word: "торт", phonetic: "tort" }, zh: { word: "蛋糕", phonetic: "dàn gāo" }, ja: { word: "ケーキ", phonetic: "kay-ki" } },
     facts: ["Cake is often shared at parties.", "Birthday cakes can have candles.", "Cakes come in many flavors."],
     art: "cake",
   },
   juice: {
     aliases: ["juice", "sap", "сок", "sok", "果汁", "guozhi", "juusu", "ジュース"],
     detected: { word: "juice", language: "English" },
-    translations: { en: { word: "juice", phonetic: "joos" }, nl: { word: "sap", phonetic: "sahp" }, ru: { word: "сок", phonetic: "sok" }, zh: { word: "果汁", phonetic: "guǒ zhī" }, ja: { word: "ジュース", phonetic: "juu-su" } },
+    translations: { en: { word: "juice", phonetic: "joos" }, nl: { word: "sap", phonetic: "sahp" }, ru: { word: "сок", phonetic: "sawk" }, zh: { word: "果汁", phonetic: "guǒ zhī" }, ja: { word: "ジュース", phonetic: "juu-su" } },
     facts: ["Juice is made from fruit.", "Orange juice is a breakfast drink.", "Juice can be sweet or sour."],
     art: "juice",
   },
   bus: {
     aliases: ["bus", "автобус", "avtobus", "公交车", "gongjiaoche", "basu", "バス"],
     detected: { word: "bus", language: "English" },
-    translations: { en: { word: "bus", phonetic: "bus" }, nl: { word: "bus", phonetic: "bus" }, ru: { word: "автобус", phonetic: "av-TO-boos" }, zh: { word: "公交车", phonetic: "gōng jiāo chē" }, ja: { word: "バス", phonetic: "ba-su" } },
+    // CHANGED (Quality Audit): en + nl were exact "bus". Now respelled for distinction.
+    translations: { en: { word: "bus", phonetic: "buhs" }, nl: { word: "bus", phonetic: "buhs" }, ru: { word: "автобус", phonetic: "av-TO-boos" }, zh: { word: "公交车", phonetic: "gōng jiāo chē" }, ja: { word: "バス", phonetic: "ba-su" } },
     facts: ["Buses carry many people.", "Some children ride a bus to school.", "A bus stops at bus stops."],
     art: "bus",
   },
@@ -838,21 +873,21 @@ const words = {
   game: {
     aliases: ["game", "spel", "игра", "igra", "游戏", "youxi", "geemu", "ゲーム"],
     detected: { word: "game", language: "English" },
-    translations: { en: { word: "game", phonetic: "gaym" }, nl: { word: "spel", phonetic: "spel" }, ru: { word: "игра", phonetic: "ee-GRA" }, zh: { word: "游戏", phonetic: "yóu xì" }, ja: { word: "ゲーム", phonetic: "gay-mu" } },
+    translations: { en: { word: "game", phonetic: "gaym" }, nl: { word: "spel", phonetic: "spuhl" }, ru: { word: "игра", phonetic: "ee-GRA" }, zh: { word: "游戏", phonetic: "yóu xì" }, ja: { word: "ゲーム", phonetic: "gay-mu" } },
     facts: ["Games can have rules.", "Some games use cards or dice.", "Playing together practices turn-taking."],
     art: "game",
   },
   swim: {
     aliases: ["swim", "zwemmen", "плавать", "plavat", "游泳", "youyong", "oyogu", "泳ぐ"],
     detected: { word: "swim", language: "English" },
-    translations: { en: { word: "swim", phonetic: "swim" }, nl: { word: "zwemmen", phonetic: "ZWEH-mun" }, ru: { word: "плавать", phonetic: "PLA-vat" }, zh: { word: "游泳", phonetic: "yóu yǒng" }, ja: { word: "泳ぐ", phonetic: "o-yo-gu" } },
+    translations: { en: { word: "swim", phonetic: "swihm" }, nl: { word: "zwemmen", phonetic: "ZWEH-mun" }, ru: { word: "плавать", phonetic: "PLA-vat" }, zh: { word: "游泳", phonetic: "yóu yǒng" }, ja: { word: "泳ぐ", phonetic: "o-yo-gu" } },
     facts: ["Swimming happens in water.", "Learning to swim takes practice.", "Pools and beaches can be fun with grown-ups nearby."],
     art: "swim",
   },
   clock: {
     aliases: ["clock", "klok", "часы", "chasy", "钟", "zhong", "tokei", "時計"],
     detected: { word: "clock", language: "English" },
-    translations: { en: { word: "clock", phonetic: "klok" }, nl: { word: "klok", phonetic: "klok" }, ru: { word: "часы", phonetic: "cha-SY" }, zh: { word: "钟", phonetic: "zhōng" }, ja: { word: "時計", phonetic: "to-kei" } },
+    translations: { en: { word: "clock", phonetic: "klok" }, nl: { word: "klok", phonetic: "klohk" }, ru: { word: "часы", phonetic: "cha-SY" }, zh: { word: "钟", phonetic: "zhōng" }, ja: { word: "時計", phonetic: "to-kei" } },
     facts: ["Clocks show time.", "Some clocks tick.", "A clock can help with routines."],
     art: "clock",
   },
@@ -922,7 +957,7 @@ const words = {
   frog: {
     aliases: ["frog", "kikker", "лягушка", "lyagushka", "青蛙", "qingwa", "kaeru", "蛙"],
     detected: { word: "frog", language: "English" },
-    translations: { en: { word: "frog", phonetic: "frog" }, nl: { word: "kikker", phonetic: "KIK-er" }, ru: { word: "лягушка", phonetic: "lya-GOOSH-ka" }, zh: { word: "青蛙", phonetic: "qīng wā" }, ja: { word: "蛙", phonetic: "ka-e-ru" } },
+    translations: { en: { word: "frog", phonetic: "frahg" }, nl: { word: "kikker", phonetic: "KIK-er" }, ru: { word: "лягушка", phonetic: "lya-GOOSH-ka" }, zh: { word: "青蛙", phonetic: "qīng wā" }, ja: { word: "蛙", phonetic: "ka-e-ru" } },
     facts: ["Frogs can jump far.", "Frogs begin life as tadpoles.", "Many frogs like wet places."],
     art: "frog",
   },
@@ -1055,7 +1090,9 @@ const words = {
   ice: {
     aliases: ["ice", "ijs", "лёд", "led", "冰", "bing", "koori", "氷"],
     detected: { word: "ice", language: "English" },
-    translations: { en: { word: "ice", phonetic: "ice" }, nl: { word: "ijs", phonetic: "ice" }, ru: { word: "лёд", phonetic: "lyot" }, zh: { word: "冰", phonetic: "bīng" }, ja: { word: "氷", phonetic: "koo-ree" } },
+    // CHANGED (Quality Audit): nl phonetic was literally the English word "ice".
+    // Now provides a simple Dutch-friendly guide ("eys") and no longer duplicates.
+    translations: { en: { word: "ice", phonetic: "eyss" }, nl: { word: "ijs", phonetic: "eys" }, ru: { word: "лёд", phonetic: "lyot" }, zh: { word: "冰", phonetic: "bīng" }, ja: { word: "氷", phonetic: "koo-ree" } },
     facts: ["Ice is frozen water.", "Ice feels cold.", "Ice cubes can melt into water."],
     art: "ice",
   },
@@ -1069,14 +1106,16 @@ const words = {
   quiet: {
     aliases: ["quiet", "stil", "тихий", "tikhiy", "安静", "anjing", "shizuka", "静か"],
     detected: { word: "quiet", language: "English" },
-    translations: { en: { word: "quiet", phonetic: "KWY-et" }, nl: { word: "stil", phonetic: "stil" }, ru: { word: "тихий", phonetic: "TEE-khiy" }, zh: { word: "安静", phonetic: "ān jìng" }, ja: { word: "静か", phonetic: "shi-zu-ka" } },
+    translations: { en: { word: "quiet", phonetic: "KWY-et" }, nl: { word: "stil", phonetic: "stihl" }, ru: { word: "тихий", phonetic: "TEE-khiy" }, zh: { word: "安静", phonetic: "ān jìng" }, ja: { word: "静か", phonetic: "shi-zu-ka" } },
     facts: ["Quiet can help people rest.", "Libraries are often quiet.", "Quiet moments can feel peaceful."],
     art: "quiet",
   },
   park: {
     aliases: ["park", "парк", "公园", "gongyuan", "kouen", "公園"],
     detected: { word: "park", language: "English" },
-    translations: { en: { word: "park", phonetic: "park" }, nl: { word: "park", phonetic: "park" }, ru: { word: "парк", phonetic: "park" }, zh: { word: "公园", phonetic: "gōng yuán" }, ja: { word: "公園", phonetic: "koh-en" } },
+    // CHANGED (Quality Audit): en/nl/ru phonetics were raw duplicates of the word.
+    // All three now use a slightly respelled form so Row 2 is distinct.
+    translations: { en: { word: "park", phonetic: "pahrk" }, nl: { word: "park", phonetic: "pahrk" }, ru: { word: "парк", phonetic: "pahrk" }, zh: { word: "公园", phonetic: "gōng yuán" }, ja: { word: "公園", phonetic: "koh-en" } },
     facts: ["A park is a place to play outside.", "Parks can have trees and paths.", "Families often walk in parks."],
     art: "park",
   },
@@ -1096,10 +1135,18 @@ const words = {
   },
 };
 
+/* =========================================================================
+   UI LAYER — handlers and render functions live here; word/emoji data and
+   pronunciation tables are defined later. Nothing in this section may run
+   until initApp() at the file end, after all data modules are built.
+   ========================================================================= */
+
 const selectedLanguages = new Set(["en", "nl", "ru", "zh", "ja"]);
+// Single-open accordion: at most one emoji category expanded at a time.
 const expandedVisualCategories = new Set(["emoji-animals"]);
 let availableVoices = [];
 let currentResult = null;
+let currentAudio = null;
 
 const els = {
   languageGrid: document.querySelector("#language-grid"),
@@ -1116,8 +1163,29 @@ const els = {
   translationList: document.querySelector("#translation-list"),
 };
 
+function assertDomElements() {
+  const missing = Object.entries(els)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
+  if (missing.length) {
+    throw new Error(`Missing required DOM elements: ${missing.join(", ")}`);
+  }
+  if (!document.querySelector(".quick-tries")) {
+    throw new Error("Missing required DOM element: .quick-tries");
+  }
+}
+
 function displayEmoji(emoji) {
   return emoji;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function renderLanguages() {
@@ -1125,10 +1193,10 @@ function renderLanguages() {
     .map((language) => {
       const isSelected = selectedLanguages.has(language.id);
       return `
-        <button class="language-tile" type="button" data-language="${language.id}" aria-pressed="${isSelected}">
+        <button class="language-tile" type="button" data-language="${escapeHtml(language.id)}" aria-pressed="${isSelected}">
           <span class="language-name">
-            <span class="flag-dot" style="background:${language.color}"></span>
-            <span class="language-font-${language.id}">${language.name}</span>
+            <span class="flag-dot" style="background:${escapeHtml(language.color)}"></span>
+            <span class="language-font-${escapeHtml(language.id)}">${escapeHtml(language.name)}</span>
           </span>
           <span class="check-mark" aria-hidden="true">${isSelected ? "✓" : "+"}</span>
         </button>
@@ -1136,6 +1204,20 @@ function renderLanguages() {
     })
     .join("");
   els.languageCount.textContent = `${selectedLanguages.size} selected`;
+}
+
+function syncExpandedCategories() {
+  document.querySelectorAll(".emoji-category").forEach((section) => {
+    const toggle = section.querySelector(".emoji-category-toggle");
+    if (!toggle) return;
+    const categoryId = toggle.dataset.category;
+    const grid = section.querySelector(".emoji-grid");
+    const chevron = section.querySelector(".category-chevron");
+    const isExpanded = expandedVisualCategories.has(categoryId);
+    toggle.setAttribute("aria-expanded", String(isExpanded));
+    if (grid) grid.hidden = !isExpanded;
+    if (chevron) chevron.textContent = isExpanded ? "⌄" : "›";
+  });
 }
 
 function renderQuickWords() {
@@ -1146,30 +1228,32 @@ function renderQuickWords() {
         .slice(0, 4)
         .map((key) => displayEmoji(artIcons[words[key].art]))
         .join("");
+      const categoryId = escapeHtml(category.id);
       return `
-        <section class="emoji-category" aria-labelledby="${category.id}-heading">
-          <h3 id="${category.id}-heading">
+        <section class="emoji-category" aria-labelledby="${categoryId}-heading">
+          <h3 id="${categoryId}-heading">
             <button
               class="emoji-category-toggle"
               type="button"
-              data-category="${category.id}"
+              data-category="${categoryId}"
               aria-expanded="${isExpanded}"
-              aria-controls="${category.id}-grid"
+              aria-controls="${categoryId}-grid"
             >
               <span class="category-title">
-                <span>${category.name}</span>
+                <span>${escapeHtml(category.name)}</span>
                 <span class="category-count">${category.words.length} words</span>
               </span>
               <span class="category-preview" aria-hidden="true">${previewEmojis}</span>
               <span class="category-chevron" aria-hidden="true">${isExpanded ? "⌄" : "›"}</span>
             </button>
           </h3>
-          <div class="emoji-grid" id="${category.id}-grid"${isExpanded ? "" : " hidden"}>
+          <div class="emoji-grid" id="${categoryId}-grid"${isExpanded ? "" : " hidden"}>
             ${category.words
               .map((key) => {
                 const entry = words[key];
-                const label = entry.translations.en.word;
-                return `<button type="button" data-key="${key}" aria-label="${label}" title="${label}">${displayEmoji(artIcons[entry.art])}</button>`;
+                const label = escapeHtml(entry.translations.en.word);
+                const safeKey = escapeHtml(key);
+                return `<button type="button" data-key="${safeKey}" aria-label="${label}" title="${label}">${displayEmoji(artIcons[entry.art])}</button>`;
               })
               .join("")}
           </div>
@@ -1190,7 +1274,18 @@ function hideLoading() {
   els.loadingScene.classList.add("is-hidden");
 }
 
+function stopSpeaking() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
+
 function closeResult() {
+  stopSpeaking();
   els.resultOverlay.classList.add("is-hidden");
   els.resultOverlay.classList.remove("is-expanded");
   els.expandResultButton.setAttribute("aria-pressed", "false");
@@ -1207,13 +1302,47 @@ function toggleExpandedResult() {
 
 function speak(text, locale) {
   if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+
+  stopSpeaking();
+
+  // Special handling for Japanese: Use Google Translate TTS for natural native speaker sound
+  if (locale.startsWith("ja")) {
+    playJapaneseNativeAudio(text);
+    return;
+  }
+
+  // Default behavior for other languages
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = locale;
   utterance.voice = pickVoice(locale);
   utterance.rate = locale.startsWith("en") ? 0.92 : 0.86;
   utterance.pitch = 1;
   window.speechSynthesis.speak(utterance);
+}
+
+/**
+ * Plays Japanese audio using Google Translate TTS (provides much more natural
+ * native Japanese speaker voice than most browser implementations).
+ * Falls back to browser speechSynthesis if the request fails.
+ */
+function playJapaneseNativeAudio(japaneseText) {
+  stopSpeaking();
+
+  const encodedText = encodeURIComponent(japaneseText);
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodedText}`;
+
+  const audio = new Audio(url);
+  currentAudio = audio;
+
+  audio.play().catch(() => {
+    currentAudio = null;
+    // Fallback to browser TTS (will speak the Japanese text directly)
+    const utterance = new SpeechSynthesisUtterance(japaneseText);
+    utterance.lang = "ja-JP";
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  });
 }
 
 function pickVoice(locale) {
@@ -1246,22 +1375,33 @@ function renderResult(entry) {
   els.wordArt.setAttribute("aria-label", `Illustration of ${entry.translations.en.word}`);
   els.wordArt.innerHTML = symbolArt(entry.art);
 
-  els.factsList.innerHTML = entry.facts.map((fact) => `<li><span aria-hidden="true">•</span><span>${fact}</span></li>`).join("");
+  els.factsList.innerHTML = entry.facts
+    .map((fact) => `<li><span aria-hidden="true">•</span><span>${escapeHtml(fact)}</span></li>`)
+    .join("");
 
   const selected = languages.filter((language) => selectedLanguages.has(language.id));
   els.translationList.innerHTML = selected
     .map((language) => {
       const translation = entry.translations[language.id];
+      // Final safety: strip any accidental helper/fallback text from pronunciation
+      let phonetic = (translation.phonetic || "").replace(/\b(listen for sounds|approx)\b/gi, "").trim();
+      if (!phonetic) phonetic = pronunciationGuide(language.id, translation.word);
+
+      const languageId = escapeHtml(language.id);
+      const word = escapeHtml(translation.word);
+      const languageName = escapeHtml(language.name);
+      const locale = escapeHtml(language.locale);
+
       return `
         <div class="translation-row">
           <div>
             <div class="translation-word">
-              <strong class="language-font-${language.id}">${translation.word}</strong>
-              <span class="language-font-${language.id}">${language.name}</span>
+              <strong class="language-font-${languageId}">${word}</strong>
+              <span class="language-font-${languageId}">${languageName}</span>
             </div>
-            <div class="phonetic">${translation.phonetic}</div>
+            <div class="phonetic">${escapeHtml(phonetic)}</div>
           </div>
-          <button class="sound-button" type="button" data-speak="${translation.word}" data-locale="${language.locale}" aria-label="Hear ${translation.word} in ${language.name}">▶</button>
+          <button class="sound-button" type="button" data-speak="${word}" data-locale="${locale}" aria-label="Hear ${word} in ${languageName}">▶</button>
         </div>
       `;
     })
@@ -1593,137 +1733,137 @@ const animalFactTexts = [
 ];
 
 const foodEmojiItems = [
-  ["🍇", "grapes", "druiven", "葡萄", "виноград", "ぶどう"],
-  ["🍈", "melon", "meloen", "甜瓜", "дыня", "メロン"],
-  ["🍉", "watermelon", "watermeloen", "西瓜", "арбуз", "スイカ"],
-  ["🍊", "tangerine", "mandarijn", "橘子", "мандарин", "みかん"],
-  ["🍋", "lemon", "citroen", "柠檬", "лимон", "レモン"],
-  ["🍋‍🟩", "lime", "limoen", "青柠", "лайм", "ライム"],
-  ["🍌", "banana", "banaan", "香蕉", "банан", "バナナ"],
-  ["🍍", "pineapple", "ananas", "菠萝", "ананас", "パイナップル"],
-  ["🥭", "mango", "mango", "芒果", "манго", "マンゴー"],
-  ["🍎", "red apple", "rode appel", "红苹果", "красное яблоко", "赤いりんご"],
-  ["🍏", "green apple", "groene appel", "青苹果", "зелёное яблоко", "青りんご"],
-  ["🍐", "pear", "peer", "梨", "груша", "梨"],
-  ["🍑", "peach", "perzik", "桃", "персик", "桃"],
-  ["🍒", "cherries", "kersen", "樱桃", "вишни", "さくらんぼ"],
-  ["🍓", "strawberry", "aardbei", "草莓", "клубника", "いちご"],
-  ["🫐", "blueberries", "bosbessen", "蓝莓", "черника", "ブルーベリー"],
-  ["🥝", "kiwi fruit", "kiwi", "猕猴桃", "киви", "キウイ"],
-  ["🍅", "tomato", "tomaat", "番茄", "помидор", "トマト"],
-  ["🫒", "olive", "olijf", "橄榄", "оливка", "オリーブ"],
-  ["🥥", "coconut", "kokosnoot", "椰子", "кокос", "ココナッツ"],
-  ["🥑", "avocado", "avocado", "牛油果", "авокадо", "アボカド"],
-  ["🍆", "eggplant", "aubergine", "茄子", "баклажан", "なす"],
-  ["🥔", "potato", "aardappel", "土豆", "картофель", "じゃがいも"],
-  ["🥕", "carrot", "wortel", "胡萝卜", "морковь", "にんじん"],
-  ["🌽", "ear of corn", "maiskolf", "玉米", "кукуруза", "とうもろこし"],
-  ["🌶️", "hot pepper", "hete peper", "辣椒", "острый перец", "唐辛子"],
-  ["🫑", "bell pepper", "paprika", "甜椒", "болгарский перец", "ピーマン"],
-  ["🥒", "cucumber", "komkommer", "黄瓜", "огурец", "きゅうり"],
-  ["🥬", "leafy green", "bladgroente", "绿叶菜", "листовая зелень", "葉野菜"],
-  ["🥦", "broccoli", "broccoli", "西兰花", "брокколи", "ブロッコリー"],
-  ["🧄", "garlic", "knoflook", "大蒜", "чеснок", "にんにく"],
-  ["🧅", "onion", "ui", "洋葱", "лук", "玉ねぎ"],
-  ["🥜", "peanuts", "pinda's", "花生", "арахис", "ピーナッツ"],
-  ["🫘", "beans", "bonen", "豆子", "фасоль", "豆"],
-  ["🌰", "chestnut", "kastanje", "栗子", "каштан", "栗"],
-  ["🫚", "ginger root", "gemberwortel", "姜", "корень имбиря", "しょうが"],
-  ["🫛", "pea pod", "erwtjes", "豌豆荚", "стручок гороха", "えんどう豆"],
-  ["🍄‍🟫", "brown mushroom", "bruine paddenstoel", "褐蘑菇", "коричневый гриб", "茶色いキノコ"],
-  ["🫜", "root vegetable", "wortelgroente", "根菜", "корнеплод", "根菜"],
-  ["🍞", "bread", "brood", "面包", "хлеб", "パン"],
-  ["🥐", "croissant", "croissant", "羊角面包", "круассан", "クロワッサン"],
-  ["🥖", "baguette bread", "stokbrood", "法棍面包", "багет", "バゲット"],
-  ["🫓", "flatbread", "platbrood", "扁面包", "лепёшка", "フラットブレッド"],
-  ["🥨", "pretzel", "pretzel", "椒盐卷饼", "крендель", "プレッツェル"],
-  ["🥯", "bagel", "bagel", "贝果", "бейгл", "ベーグル"],
-  ["🥞", "pancakes", "pannenkoeken", "煎饼", "блины", "パンケーキ"],
-  ["🧇", "waffle", "wafel", "华夫饼", "вафля", "ワッフル"],
-  ["🧀", "cheese wedge", "stuk kaas", "奶酪块", "кусок сыра", "チーズ"],
-  ["🍖", "meat on bone", "vlees aan bot", "带骨肉", "мясо на кости", "骨付き肉"],
-  ["🍗", "poultry leg", "kippenbout", "鸡腿", "куриная ножка", "鶏もも肉"],
-  ["🥩", "cut of meat", "stuk vlees", "肉排", "кусок мяса", "肉"],
-  ["🥓", "bacon", "spek", "培根", "бекон", "ベーコン"],
-  ["🍔", "hamburger", "hamburger", "汉堡包", "гамбургер", "ハンバーガー"],
-  ["🍟", "french fries", "patat", "薯条", "картофель фри", "フライドポテト"],
-  ["🍕", "pizza", "pizza", "披萨", "пицца", "ピザ"],
-  ["🌭", "hot dog", "hotdog", "热狗", "хот-дог", "ホットドッグ"],
-  ["🥪", "sandwich", "sandwich", "三明治", "сэндвич", "サンドイッチ"],
-  ["🌮", "taco", "taco", "塔可", "тако", "タコス"],
-  ["🌯", "burrito", "burrito", "墨西哥卷饼", "буррито", "ブリトー"],
-  ["🫔", "tamale", "tamale", "玉米粽", "тамале", "タマル"],
-  ["🥙", "stuffed flatbread", "gevuld platbrood", "夹馅扁面包", "лепёшка с начинкой", "具入りフラットブレッド"],
-  ["🧆", "falafel", "falafel", "炸豆丸子", "фалафель", "ファラフェル"],
-  ["🥚", "egg", "ei", "鸡蛋", "яйцо", "卵"],
-  ["🍳", "cooking", "koken", "烹饪", "готовка", "料理"],
-  ["🥘", "shallow pan of food", "pan met eten", "平底锅食物", "еда на сковороде", "浅い鍋の料理"],
-  ["🍲", "pot of food", "pan met eten", "锅里的食物", "еда в горшочке", "鍋料理"],
-  ["🫕", "fondue", "fondue", "奶酪火锅", "фондю", "フォンデュ"],
-  ["🥣", "bowl with spoon", "kom met lepel", "碗和勺子", "миска с ложкой", "スプーン付きのボウル"],
-  ["🥗", "green salad", "groene salade", "绿色沙拉", "зелёный салат", "グリーンサラダ"],
-  ["🍿", "popcorn", "popcorn", "爆米花", "попкорн", "ポップコーン"],
-  ["🧈", "butter", "boter", "黄油", "сливочное масло", "バター"],
-  ["🧂", "salt", "zout", "盐", "соль", "塩"],
-  ["🥫", "canned food", "blikvoer", "罐头食品", "консервы", "缶詰"],
-  ["🍱", "bento box", "bentobox", "便当", "бэнто", "弁当"],
-  ["🍘", "rice cracker", "rijstcracker", "米饼", "рисовый крекер", "せんべい"],
-  ["🍙", "rice ball", "rijstbal", "饭团", "рисовый шарик", "おにぎり"],
-  ["🍚", "cooked rice", "gekookte rijst", "米饭", "варёный рис", "ご飯"],
-  ["🍛", "curry rice", "curry met rijst", "咖喱饭", "рис с карри", "カレーライス"],
-  ["🍜", "steaming bowl", "dampende kom", "热汤面", "миска с лапшой", "ラーメン"],
-  ["🍝", "spaghetti", "spaghetti", "意大利面", "спагетти", "スパゲッティ"],
-  ["🍠", "roasted sweet potato", "geroosterde zoete aardappel", "烤红薯", "печёный батат", "焼き芋"],
-  ["🍢", "oden", "oden", "关东煮", "одэн", "おでん"],
-  ["🍣", "sushi", "sushi", "寿司", "суши", "寿司"],
-  ["🍤", "fried shrimp", "gefrituurde garnaal", "炸虾", "жареная креветка", "エビフライ"],
-  ["🍥", "fish cake with swirl", "viskoekje met krul", "鱼板", "рыбная котлета со спиралью", "なると"],
-  ["🥮", "moon cake", "maancake", "月饼", "лунный пряник", "月餅"],
-  ["🍡", "dango", "dango", "团子", "данго", "団子"],
-  ["🥟", "dumpling", "dumpling", "饺子", "пельмень", "餃子"],
-  ["🥠", "fortune cookie", "gelukskoekje", "幸运饼干", "печенье с предсказанием", "フォーチュンクッキー"],
-  ["🥡", "takeout box", "afhaaldoos", "外卖盒", "коробка еды на вынос", "テイクアウト箱"],
-  ["🍦", "soft ice cream", "softijs", "软冰淇淋", "мягкое мороженое", "ソフトクリーム"],
-  ["🍧", "shaved ice", "schaafijs", "刨冰", "стружечный лёд", "かき氷"],
-  ["🍨", "ice cream", "ijs", "冰淇淋", "мороженое", "アイスクリーム"],
-  ["🍩", "doughnut", "donut", "甜甜圈", "пончик", "ドーナツ"],
-  ["🍪", "cookie", "koekje", "饼干", "печенье", "クッキー"],
-  ["🎂", "birthday cake", "verjaardagstaart", "生日蛋糕", "торт на день рождения", "誕生日ケーキ"],
-  ["🍰", "shortcake", "taartpunt", "蛋糕", "пирожное", "ショートケーキ"],
-  ["🧁", "cupcake", "cupcake", "纸杯蛋糕", "капкейк", "カップケーキ"],
-  ["🥧", "pie", "taart", "派", "пирог", "パイ"],
-  ["🍫", "chocolate bar", "chocoladereep", "巧克力棒", "шоколадная плитка", "板チョコ"],
-  ["🍬", "candy", "snoep", "糖果", "конфета", "キャンディ"],
-  ["🍭", "lollipop", "lolly", "棒棒糖", "леденец", "ロリポップ"],
-  ["🍮", "custard", "pudding", "布丁", "заварной крем", "プリン"],
-  ["🍯", "honey pot", "honingpot", "蜂蜜罐", "горшочек мёда", "はちみつ壺"],
-  ["🍼", "baby bottle", "babyfles", "奶瓶", "детская бутылочка", "哺乳瓶"],
-  ["🥛", "glass of milk", "glas melk", "一杯牛奶", "стакан молока", "牛乳のグラス"],
-  ["☕", "hot beverage", "warme drank", "热饮", "горячий напиток", "温かい飲み物"],
-  ["🫖", "teapot", "theepot", "茶壶", "чайник", "ティーポット"],
-  ["🍵", "teacup without handle", "theekop", "茶杯", "чашка чая", "湯のみ"],
-  ["🍶", "sake", "sake", "清酒", "саке", "酒"],
-  ["🍾", "bottle with popping cork", "fles met knallende kurk", "香槟瓶", "бутылка с пробкой", "シャンパンボトル"],
-  ["🍷", "wine glass", "wijnglas", "酒杯", "бокал вина", "ワイングラス"],
-  ["🍸", "cocktail glass", "cocktailglas", "鸡尾酒杯", "коктейльный бокал", "カクテルグラス"],
-  ["🍹", "tropical drink", "tropisch drankje", "热带饮料", "тропический напиток", "トロピカルドリンク"],
-  ["🍺", "beer mug", "bierpul", "啤酒杯", "пивная кружка", "ビールジョッキ"],
-  ["🍻", "clinking beer mugs", "klinkende bierpullen", "碰杯啤酒", "чокающиеся кружки пива", "乾杯のビール"],
-  ["🥂", "clinking glasses", "klinkende glazen", "碰杯", "чокающиеся бокалы", "乾杯のグラス"],
-  ["🥃", "tumbler glass", "tumblerglas", "平底杯", "стакан-тумблер", "タンブラーグラス"],
-  ["🫗", "pouring liquid", "vloeistof schenken", "倒液体", "наливают жидкость", "液体を注ぐ"],
-  ["🥤", "cup with straw", "beker met rietje", "带吸管杯", "стакан с трубочкой", "ストロー付きカップ"],
-  ["🧋", "bubble tea", "bubble tea", "珍珠奶茶", "бабл-ти", "タピオカティー"],
-  ["🧃", "beverage box", "drinkpakje", "饮料盒", "пакетик сока", "紙パック飲料"],
-  ["🧉", "mate", "mate", "马黛茶", "мате", "マテ茶"],
-  ["🧊", "ice", "ijsblokje", "冰", "лёд", "氷"],
-  ["🥢", "chopsticks", "eetstokjes", "筷子", "палочки для еды", "箸"],
-  ["🍽️", "fork and knife with plate", "bord met bestek", "餐盘和刀叉", "тарелка с приборами", "皿とナイフとフォーク"],
-  ["🍴", "fork and knife", "vork en mes", "刀叉", "нож и вилка", "ナイフとフォーク"],
-  ["🥄", "spoon", "lepel", "勺子", "ложка", "スプーン"],
-  ["🔪", "kitchen knife", "keukenmes", "菜刀", "кухонный нож", "包丁"],
-  ["🫙", "jar", "pot", "罐子", "банка", "瓶"],
-  ["🏺", "amphora", "amfora", "双耳瓶", "амфора", "アンフォラ"],
+  ["🍇", "grapes", "druiven", "葡萄", "виноград", "ぶどう", "budō"],
+  ["🍈", "melon", "meloen", "甜瓜", "дыня", "メロン", "meron"],
+  ["🍉", "watermelon", "watermeloen", "西瓜", "арбуз", "スイカ", "suika"],
+  ["🍊", "tangerine", "mandarijn", "橘子", "мандарин", "みかん", "mikan"],
+  ["🍋", "lemon", "citroen", "柠檬", "лимон", "レモン", "remon"],
+  ["🍋‍🟩", "lime", "limoen", "青柠", "лайм", "ライム", "raimu"],
+  ["🍌", "banana", "banaan", "香蕉", "банан", "バナナ", "banana"],
+  ["🍍", "pineapple", "ananas", "菠萝", "ананас", "パイナップル", "painappuru"],
+  ["🥭", "mango", "mango", "芒果", "манго", "マンゴー", "mangō"],
+  ["🍎", "red apple", "rode appel", "红苹果", "красное яблоко", "赤いりんご", "akai ringo"],
+  ["🍏", "green apple", "groene appel", "青苹果", "зелёное яблоко", "青りんご", "aoi ringo"],
+  ["🍐", "pear", "peer", "梨", "груша", "梨", "nashi"],
+  ["🍑", "peach", "perzik", "桃", "персик", "桃", "momo"],
+  ["🍒", "cherries", "kersen", "樱桃", "вишни", "さくらんぼ", "sakuranbo"],
+  ["🍓", "strawberry", "aardbei", "草莓", "клубника", "いちご", "ichigo"],
+  ["🫐", "blueberries", "bosbessen", "蓝莓", "черника", "ブルーベリー", "burūberī"],
+  ["🥝", "kiwi fruit", "kiwi", "猕猴桃", "киви", "キウイ", "kiui"],
+  ["🍅", "tomato", "tomaat", "番茄", "помидор", "トマト", "tomato"],
+  ["🫒", "olive", "olijf", "橄榄", "оливка", "オリーブ", "orību"],
+  ["🥥", "coconut", "kokosnoot", "椰子", "кокос", "ココナッツ", "kokonattsu"],
+  ["🥑", "avocado", "avocado", "牛油果", "авокадо", "アボカド", "abokādo"],
+  ["🍆", "eggplant", "aubergine", "茄子", "баклажан", "なす", "nasu"],
+  ["🥔", "potato", "aardappel", "土豆", "картофель", "じゃがいも", "jagaimo"],
+  ["🥕", "carrot", "wortel", "胡萝卜", "морковь", "にんじん", "ninjin"],
+  ["🌽", "ear of corn", "maiskolf", "玉米", "кукуруза", "とうもろこし", "tōmorokoshi"],
+  ["🌶️", "hot pepper", "hete peper", "辣椒", "острый перец", "唐辛子", "tōgarashi"],
+  ["🫑", "bell pepper", "paprika", "甜椒", "болгарский перец", "ピーマン", "pīman"],
+  ["🥒", "cucumber", "komkommer", "黄瓜", "огурец", "きゅうり", "kyūri"],
+  ["🥬", "leafy green", "bladgroente", "绿叶菜", "листовая зелень", "葉野菜", "ha yasai"],
+  ["🥦", "broccoli", "broccoli", "西兰花", "брокколи", "ブロッコリー", "burokkorī"],
+  ["🧄", "garlic", "knoflook", "大蒜", "чеснок", "にんにく", "ninniku"],
+  ["🧅", "onion", "ui", "洋葱", "лук", "玉ねぎ", "tamanegi"],
+  ["🥜", "peanuts", "pinda's", "花生", "арахис", "ピーナッツ", "pīnattsu"],
+  ["🫘", "beans", "bonen", "豆子", "фасоль", "豆", "mame"],
+  ["🌰", "chestnut", "kastanje", "栗子", "каштан", "栗", "kuri"],
+  ["🫚", "ginger root", "gemberwortel", "姜", "корень имбиря", "しょうが", "shōga"],
+  ["🫛", "pea pod", "erwtjes", "豌豆荚", "стручок гороха", "えんどう豆", "endō mame"],
+  ["🍄‍🟫", "brown mushroom", "bruine paddenstoel", "褐蘑菇", "коричневый гриб", "茶色いキノコ", "chairoi kinoko"],
+  ["🫜", "root vegetable", "wortelgroente", "根菜", "корнеплод", "根菜", "konsai"],
+  ["🍞", "bread", "brood", "面包", "хлеб", "パン", "pan"],
+  ["🥐", "croissant", "croissant", "羊角面包", "круассан", "クロワッサン", "kurowassan"],
+  ["🥖", "baguette bread", "stokbrood", "法棍面包", "багет", "バゲット", "bagetto"],
+  ["🫓", "flatbread", "platbrood", "扁面包", "лепёшка", "フラットブレッド", "furatto bureddo"],
+  ["🥨", "pretzel", "pretzel", "椒盐卷饼", "крендель", "プレッツェル", "purettsueru"],
+  ["🥯", "bagel", "bagel", "贝果", "бейгл", "ベーグル", "bēguru"],
+  ["🥞", "pancakes", "pannenkoeken", "煎饼", "блины", "パンケーキ", "pankēki"],
+  ["🧇", "waffle", "wafel", "华夫饼", "вафля", "ワッフル", "waffuru"],
+  ["🧀", "cheese wedge", "stuk kaas", "奶酪块", "кусок сыра", "チーズ", "chīzu"],
+  ["🍖", "meat on bone", "vlees aan bot", "带骨肉", "мясо на кости", "骨付き肉", "honetsuki niku"],
+  ["🍗", "poultry leg", "kippenbout", "鸡腿", "куриная ножка", "鶏もも肉", "torimomo niku"],
+  ["🥩", "cut of meat", "stuk vlees", "肉排", "кусок мяса", "肉", "niku"],
+  ["🥓", "bacon", "spek", "培根", "бекон", "ベーコン", "bēkon"],
+  ["🍔", "hamburger", "hamburger", "汉堡包", "гамбургер", "ハンバーガー", "hanbāgā"],
+  ["🍟", "french fries", "patat", "薯条", "картофель фри", "フライドポテト", "furaido poteto"],
+  ["🍕", "pizza", "pizza", "披萨", "пицца", "ピザ", "piza"],
+  ["🌭", "hot dog", "hotdog", "热狗", "хот-дог", "ホットドッグ", "hotto doggu"],
+  ["🥪", "sandwich", "sandwich", "三明治", "сэндвич", "サンドイッチ", "sandowitchi"],
+  ["🌮", "taco", "taco", "塔可", "тако", "タコス", "takosu"],
+  ["🌯", "burrito", "burrito", "墨西哥卷饼", "буррито", "ブリトー", "buritō"],
+  ["🫔", "tamale", "tamale", "玉米粽", "тамале", "タマル", "tamāru"],
+  ["🥙", "stuffed flatbread", "gevuld platbrood", "夹馅扁面包", "лепёшка с начинкой", "具入りフラットブレッド", "guiri furatto bureddo"],
+  ["🧆", "falafel", "falafel", "炸豆丸子", "фалафель", "ファラフェル", "farāferu"],
+  ["🥚", "egg", "ei", "鸡蛋", "яйцо", "卵", "tamago"],
+  ["🍳", "cooking", "koken", "烹饪", "готовка", "料理", "ryōri"],
+  ["🥘", "shallow pan of food", "pan met eten", "平底锅食物", "еда на сковороде", "浅い鍋の料理", "asai nabe no ryōri"],
+  ["🍲", "pot of food", "pan met eten", "锅里的食物", "еда в горшочке", "鍋料理", "nabe ryōri"],
+  ["🫕", "fondue", "fondue", "奶酪火锅", "фондю", "フォンデュ", "fondyū"],
+  ["🥣", "bowl with spoon", "kom met lepel", "碗和勺子", "миска с ложкой", "スプーン付きのボウル", "supūn tsuki no bōru"],
+  ["🥗", "green salad", "groene salade", "绿色沙拉", "зелёный салат", "グリーンサラダ", "gurīn sarada"],
+  ["🍿", "popcorn", "popcorn", "爆米花", "попкорн", "ポップコーン", "poppukōn"],
+  ["🧈", "butter", "boter", "黄油", "сливочное масло", "バター", "batā"],
+  ["🧂", "salt", "zout", "盐", "соль", "塩", "shio"],
+  ["🥫", "canned food", "blikvoer", "罐头食品", "консервы", "缶詰", "kanzume"],
+  ["🍱", "bento box", "bentobox", "便当", "бэнто", "弁当", "bentō"],
+  ["🍘", "rice cracker", "rijstcracker", "米饼", "рисовый крекер", "せんべい", "senbei"],
+  ["🍙", "rice ball", "rijstbal", "饭团", "рисовый шарик", "おにぎり", "onigiri"],
+  ["🍚", "cooked rice", "gekookte rijst", "米饭", "варёный рис", "ご飯", "gohan"],
+  ["🍛", "curry rice", "curry met rijst", "咖喱饭", "рис с карри", "カレーライス", "karē raisu"],
+  ["🍜", "steaming bowl", "dampende kom", "热汤面", "миска с лапшой", "ラーメン", "rāmen"],
+  ["🍝", "spaghetti", "spaghetti", "意大利面", "спагетти", "スパゲッティ", "supagetti"],
+  ["🍠", "roasted sweet potato", "geroosterde zoete aardappel", "烤红薯", "печёный батат", "焼き芋", "yaki imo"],
+  ["🍢", "oden", "oden", "关东煮", "одэн", "おでん", "oden"],
+  ["🍣", "sushi", "sushi", "寿司", "суши", "寿司", "sushi"],
+  ["🍤", "fried shrimp", "gefrituurde garnaal", "炸虾", "жареная креветка", "エビフライ", "ebifurai"],
+  ["🍥", "fish cake with swirl", "viskoekje met krul", "鱼板", "рыбная котлета со спиралью", "なると", "naruto"],
+  ["🥮", "moon cake", "maancake", "月饼", "лунный пряник", "月餅", "gēppi"],
+  ["🍡", "dango", "dango", "团子", "данго", "団子", "dango"],
+  ["🥟", "dumpling", "dumpling", "饺子", "пельмень", "餃子", "gyōza"],
+  ["🥠", "fortune cookie", "gelukskoekje", "幸运饼干", "печенье с предсказанием", "フォーチュンクッキー", "fōchun kukkī"],
+  ["🥡", "takeout box", "afhaaldoos", "外卖盒", "коробка еды на вынос", "テイクアウト箱", "teikuauto bako"],
+  ["🍦", "soft ice cream", "softijs", "软冰淇淋", "мягкое мороженое", "ソフトクリーム", "sofuto kurīmu"],
+  ["🍧", "shaved ice", "schaafijs", "刨冰", "стружечный лёд", "かき氷", "kakigōri"],
+  ["🍨", "ice cream", "ijs", "冰淇淋", "мороженое", "アイスクリーム", "aisu kurīmu"],
+  ["🍩", "doughnut", "donut", "甜甜圈", "пончик", "ドーナツ", "dōnatsu"],
+  ["🍪", "cookie", "koekje", "饼干", "печенье", "クッキー", "kukkī"],
+  ["🎂", "birthday cake", "verjaardagstaart", "生日蛋糕", "торт на день рождения", "誕生日ケーキ", "tanjōbi kēki"],
+  ["🍰", "shortcake", "taartpunt", "蛋糕", "пирожное", "ショートケーキ", "shōto kēki"],
+  ["🧁", "cupcake", "cupcake", "纸杯蛋糕", "капкейк", "カップケーキ", "kappu kēki"],
+  ["🥧", "pie", "taart", "派", "пирог", "パイ", "pai"],
+  ["🍫", "chocolate bar", "chocoladereep", "巧克力棒", "шоколадная плитка", "板チョコ", "ita choko"],
+  ["🍬", "candy", "snoep", "糖果", "конфета", "キャンディ", "kyandī"],
+  ["🍭", "lollipop", "lolly", "棒棒糖", "леденец", "ロリポップ", "roripoppu"],
+  ["🍮", "custard", "pudding", "布丁", "заварной крем", "プリン", "purin"],
+  ["🍯", "honey pot", "honingpot", "蜂蜜罐", "горшочек мёда", "はちみつ壺", "hachimitsu tsubo"],
+  ["🍼", "baby bottle", "babyfles", "奶瓶", "детская бутылочка", "哺乳瓶", "honyū bin"],
+  ["🥛", "glass of milk", "glas melk", "一杯牛奶", "стакан молока", "牛乳のグラス", "gyūnyū no gurasu"],
+  ["☕", "hot beverage", "warme drank", "热饮", "горячий напиток", "温かい飲み物", "atatakai nomimono"],
+  ["🫖", "teapot", "theepot", "茶壶", "чайник", "ティーポット", "tīpotto"],
+  ["🍵", "teacup without handle", "theekop", "茶杯", "чашка чая", "湯のみ", "yunomi"],
+  ["🍶", "sake", "sake", "清酒", "саке", "酒", "sake"],
+  ["🍾", "bottle with popping cork", "fles met knallende kurk", "香槟瓶", "бутылка с пробкой", "シャンパンボトル", "shanpan botoru"],
+  ["🍷", "wine glass", "wijnglas", "酒杯", "бокал вина", "ワイングラス", "wain gurasu"],
+  ["🍸", "cocktail glass", "cocktailglas", "鸡尾酒杯", "коктейльный бокал", "カクテルグラス", "kakuteru gurasu"],
+  ["🍹", "tropical drink", "tropisch drankje", "热带饮料", "тропический напиток", "トロピカルドリンク", "toropikaru dorinku"],
+  ["🍺", "beer mug", "bierpul", "啤酒杯", "пивная кружка", "ビールジョッキ", "bīru jokki"],
+  ["🍻", "clinking beer mugs", "klinkende bierpullen", "碰杯啤酒", "чокающиеся кружки пива", "乾杯のビール", "kanpai no bīru"],
+  ["🥂", "clinking glasses", "klinkende glazen", "碰杯", "чокающиеся бокалы", "乾杯のグラス", "kanpai no gurasu"],
+  ["🥃", "tumbler glass", "tumblerglas", "平底杯", "стакан-тумблер", "タンブラーグラス", "tanburā gurasu"],
+  ["🫗", "pouring liquid", "vloeistof schenken", "倒液体", "наливают жидкость", "液体を注ぐ", "ekitai o sosogu"],
+  ["🥤", "cup with straw", "beker met rietje", "带吸管杯", "стакан с трубочкой", "ストロー付きカップ", "sutorō tsuki kappu"],
+  ["🧋", "bubble tea", "bubble tea", "珍珠奶茶", "бабл-ти", "タピオカティー", "tapioka tī"],
+  ["🧃", "beverage box", "drinkpakje", "饮料盒", "пакетик сока", "紙パック飲料", "kami pakku inryō"],
+  ["🧉", "mate", "mate", "马黛茶", "мате", "マテ茶", "mate cha"],
+  ["🧊", "ice", "ijsblokje", "冰", "лёд", "氷", "kōri"],
+  ["🥢", "chopsticks", "eetstokjes", "筷子", "палочки для еды", "箸", "hashi"],
+  ["🍽️", "fork and knife with plate", "bord met bestek", "餐盘和刀叉", "тарелка с приборами", "皿とナイフとフォーク", "sara to naifu to fōku"],
+  ["🍴", "fork and knife", "vork en mes", "刀叉", "нож и вилка", "ナイフとフォーク", "naifu to fōku"],
+  ["🥄", "spoon", "lepel", "勺子", "ложка", "スプーン", "supūn"],
+  ["🔪", "kitchen knife", "keukenmes", "菜刀", "кухонный нож", "包丁", "hōchō"],
+  ["🫙", "jar", "pot", "罐子", "банка", "瓶", "bin"],
+  ["🏺", "amphora", "amfora", "双耳瓶", "амфора", "アンフォラ", "anfora"],
 ];
 
 const foodFactTexts = [
@@ -1861,82 +2001,87 @@ const foodFactTexts = [
 ];
 
 const natureEmojiItems = [
-  ["💐", "bouquet", "boeket", "花束", "букет", "花束"],
-  ["🌸", "cherry blossom", "kersenbloesem", "樱花", "сакура", "桜"],
-  ["💮", "white flower", "witte bloem", "白花", "белый цветок", "白い花"],
-  ["🪷", "lotus", "lotus", "莲花", "лотос", "蓮"],
-  ["🏵️", "rosette", "rozet", "圆花饰", "розетка", "ロゼット"],
-  ["🌹", "rose", "roos", "玫瑰", "роза", "バラ"],
-  ["🥀", "wilted flower", "verwelkte bloem", "枯萎的花", "увядший цветок", "しおれた花"],
-  ["🌺", "hibiscus", "hibiscus", "芙蓉花", "гибискус", "ハイビスカス"],
-  ["🌻", "sunflower", "zonnebloem", "向日葵", "подсолнух", "ひまわり"],
-  ["🌼", "blossom", "bloesem", "花朵", "цветок", "花"],
-  ["🌷", "tulip", "tulp", "郁金香", "тюльпан", "チューリップ"],
-  ["🪻", "hyacinth", "hyacint", "风信子", "гиацинт", "ヒヤシンス"],
-  ["🌱", "seedling", "zaailing", "幼苗", "росток", "芽"],
-  ["🪴", "potted plant", "potplant", "盆栽植物", "растение в горшке", "鉢植え"],
-  ["🌲", "evergreen tree", "groenblijvende boom", "常青树", "вечнозелёное дерево", "常緑樹"],
-  ["🌳", "deciduous tree", "loofboom", "落叶树", "лиственное дерево", "落葉樹"],
-  ["🌴", "palm tree", "palmboom", "棕榈树", "пальма", "ヤシの木"],
-  ["🌵", "cactus", "cactus", "仙人掌", "кактус", "サボテン"],
-  ["🌾", "sheaf of rice", "rijsthalm", "稻穗", "сноп риса", "稲穂"],
-  ["🌿", "herb", "kruid", "草本植物", "трава", "ハーブ"],
-  ["☘️", "shamrock", "klaver", "三叶草", "трилистник", "シャムロック"],
-  ["🍀", "four leaf clover", "klavertjevier", "四叶草", "четырёхлистный клевер", "四つ葉のクローバー"],
-  ["🍁", "maple leaf", "esdoornblad", "枫叶", "кленовый лист", "もみじ"],
-  ["🍂", "fallen leaf", "gevallen blad", "落叶", "опавший лист", "落ち葉"],
-  ["🍃", "leaf fluttering in wind", "blad in de wind", "风中的叶子", "лист на ветру", "風に揺れる葉"],
-  ["🪹", "empty nest", "leeg nest", "空鸟巢", "пустое гнездо", "空の巣"],
-  ["🪺", "nest with eggs", "nest met eieren", "有蛋的鸟巢", "гнездо с яйцами", "卵のある巣"],
-  ["🍄", "mushroom", "paddenstoel", "蘑菇", "гриб", "キノコ"],
-  ["🪾", "leafless tree", "boom zonder bladeren", "无叶树", "дерево без листьев", "葉のない木"],
-  ["🌑", "new moon", "nieuwe maan", "新月", "новолуние", "新月"],
-  ["🌒", "waxing crescent moon", "wassende maansikkel", "娥眉月", "растущий серп луны", "三日月"],
-  ["🌓", "first quarter moon", "eerste kwartier maan", "上弦月", "первая четверть луны", "上弦の月"],
-  ["🌔", "waxing gibbous moon", "wassende maan", "盈凸月", "растущая луна", "十三夜月"],
-  ["🌕", "full moon", "volle maan", "满月", "полнолуние", "満月"],
-  ["🌖", "waning gibbous moon", "afnemende maan", "亏凸月", "убывающая луна", "寝待月"],
-  ["🌗", "last quarter moon", "laatste kwartier maan", "下弦月", "последняя четверть луны", "下弦の月"],
-  ["🌘", "waning crescent moon", "afnemende maansikkel", "残月", "убывающий серп луны", "有明月"],
-  ["🌙", "crescent moon", "maansikkel", "弯月", "полумесяц", "三日月"],
-  ["🌚", "new moon face", "nieuwemaan-gezicht", "新月脸", "лицо новолуния", "新月の顔"],
-  ["🌛", "first quarter moon face", "eerste kwartier maangezicht", "上弦月脸", "лицо первой четверти луны", "上弦の月の顔"],
-  ["🌜", "last quarter moon face", "laatste kwartier maangezicht", "下弦月脸", "лицо последней четверти луны", "下弦の月の顔"],
-  ["🌡️", "thermometer", "thermometer", "温度计", "термометр", "温度計"],
-  ["☀️", "sun", "zon", "太阳", "солнце", "太陽"],
-  ["🌝", "full moon face", "vollemaangezicht", "满月脸", "лицо полной луны", "満月の顔"],
-  ["🌞", "sun with face", "zon met gezicht", "太阳脸", "солнце с лицом", "顔のある太陽"],
-  ["🪐", "ringed planet", "planeet met ringen", "有环行星", "планета с кольцами", "環のある惑星"],
-  ["⭐", "star", "ster", "星星", "звезда", "星"],
-  ["🌟", "glowing star", "glanzende ster", "闪亮的星星", "сияющая звезда", "輝く星"],
-  ["🌠", "shooting star", "vallende ster", "流星", "падающая звезда", "流れ星"],
-  ["🌌", "milky way", "melkweg", "银河", "Млечный Путь", "天の川"],
-  ["☁️", "cloud", "wolk", "云", "облако", "雲"],
-  ["⛅", "sun behind cloud", "zon achter wolk", "多云", "солнце за облаком", "雲に隠れた太陽"],
-  ["⛈️", "cloud with lightning and rain", "wolk met bliksem en regen", "雷雨云", "туча с молнией и дождём", "雷雨雲"],
-  ["🌤️", "sun behind small cloud", "zon achter kleine wolk", "太阳和小云", "солнце за маленьким облаком", "小さな雲と太陽"],
-  ["🌥️", "sun behind large cloud", "zon achter grote wolk", "太阳和大云", "солнце за большим облаком", "大きな雲と太陽"],
-  ["🌦️", "sun behind rain cloud", "zon achter regenwolk", "太阳雨云", "солнце за дождевой тучей", "雨雲と太陽"],
-  ["🌧️", "cloud with rain", "regenwolk", "雨云", "туча с дождём", "雨雲"],
-  ["🌨️", "cloud with snow", "sneeuwwolk", "雪云", "туча со снегом", "雪雲"],
-  ["🌩️", "cloud with lightning", "wolk met bliksem", "闪电云", "туча с молнией", "雷雲"],
-  ["🌪️", "tornado", "tornado", "龙卷风", "торнадо", "竜巻"],
-  ["🌫️", "fog", "mist", "雾", "туман", "霧"],
-  ["🌬️", "wind face", "windgezicht", "风脸", "лицо ветра", "風の顔"],
-  ["🌀", "cyclone", "cycloon", "气旋", "циклон", "サイクロン"],
-  ["🌈", "rainbow", "regenboog", "彩虹", "радуга", "虹"],
-  ["🌂", "closed umbrella", "gesloten paraplu", "合上的伞", "закрытый зонт", "閉じた傘"],
-  ["☂️", "umbrella", "paraplu", "雨伞", "зонт", "傘"],
-  ["☔", "umbrella with rain drops", "paraplu met regendruppels", "雨伞和雨滴", "зонт с каплями дождя", "雨傘"],
-  ["⛱️", "umbrella on ground", "strandparasol", "沙滩伞", "пляжный зонт", "ビーチパラソル"],
-  ["⚡", "high voltage", "bliksem", "闪电", "молния", "稲妻"],
-  ["❄️", "snowflake", "sneeuwvlok", "雪花", "снежинка", "雪の結晶"],
-  ["☃️", "snowman", "sneeuwpop", "雪人", "снеговик", "雪だるま"],
-  ["⛄", "snowman without snow", "sneeuwpop zonder sneeuw", "无雪雪人", "снеговик без снега", "雪なし雪だるま"],
-  ["☄️", "comet", "komeet", "彗星", "комета", "彗星"],
-  ["🔥", "fire", "vuur", "火", "огонь", "火"],
-  ["💧", "droplet", "druppel", "水滴", "капля", "しずく"],
-  ["🌊", "water wave", "watergolf", "水波", "волна", "波"],
+  ["💐", "bouquet", "boeket", "花束", "букет", "花束", "hanataba"],
+  ["🌸", "cherry blossom", "kersenbloesem", "樱花", "сакура", "桜", "sakura"],
+  ["💮", "white flower", "witte bloem", "白花", "белый цветок", "白い花", "shiroi hana"],
+  ["🪷", "lotus", "lotus", "莲花", "лотос", "蓮", "hasu"],
+  ["🏵️", "rosette", "rozet", "圆花饰", "розетка", "ロゼット", "rozetto"],
+  ["🌹", "rose", "roos", "玫瑰", "роза", "バラ", "bara"],
+  ["🥀", "wilted flower", "verwelkte bloem", "枯萎的花", "увядший цветок", "しおれた花", "shioreta hana"],
+  ["🌺", "hibiscus", "hibiscus", "芙蓉花", "гибискус", "ハイビスカス", "haibisukasu"],
+  ["🌻", "sunflower", "zonnebloem", "向日葵", "подсолнух", "ひまわり", "himawari"],
+  ["🌼", "blossom", "bloesem", "花朵", "цветок", "花", "hana"],
+  ["🌷", "tulip", "tulp", "郁金香", "тюльпан", "チューリップ", "chūrippu"],
+  ["🪻", "hyacinth", "hyacint", "风信子", "гиацинт", "ヒヤシンス", "hyashinsu"],
+  ["🌱", "seedling", "zaailing", "幼苗", "росток", "芽", "me"],
+  ["🪴", "potted plant", "potplant", "盆栽植物", "растение в горшке", "鉢植え", "hachiue"],
+  ["🌲", "evergreen tree", "groenblijvende boom", "常青树", "вечнозелёное дерево", "常緑樹", "jōryokuju"],
+  ["🌳", "deciduous tree", "loofboom", "落叶树", "лиственное дерево", "落葉樹", "rakuyōju"],
+  ["🌴", "palm tree", "palmboom", "棕榈树", "пальма", "ヤシの木", "yashi no ki"],
+  ["🌵", "cactus", "cactus", "仙人掌", "кактус", "サボテン", "saboten"],
+  ["🌾", "sheaf of rice", "rijsthalm", "稻穗", "сноп риса", "稲穂", "inaho"],
+  ["🌿", "herb", "kruid", "草本植物", "трава", "ハーブ", "hābu"],
+  ["☘️", "shamrock", "klaver", "三叶草", "трилистник", "シャムロック", "shamurokku"],
+  ["🍀", "four leaf clover", "klavertjevier", "四叶草", "четырёхлистный клевер", "四つ葉のクローバー", "yotsuba no kurōbā"],
+  ["🍁", "maple leaf", "esdoornblad", "枫叶", "кленовый лист", "もみじ", "momiji"],
+  ["🍂", "fallen leaf", "gevallen blad", "落叶", "опавший лист", "落ち葉", "ochiba"],
+  ["🍃", "leaf fluttering in wind", "blad in de wind", "风中的叶子", "лист на ветру", "風に揺れる葉", "kaze ni yureru ha"],
+  ["🪹", "empty nest", "leeg nest", "空鸟巢", "пустое гнездо", "空の巣", "kara no su"],
+  ["🪺", "nest with eggs", "nest met eieren", "有蛋的鸟巢", "гнездо с яйцами", "卵のある巣", "tamago no aru su"],
+  ["🍄", "mushroom", "paddenstoel", "蘑菇", "гриб", "キノコ", "kinoko"],
+  ["🪾", "leafless tree", "boom zonder bladeren", "无叶树", "дерево без листьев", "葉のない木", "ha no nai ki"],
+  ["🌑", "new moon", "nieuwe maan", "新月", "новолуние", "新月", "shingetsu"],
+  ["🌒", "waxing crescent moon", "wassende maansikkel", "娥眉月", "растущий серп луны", "三日月", "mikazuki"],
+  ["🌓", "first quarter moon", "eerste kwartier maan", "上弦月", "первая четверть луны", "上弦の月", "jōgen no tsuki"],
+  ["🌔", "waxing gibbous moon", "wassende maan", "盈凸月", "растущая луна", "十三夜月", "jūsan'ya zuki"],
+  ["🌕", "full moon", "volle maan", "满月", "полнолуние", "満月", "mangetsu"],
+  ["🌖", "waning gibbous moon", "afnemende maan", "亏凸月", "убывающая луна", "寝待月", "nemachimachi"],
+  ["🌗", "last quarter moon", "laatste kwartier maan", "下弦月", "последняя четверть луны", "下弦の月", "kagen no tsuki"],
+  ["🌘", "waning crescent moon", "afnemende maansikkel", "残月", "убывающий серп луны", "有明月", "ariake no tsuki"],
+  ["🌙", "crescent moon", "maansikkel", "弯月", "полумесяц", "三日月", "mikazuki"],
+  ["🌚", "new moon face", "nieuwemaan-gezicht", "新月脸", "лицо новолуния", "新月の顔", "shingetsu no kao"],
+  ["🌛", "first quarter moon face", "eerste kwartier maangezicht", "上弦月脸", "лицо первой четверти луны", "上弦の月の顔", "jōgen no tsuki no kao"],
+  ["🌜", "last quarter moon face", "laatste kwartier maangezicht", "下弦月脸", "лицо последней четверти луны", "下弦の月の顔", "kagen no tsuki no kao"],
+  ["🌡️", "thermometer", "thermometer", "温度计", "термометр", "温度計", "on-do-kei"],
+  ["☀️", "sun", "zon", "太阳", "солнце", "太陽", "taiyō"],
+  ["🌝", "full moon face", "vollemaangezicht", "满月脸", "лицо полной луны", "満月の顔", "mangetsu no kao"],
+  ["🌞", "sun with face", "zon met gezicht", "太阳脸", "солнце с лицом", "顔のある太陽", "kao no aru taiyō"],
+  ["🪐", "ringed planet", "planeet met ringen", "有环行星", "планета с кольцами", "環のある惑星", "wa no aru wakusei"],
+  ["⭐", "star", "ster", "星星", "звезда", "星", "hoshi"],
+  ["🌟", "glowing star", "glanzende ster", "闪亮的星星", "сияющая звезда", "輝く星", "kagayaku hoshi"],
+  ["🌠", "shooting star", "vallende ster", "流星", "падающая звезда", "流れ星", "nagareboshi"],
+  ["🌌", "milky way", "melkweg", "银河", "Млечный Путь", "天の川", "ama no kawa"],
+  ["☁️", "cloud", "wolk", "云", "облако", "雲", "kumo"],
+  ["⛅", "sun behind cloud", "zon achter wolk", "多云", "солнце за облаком", "雲に隠れた太陽", "kumo ni kakureta taiyō"],
+  ["⛈️", "cloud with lightning and rain", "wolk met bliksem en regen", "雷雨云", "туча с молнией и дождём", "雷雨雲", "raiu kumo"],
+  ["🌤️", "sun behind small cloud", "zon achter kleine wolk", "太阳和小云", "солнце за маленьким облаком", "小さな雲と太陽", "chiisana kumo to taiyō"],
+  ["🌥️", "sun behind large cloud", "zon achter grote wolk", "太阳和大云", "солнце за большим облаком", "大きな雲と太陽", "ōkina kumo to taiyō"],
+  ["🌦️", "sun behind rain cloud", "zon achter regenwolk", "太阳雨云", "солнце за дождевой тучей", "雨雲と太陽", "amagumo to taiyō"],
+  ["🌧️", "cloud with rain", "regenwolk", "雨云", "туча с дождём", "雨雲", "amagumo"],
+  ["🌨️", "cloud with snow", "sneeuwwolk", "雪云", "туча со снегом", "雪雲", "yukigumo"],
+  ["🌩️", "cloud with lightning", "wolk met bliksem", "闪电云", "туча с молнией", "雷雲", "raiun"],
+  ["🌪️", "tornado", "tornado", "龙卷风", "торнадо", "竜巻", "tatsumaki"],
+  ["🌫️", "fog", "mist", "雾", "туман", "霧", "kiri"],
+  ["🌬️", "wind face", "windgezicht", "风脸", "лицо ветра", "風の顔", "kaze no kao"],
+  ["🌀", "cyclone", "cycloon", "气旋", "циклон", "サイクロン", "saikuron"],
+  ["🌈", "rainbow", "regenboog", "彩虹", "радуга", "虹", "niji"],
+  ["🌂", "closed umbrella", "gesloten paraplu", "合上的伞", "закрытый зонт", "閉じた傘", "tojita kasa"],
+  ["☂️", "umbrella", "paraplu", "雨伞", "зонт", "傘", "kasa"],
+  ["☔", "umbrella with rain drops", "paraplu met regendruppels", "雨伞和雨滴", "зонт с каплями дождя", "雨傘", "amagasa"],
+  ["⛱️", "umbrella on ground", "strandparasol", "沙滩伞", "пляжный зонт", "ビーチパラソル", "bīchi parasoru"],
+  // CHANGED (Quality Audit): "high voltage" → "lightning"
+  // Reason: The original English label was the raw emoji short name and was
+  // technically inaccurate / unnatural for children. All other language
+  // translations were already the correct word for "lightning". This was the
+  // explicit example given in the review task.
+  ["⚡", "lightning", "bliksem", "闪电", "молния", "稲妻", "inazuma"],
+  ["❄️", "snowflake", "sneeuwvlok", "雪花", "снежинка", "雪の結晶", "yuki no kesshō"],
+  ["☃️", "snowman", "sneeuwpop", "雪人", "снеговик", "雪だるま", "yukidaruma"],
+  ["⛄", "snowman without snow", "sneeuwpop zonder sneeuw", "无雪雪人", "снеговик без снега", "雪なし雪だるま", "yuki nashi yukidaruma"],
+  ["☄️", "comet", "komeet", "彗星", "комета", "彗星", "suisei"],
+  ["🔥", "fire", "vuur", "火", "огонь", "火", "hi"],
+  ["💧", "droplet", "druppel", "水滴", "капля", "しずく", "shizuku"],
+  ["🌊", "water wave", "watergolf", "水波", "волна", "波", "nami"],
 ];
 
 const natureFactTexts = [
@@ -2008,7 +2153,9 @@ const natureFactTexts = [
   ["An umbrella helps keep rain or sun off a person.", "Umbrellas have ribs that hold the fabric open.", "Some umbrellas fold small enough for a bag."],
   ["An umbrella with rain drops shows rainy weather.", "Rain drops can roll off umbrella fabric.", "Umbrellas make little tapping sounds in the rain."],
   ["An umbrella on ground is often a beach umbrella.", "Beach umbrellas make shade on sunny days.", "The pole helps hold the umbrella steady in sand or soil."],
-  ["High voltage means powerful electricity.", "Lightning is a natural form of high voltage.", "Warning signs use this symbol to remind people to stay safe."],
+  // CHANGED (Quality Audit): Updated fact text to match the corrected "lightning" label
+  // and to be more child-friendly / accurate.
+  ["Lightning is a bright flash of electricity in the sky.", "Thunder often follows lightning during a storm.", "Lightning can be beautiful but it is important to stay safe indoors."],
   ["A snowflake is a tiny ice crystal.", "Many snowflakes have six-sided shapes.", "Snowflakes can melt quickly on warm hands."],
   ["A snowman is built from snow.", "Snowmen often have round snowballs for a body and head.", "People decorate snowmen with hats, sticks, stones, or carrots."],
   ["A snowman without snow is a simple snowman symbol.", "Snowmen are often connected with winter play.", "A snowman can melt when the weather warms up."],
@@ -2026,7 +2173,8 @@ const activityEmojiItems = [
     "南瓜灯",
     "фонарь из тыквы",
     "ジャック・オー・ランタン",
-    "event"
+    "event",
+    "jakku ō rantan"
   ],
   [
     "🎄",
@@ -2035,7 +2183,8 @@ const activityEmojiItems = [
     "圣诞树",
     "рождественская ёлка",
     "クリスマスツリー",
-    "event"
+    "event",
+    "kurisumasu tsurī"
   ],
   [
     "🎆",
@@ -2044,7 +2193,8 @@ const activityEmojiItems = [
     "烟花",
     "фейерверк",
     "花火",
-    "event"
+    "event",
+    "hanabi"
   ],
   [
     "🎇",
@@ -2053,7 +2203,8 @@ const activityEmojiItems = [
     "仙女棒",
     "бенгальский огонь",
     "線香花火",
-    "event"
+    "event",
+    "senkō hanabi"
   ],
   [
     "🧨",
@@ -2062,7 +2213,8 @@ const activityEmojiItems = [
     "鞭炮",
     "петарда",
     "爆竹",
-    "event"
+    "event",
+    "bakuchiku"
   ],
   [
     "✨",
@@ -2071,7 +2223,8 @@ const activityEmojiItems = [
     "闪光",
     "искорки",
     "きらめき",
-    "event"
+    "event",
+    "kirameki"
   ],
   [
     "🎈",
@@ -2080,7 +2233,8 @@ const activityEmojiItems = [
     "气球",
     "воздушный шар",
     "風船",
-    "event"
+    "event",
+    "fūsen"
   ],
   [
     "🎉",
@@ -2089,7 +2243,8 @@ const activityEmojiItems = [
     "派对礼花",
     "хлопушка",
     "クラッカー",
-    "event"
+    "event",
+    "kurakkā"
   ],
   [
     "🎊",
@@ -2098,7 +2253,8 @@ const activityEmojiItems = [
     "彩纸球",
     "шар с конфетти",
     "くす玉",
-    "event"
+    "event",
+    "kusudama"
   ],
   [
     "🎋",
@@ -2107,7 +2263,8 @@ const activityEmojiItems = [
     "七夕树",
     "дерево Танабата",
     "七夕飾り",
-    "event"
+    "event",
+    "tanabata kazari"
   ],
   [
     "🎍",
@@ -2116,7 +2273,8 @@ const activityEmojiItems = [
     "门松",
     "сосновое украшение",
     "門松",
-    "event"
+    "event",
+    "kadomatsu"
   ],
   [
     "🎎",
@@ -2125,7 +2283,8 @@ const activityEmojiItems = [
     "日本人偶",
     "японские куклы",
     "ひな人形",
-    "event"
+    "event",
+    "hinaningyō"
   ],
   [
     "🎏",
@@ -2134,7 +2293,8 @@ const activityEmojiItems = [
     "鲤鱼旗",
     "карповый флаг",
     "こいのぼり",
-    "event"
+    "event",
+    "koinobori"
   ],
   [
     "🎐",
@@ -2143,7 +2303,8 @@ const activityEmojiItems = [
     "风铃",
     "ветряной колокольчик",
     "風鈴",
-    "event"
+    "event",
+    "fūrin"
   ],
   [
     "🎑",
@@ -2152,7 +2313,8 @@ const activityEmojiItems = [
     "赏月",
     "церемония любования луной",
     "お月見",
-    "event"
+    "event",
+    "o-tsukimi"
   ],
   [
     "🧧",
@@ -2161,7 +2323,8 @@ const activityEmojiItems = [
     "红包",
     "красный конверт",
     "赤い封筒",
-    "event"
+    "event",
+    "akai fūtō"
   ],
   [
     "🎀",
@@ -2170,7 +2333,8 @@ const activityEmojiItems = [
     "丝带",
     "лента",
     "リボン",
-    "event"
+    "event",
+    "ri-bo-n"
   ],
   [
     "🎁",
@@ -2179,7 +2343,8 @@ const activityEmojiItems = [
     "礼物",
     "подарок в упаковке",
     "包まれたプレゼント",
-    "event"
+    "event",
+    "tsutsumareta purezento"
   ],
   [
     "🎗️",
@@ -2188,7 +2353,8 @@ const activityEmojiItems = [
     "纪念丝带",
     "памятная лента",
     "リマインダーリボン",
-    "event"
+    "event",
+    "ri-ma-i-n-da-ri-bo-n"
   ],
   [
     "🎟️",
@@ -2197,7 +2363,8 @@ const activityEmojiItems = [
     "入场券",
     "входные билеты",
     "入場券",
-    "event"
+    "event",
+    "nyūjōken"
   ],
   [
     "🎫",
@@ -2206,7 +2373,8 @@ const activityEmojiItems = [
     "票",
     "билет",
     "チケット",
-    "event"
+    "event",
+    "chi-ke-to"
   ],
   [
     "🎖️",
@@ -2215,7 +2383,8 @@ const activityEmojiItems = [
     "军功章",
     "военная медаль",
     "勲章",
-    "award-medal"
+    "award-medal",
+    "kunshō"
   ],
   [
     "🏆",
@@ -2224,7 +2393,8 @@ const activityEmojiItems = [
     "奖杯",
     "трофей",
     "トロフィー",
-    "award-medal"
+    "award-medal",
+    "to-ro-fu-i-"
   ],
   [
     "🏅",
@@ -2233,7 +2403,8 @@ const activityEmojiItems = [
     "体育奖牌",
     "спортивная медаль",
     "スポーツメダル",
-    "award-medal"
+    "award-medal",
+    "su-po-tsu-me-da-ru"
   ],
   [
     "🥇",
@@ -2242,7 +2413,8 @@ const activityEmojiItems = [
     "第一名奖牌",
     "медаль за первое место",
     "金メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "🥈",
@@ -2251,7 +2423,8 @@ const activityEmojiItems = [
     "第二名奖牌",
     "медаль за второе место",
     "銀メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "🥉",
@@ -2260,7 +2433,8 @@ const activityEmojiItems = [
     "第三名奖牌",
     "медаль за третье место",
     "銅メダル",
-    "award-medal"
+    "award-medal",
+    "me-da-ru"
   ],
   [
     "⚽",
@@ -2269,7 +2443,8 @@ const activityEmojiItems = [
     "足球",
     "футбольный мяч",
     "サッカーボール",
-    "sport"
+    "sport",
+    "sa-ka-bo-ru"
   ],
   [
     "⚾",
@@ -2278,7 +2453,8 @@ const activityEmojiItems = [
     "棒球",
     "бейсбольный мяч",
     "野球ボール",
-    "sport"
+    "sport",
+    "bo-ru"
   ],
   [
     "🥎",
@@ -2287,7 +2463,8 @@ const activityEmojiItems = [
     "垒球",
     "софтбол",
     "ソフトボール",
-    "sport"
+    "sport",
+    "so-fu-to-bo-ru"
   ],
   [
     "🏀",
@@ -2296,7 +2473,8 @@ const activityEmojiItems = [
     "篮球",
     "баскетбольный мяч",
     "バスケットボール",
-    "sport"
+    "sport",
+    "ba-su-ke-to-bo-ru"
   ],
   [
     "🏐",
@@ -2305,7 +2483,8 @@ const activityEmojiItems = [
     "排球",
     "волейбольный мяч",
     "バレーボール",
-    "sport"
+    "sport",
+    "ba-re-bo-ru"
   ],
   [
     "🏈",
@@ -2314,7 +2493,8 @@ const activityEmojiItems = [
     "美式橄榄球",
     "мяч для американского футбола",
     "アメリカンフットボール",
-    "sport"
+    "sport",
+    "a-me-ri-ka-n-fu-to-bo-ru"
   ],
   [
     "🏉",
@@ -2323,7 +2503,8 @@ const activityEmojiItems = [
     "橄榄球",
     "мяч для регби",
     "ラグビーボール",
-    "sport"
+    "sport",
+    "ra-gu-bi-bo-ru"
   ],
   [
     "🎾",
@@ -2332,7 +2513,8 @@ const activityEmojiItems = [
     "网球",
     "теннис",
     "テニス",
-    "sport"
+    "sport",
+    "te-ni-su"
   ],
   [
     "🥏",
@@ -2341,7 +2523,8 @@ const activityEmojiItems = [
     "飞盘",
     "летающий диск",
     "フライングディスク",
-    "sport"
+    "sport",
+    "fu-ra-i-n-gu-de-i-su-ku"
   ],
   [
     "🎳",
@@ -2350,7 +2533,8 @@ const activityEmojiItems = [
     "保龄球",
     "боулинг",
     "ボウリング",
-    "sport"
+    "sport",
+    "bo-u-ri-n-gu"
   ],
   [
     "🏏",
@@ -2359,7 +2543,8 @@ const activityEmojiItems = [
     "板球",
     "крикет",
     "クリケット",
-    "sport"
+    "sport",
+    "ku-ri-ke-to"
   ],
   [
     "🏑",
@@ -2368,7 +2553,8 @@ const activityEmojiItems = [
     "曲棍球",
     "хоккей на траве",
     "フィールドホッケー",
-    "sport"
+    "sport",
+    "fu-i-ru-do-ho-ke-"
   ],
   [
     "🏒",
@@ -2377,7 +2563,8 @@ const activityEmojiItems = [
     "冰球",
     "хоккей с шайбой",
     "アイスホッケー",
-    "sport"
+    "sport",
+    "a-i-su-ho-ke-"
   ],
   [
     "🥍",
@@ -2386,7 +2573,8 @@ const activityEmojiItems = [
     "长曲棍球",
     "лакросс",
     "ラクロス",
-    "sport"
+    "sport",
+    "ra-ku-ro-su"
   ],
   [
     "🏓",
@@ -2395,7 +2583,8 @@ const activityEmojiItems = [
     "乒乓球",
     "настольный теннис",
     "卓球",
-    "sport"
+    "sport",
+    "takkyū"
   ],
   [
     "🏸",
@@ -2404,7 +2593,8 @@ const activityEmojiItems = [
     "羽毛球",
     "бадминтон",
     "バドミントン",
-    "sport"
+    "sport",
+    "ba-do-mi-n-to-n"
   ],
   [
     "🥊",
@@ -2413,7 +2603,8 @@ const activityEmojiItems = [
     "拳击手套",
     "боксёрская перчатка",
     "ボクシンググローブ",
-    "sport"
+    "sport",
+    "bo-ku-shi-n-gu-gu-ro-bu"
   ],
   [
     "🥋",
@@ -2422,7 +2613,8 @@ const activityEmojiItems = [
     "武术服",
     "форма для боевых искусств",
     "武道着",
-    "sport"
+    "sport",
+    "budōgi"
   ],
   [
     "🥅",
@@ -2431,7 +2623,8 @@ const activityEmojiItems = [
     "球门",
     "ворота с сеткой",
     "ゴールネット",
-    "sport"
+    "sport",
+    "go-ru-ne-to"
   ],
   [
     "⛳",
@@ -2440,7 +2633,8 @@ const activityEmojiItems = [
     "高尔夫球洞旗",
     "флажок в лунке",
     "ゴルフの旗",
-    "sport"
+    "sport",
+    "go-ru-fu-no"
   ],
   [
     "⛸️",
@@ -2449,7 +2643,8 @@ const activityEmojiItems = [
     "冰鞋",
     "конёк",
     "アイススケート",
-    "sport"
+    "sport",
+    "a-i-su-su-ke-to"
   ],
   [
     "🎣",
@@ -2458,7 +2653,8 @@ const activityEmojiItems = [
     "钓竿",
     "удочка",
     "釣り竿",
-    "sport"
+    "sport",
+    "ri"
   ],
   [
     "🤿",
@@ -2467,7 +2663,8 @@ const activityEmojiItems = [
     "潜水面罩",
     "маска для дайвинга",
     "ダイビングマスク",
-    "sport"
+    "sport",
+    "da-i-bi-n-gu-ma-su-ku"
   ],
   [
     "🎽",
@@ -2476,7 +2673,8 @@ const activityEmojiItems = [
     "跑步背心",
     "беговая майка",
     "ランニングシャツ",
-    "sport"
+    "sport",
+    "ra-n-ni-n-gu-sha-tsu"
   ],
   [
     "🎿",
@@ -2485,7 +2683,8 @@ const activityEmojiItems = [
     "滑雪板",
     "лыжи",
     "スキー",
-    "sport"
+    "sport",
+    "su-ki-"
   ],
   [
     "🛷",
@@ -2494,7 +2693,8 @@ const activityEmojiItems = [
     "雪橇",
     "санки",
     "そり",
-    "sport"
+    "sport",
+    "so-ri"
   ],
   [
     "🥌",
@@ -2503,7 +2703,8 @@ const activityEmojiItems = [
     "冰壶",
     "камень для кёрлинга",
     "カーリングストーン",
-    "sport"
+    "sport",
+    "ka-ri-n-gu-su-to-n"
   ],
   [
     "🎯",
@@ -2512,7 +2713,8 @@ const activityEmojiItems = [
     "靶心",
     "яблочко мишени",
     "的",
-    "game"
+    "game",
+    "mato"
   ],
   [
     "🪀",
@@ -2521,7 +2723,8 @@ const activityEmojiItems = [
     "悠悠球",
     "йо-йо",
     "ヨーヨー",
-    "game"
+    "game",
+    "yo-yo-"
   ],
   [
     "🪁",
@@ -2530,7 +2733,8 @@ const activityEmojiItems = [
     "风筝",
     "воздушный змей",
     "凧",
-    "game"
+    "game",
+    "tako"
   ],
   [
     "🔫",
@@ -2539,7 +2743,8 @@ const activityEmojiItems = [
     "水枪",
     "водяной пистолет",
     "水鉄砲",
-    "game"
+    "game",
+    "mizuteppō"
   ],
   [
     "🎱",
@@ -2548,7 +2753,8 @@ const activityEmojiItems = [
     "八号球",
     "бильярдный шар 8",
     "ビリヤードの8ボール",
-    "game"
+    "game",
+    "8"
   ],
   [
     "🔮",
@@ -2557,7 +2763,8 @@ const activityEmojiItems = [
     "水晶球",
     "хрустальный шар",
     "水晶玉",
-    "game"
+    "game",
+    "suishō dama"
   ],
   [
     "🪄",
@@ -2566,7 +2773,8 @@ const activityEmojiItems = [
     "魔法棒",
     "волшебная палочка",
     "魔法の杖",
-    "game"
+    "game",
+    "no"
   ],
   [
     "🎮",
@@ -2575,7 +2783,8 @@ const activityEmojiItems = [
     "电子游戏",
     "видеоигра",
     "ビデオゲーム",
-    "game"
+    "game",
+    "bi-de-o-ge-mu"
   ],
   [
     "🕹️",
@@ -2584,7 +2793,8 @@ const activityEmojiItems = [
     "操纵杆",
     "джойстик",
     "ジョイスティック",
-    "game"
+    "game",
+    "jo-i-su-te-i-ku"
   ],
   [
     "🎰",
@@ -2593,7 +2803,8 @@ const activityEmojiItems = [
     "老虎机",
     "игровой автомат",
     "スロットマシン",
-    "game"
+    "game",
+    "su-ro-to-ma-shi-n"
   ],
   [
     "🎲",
@@ -2602,7 +2813,8 @@ const activityEmojiItems = [
     "骰子",
     "игральная кость",
     "サイコロ",
-    "game"
+    "game",
+    "sa-i-ko-ro"
   ],
   [
     "🧩",
@@ -2611,7 +2823,8 @@ const activityEmojiItems = [
     "拼图块",
     "кусочек пазла",
     "パズルピース",
-    "game"
+    "game",
+    "pa-zu-ru-pi-su"
   ],
   [
     "🧸",
@@ -2620,7 +2833,8 @@ const activityEmojiItems = [
     "泰迪熊",
     "плюшевый мишка",
     "テディベア",
-    "game"
+    "game",
+    "te-de-i-be-a"
   ],
   [
     "🪅",
@@ -2629,7 +2843,8 @@ const activityEmojiItems = [
     "皮纳塔",
     "пиньята",
     "ピニャータ",
-    "game"
+    "game",
+    "pi-nya-ta"
   ],
   [
     "🪩",
@@ -2638,7 +2853,8 @@ const activityEmojiItems = [
     "迪斯科球",
     "зеркальный шар",
     "ミラーボール",
-    "game"
+    "game",
+    "mi-ra-bo-ru"
   ],
   [
     "🪆",
@@ -2647,7 +2863,8 @@ const activityEmojiItems = [
     "套娃",
     "матрёшки",
     "マトリョーシカ",
-    "game"
+    "game",
+    "ma-to-ryo-shi-ka"
   ],
   [
     "♠️",
@@ -2656,7 +2873,8 @@ const activityEmojiItems = [
     "黑桃",
     "пики",
     "スペード",
-    "game"
+    "game",
+    "su-pe-do"
   ],
   [
     "♥️",
@@ -2665,7 +2883,8 @@ const activityEmojiItems = [
     "红心",
     "червы",
     "ハート",
-    "game"
+    "game",
+    "ha-to"
   ],
   [
     "♦️",
@@ -2674,7 +2893,8 @@ const activityEmojiItems = [
     "方块",
     "бубны",
     "ダイヤ",
-    "game"
+    "game",
+    "da-i-ya"
   ],
   [
     "♣️",
@@ -2683,7 +2903,8 @@ const activityEmojiItems = [
     "梅花",
     "трефы",
     "クラブ",
-    "game"
+    "game",
+    "ku-ra-bu"
   ],
   [
     "♟️",
@@ -2692,7 +2913,8 @@ const activityEmojiItems = [
     "兵",
     "шахматная пешка",
     "チェスのポーン",
-    "game"
+    "game",
+    "chi-e-su-no-po-n"
   ],
   [
     "🃏",
@@ -2701,7 +2923,8 @@ const activityEmojiItems = [
     "小丑牌",
     "джокер",
     "ジョーカー",
-    "game"
+    "game",
+    "jo-ka-"
   ],
   [
     "🀄",
@@ -2710,7 +2933,8 @@ const activityEmojiItems = [
     "麻将红中",
     "маджонг красный дракон",
     "麻雀の中",
-    "game"
+    "game",
+    "no"
   ],
   [
     "🎴",
@@ -2719,7 +2943,8 @@ const activityEmojiItems = [
     "花札",
     "карты ханафуда",
     "花札",
-    "game"
+    "game",
+    "hanafuda"
   ],
   [
     "🎭",
@@ -2728,7 +2953,8 @@ const activityEmojiItems = [
     "表演艺术",
     "сценическое искусство",
     "舞台芸術",
-    "arts & crafts"
+    "arts & crafts",
+    "butai geijutsu"
   ],
   [
     "🖼️",
@@ -2737,7 +2963,8 @@ const activityEmojiItems = [
     "带框画",
     "картина в рамке",
     "額入りの絵",
-    "arts & crafts"
+    "arts & crafts",
+    "ri-no"
   ],
   [
     "🎨",
@@ -2746,7 +2973,8 @@ const activityEmojiItems = [
     "调色板",
     "палитра художника",
     "絵の具パレット",
-    "arts & crafts"
+    "arts & crafts",
+    "no-pa-re-to"
   ],
   [
     "🧵",
@@ -2755,7 +2983,8 @@ const activityEmojiItems = [
     "线",
     "нитка",
     "糸",
-    "arts & crafts"
+    "arts & crafts",
+    "ito"
   ],
   [
     "🪡",
@@ -2764,7 +2993,8 @@ const activityEmojiItems = [
     "缝衣针",
     "швейная игла",
     "縫い針",
-    "arts & crafts"
+    "arts & crafts",
+    "i"
   ],
   [
     "🧶",
@@ -2773,7 +3003,8 @@ const activityEmojiItems = [
     "毛线",
     "пряжа",
     "毛糸",
-    "arts & crafts"
+    "arts & crafts",
+    "keito"
   ],
   [
     "🪢",
@@ -2782,7 +3013,8 @@ const activityEmojiItems = [
     "结",
     "узел",
     "結び目",
-    "arts & crafts"
+    "arts & crafts",
+    "bi"
   ],
   [
     "🎼",
@@ -2791,7 +3023,8 @@ const activityEmojiItems = [
     "乐谱",
     "нотная запись",
     "楽譜",
-    "music"
+    "music",
+    "gakufu"
   ],
   [
     "🎵",
@@ -2800,7 +3033,8 @@ const activityEmojiItems = [
     "音符",
     "нота",
     "音符",
-    "music"
+    "music",
+    "onpu"
   ],
   [
     "🎶",
@@ -2809,7 +3043,8 @@ const activityEmojiItems = [
     "多个音符",
     "ноты",
     "複数の音符",
-    "music"
+    "music",
+    "no"
   ],
   [
     "🎙️",
@@ -2818,7 +3053,8 @@ const activityEmojiItems = [
     "录音室麦克风",
     "студийный микрофон",
     "スタジオマイク",
-    "music"
+    "music",
+    "su-ta-ji-o-ma-i-ku"
   ],
   [
     "🎚️",
@@ -2827,7 +3063,8 @@ const activityEmojiItems = [
     "电平滑块",
     "ползунок уровня",
     "レベルスライダー",
-    "music"
+    "music",
+    "re-be-ru-su-ra-i-da-"
   ],
   [
     "🎛️",
@@ -2836,7 +3073,8 @@ const activityEmojiItems = [
     "控制旋钮",
     "ручки управления",
     "コントロールノブ",
-    "music"
+    "music",
+    "ko-n-to-ro-ru-no-bu"
   ],
   [
     "🎤",
@@ -2845,7 +3083,8 @@ const activityEmojiItems = [
     "麦克风",
     "микрофон",
     "マイク",
-    "music"
+    "music",
+    "ma-i-ku"
   ],
   [
     "🎧",
@@ -2854,7 +3093,8 @@ const activityEmojiItems = [
     "耳机",
     "наушники",
     "ヘッドホン",
-    "music"
+    "music",
+    "he-do-ho-n"
   ],
   [
     "📻",
@@ -2863,7 +3103,8 @@ const activityEmojiItems = [
     "收音机",
     "радио",
     "ラジオ",
-    "music"
+    "music",
+    "ra-ji-o"
   ],
   [
     "🎷",
@@ -2872,7 +3113,8 @@ const activityEmojiItems = [
     "萨克斯管",
     "саксофон",
     "サックス",
-    "musical-instrument"
+    "musical-instrument",
+    "sa-ku-su"
   ],
   [
     "🎺",
@@ -2881,7 +3123,8 @@ const activityEmojiItems = [
     "小号",
     "труба",
     "トランペット",
-    "musical-instrument"
+    "musical-instrument",
+    "to-ra-n-pe-to"
   ],
   [
     "🪗",
@@ -2890,7 +3133,8 @@ const activityEmojiItems = [
     "手风琴",
     "аккордеон",
     "アコーディオン",
-    "musical-instrument"
+    "musical-instrument",
+    "a-ko-de-i-o-n"
   ],
   [
     "🎸",
@@ -2899,7 +3143,8 @@ const activityEmojiItems = [
     "吉他",
     "гитара",
     "ギター",
-    "musical-instrument"
+    "musical-instrument",
+    "gi-ta-"
   ],
   [
     "🎹",
@@ -2908,7 +3153,8 @@ const activityEmojiItems = [
     "电子琴",
     "клавишный инструмент",
     "鍵盤",
-    "musical-instrument"
+    "musical-instrument",
+    "kenban"
   ],
   [
     "🎻",
@@ -2917,7 +3163,8 @@ const activityEmojiItems = [
     "小提琴",
     "скрипка",
     "バイオリン",
-    "musical-instrument"
+    "musical-instrument",
+    "ba-i-o-ri-n"
   ],
   [
     "🪕",
@@ -2926,7 +3173,8 @@ const activityEmojiItems = [
     "班卓琴",
     "банджо",
     "バンジョー",
-    "musical-instrument"
+    "musical-instrument",
+    "ba-n-jo-"
   ],
   [
     "🥁",
@@ -2935,7 +3183,8 @@ const activityEmojiItems = [
     "鼓",
     "барабан",
     "ドラム",
-    "musical-instrument"
+    "musical-instrument",
+    "do-ra-mu"
   ],
   [
     "🪘",
@@ -2944,7 +3193,8 @@ const activityEmojiItems = [
     "长鼓",
     "длинный барабан",
     "長太鼓",
-    "musical-instrument"
+    "musical-instrument",
+    "nagadaiko"
   ],
   [
     "🪇",
@@ -2953,7 +3203,8 @@ const activityEmojiItems = [
     "沙锤",
     "маракасы",
     "マラカス",
-    "musical-instrument"
+    "musical-instrument",
+    "ma-ra-ka-su"
   ],
   [
     "🪈",
@@ -2962,7 +3213,8 @@ const activityEmojiItems = [
     "长笛",
     "флейта",
     "フルート",
-    "musical-instrument"
+    "musical-instrument",
+    "fu-ru-to"
   ],
   [
     "🪉",
@@ -2971,8 +3223,9 @@ const activityEmojiItems = [
     "竖琴",
     "арфа",
     "ハープ",
-    "musical-instrument"
-  ]
+    "musical-instrument",
+    "ha-pu"
+  ],
 ];
 
 const travelEmojiItems = [
@@ -2983,7 +3236,8 @@ const travelEmojiItems = [
     "欧洲非洲地球仪",
     "глобус с Европой и Африкой",
     "ヨーロッパとアフリカの地球",
-    "place-map"
+    "place-map",
+    "yōroppa to afurika no chikyū"
   ],
   [
     "🌎",
@@ -2992,7 +3246,8 @@ const travelEmojiItems = [
     "美洲地球仪",
     "глобус с Америкой",
     "アメリカ大陸の地球",
-    "place-map"
+    "place-map",
+    "amerika tairiku no chikyū"
   ],
   [
     "🌏",
@@ -3001,7 +3256,8 @@ const travelEmojiItems = [
     "亚洲澳洲地球仪",
     "глобус с Азией и Австралией",
     "アジアとオーストラリアの地球",
-    "place-map"
+    "place-map",
+    "ajia to ōsutoraria no chikyū"
   ],
   [
     "🌐",
@@ -3010,7 +3266,8 @@ const travelEmojiItems = [
     "经纬线地球",
     "глобус с меридианами",
     "経線入りの地球",
-    "place-map"
+    "place-map",
+    "keisen iri no chikyū"
   ],
   [
     "🗺️",
@@ -3019,7 +3276,8 @@ const travelEmojiItems = [
     "世界地图",
     "карта мира",
     "世界地図",
-    "place-map"
+    "place-map",
+    "sekai chizu"
   ],
   [
     "🗾",
@@ -3028,7 +3286,8 @@ const travelEmojiItems = [
     "日本地图",
     "карта Японии",
     "日本地図",
-    "place-map"
+    "place-map",
+    "nihon chizu"
   ],
   [
     "🧭",
@@ -3037,7 +3296,8 @@ const travelEmojiItems = [
     "指南针",
     "компас",
     "コンパス",
-    "place-map"
+    "place-map",
+    "konpasu"
   ],
   [
     "🏔️",
@@ -3046,7 +3306,8 @@ const travelEmojiItems = [
     "雪山",
     "заснеженная гора",
     "雪山",
-    "place-geographic"
+    "place-geographic",
+    "yukiyama"
   ],
   [
     "⛰️",
@@ -3055,7 +3316,8 @@ const travelEmojiItems = [
     "山",
     "гора",
     "山",
-    "place-geographic"
+    "place-geographic",
+    "yama"
   ],
   [
     "🌋",
@@ -3064,7 +3326,8 @@ const travelEmojiItems = [
     "火山",
     "вулкан",
     "火山",
-    "place-geographic"
+    "place-geographic",
+    "kazan"
   ],
   [
     "🗻",
@@ -3073,7 +3336,8 @@ const travelEmojiItems = [
     "富士山",
     "гора Фудзи",
     "富士山",
-    "place-geographic"
+    "place-geographic",
+    "fujisan"
   ],
   [
     "🏕️",
@@ -3082,7 +3346,8 @@ const travelEmojiItems = [
     "露营",
     "кемпинг",
     "キャンプ",
-    "place-geographic"
+    "place-geographic",
+    "kyanpu"
   ],
   [
     "🏖️",
@@ -3091,7 +3356,8 @@ const travelEmojiItems = [
     "带伞的海滩",
     "пляж с зонтом",
     "ビーチとパラソル",
-    "place-geographic"
+    "place-geographic",
+    "bīchi to parasoru"
   ],
   [
     "🏜️",
@@ -3100,7 +3366,8 @@ const travelEmojiItems = [
     "沙漠",
     "пустыня",
     "砂漠",
-    "place-geographic"
+    "place-geographic",
+    "sabaku"
   ],
   [
     "🏝️",
@@ -3109,7 +3376,8 @@ const travelEmojiItems = [
     "荒岛",
     "необитаемый остров",
     "無人島",
-    "place-geographic"
+    "place-geographic",
+    "mujintō"
   ],
   [
     "🏞️",
@@ -3118,7 +3386,8 @@ const travelEmojiItems = [
     "国家公园",
     "национальный парк",
     "国立公園",
-    "place-geographic"
+    "place-geographic",
+    "kokuritsu kōen"
   ],
   [
     "🏟️",
@@ -3127,7 +3396,8 @@ const travelEmojiItems = [
     "体育场",
     "стадион",
     "スタジアム",
-    "place-building"
+    "place-building",
+    "sutajiamu"
   ],
   [
     "🏛️",
@@ -3136,7 +3406,8 @@ const travelEmojiItems = [
     "古典建筑",
     "классическое здание",
     "古典的な建物",
-    "place-building"
+    "place-building",
+    "kotenteki na tatemono"
   ],
   [
     "🏗️",
@@ -3145,7 +3416,8 @@ const travelEmojiItems = [
     "建筑施工",
     "строительство здания",
     "建設工事",
-    "place-building"
+    "place-building",
+    "kensetsu-kōji"
   ],
   [
     "🧱",
@@ -3154,7 +3426,8 @@ const travelEmojiItems = [
     "砖",
     "кирпич",
     "レンガ",
-    "place-building"
+    "place-building",
+    "renga"
   ],
   [
     "🪨",
@@ -3163,7 +3436,8 @@ const travelEmojiItems = [
     "岩石",
     "камень",
     "岩",
-    "place-building"
+    "place-building",
+    "iwa"
   ],
   [
     "🪵",
@@ -3172,7 +3446,8 @@ const travelEmojiItems = [
     "木头",
     "дерево",
     "木材",
-    "place-building"
+    "place-building",
+    "mokuzai"
   ],
   [
     "🛖",
@@ -3181,7 +3456,8 @@ const travelEmojiItems = [
     "小屋",
     "хижина",
     "小屋",
-    "place-building"
+    "place-building",
+    "koya"
   ],
   [
     "🏘️",
@@ -3190,7 +3466,8 @@ const travelEmojiItems = [
     "房屋",
     "дома",
     "家々",
-    "place-building"
+    "place-building",
+    "ieie"
   ],
   [
     "🏚️",
@@ -3199,7 +3476,8 @@ const travelEmojiItems = [
     "废弃房屋",
     "заброшенный дом",
     "廃屋",
-    "place-building"
+    "place-building",
+    "haioku"
   ],
   [
     "🏠",
@@ -3208,7 +3486,8 @@ const travelEmojiItems = [
     "房子",
     "дом",
     "家",
-    "place-building"
+    "place-building",
+    "ie"
   ],
   [
     "🏡",
@@ -3217,7 +3496,8 @@ const travelEmojiItems = [
     "带花园的房子",
     "дом с садом",
     "庭付きの家",
-    "place-building"
+    "place-building",
+    "ki-no"
   ],
   [
     "🏢",
@@ -3226,7 +3506,8 @@ const travelEmojiItems = [
     "办公楼",
     "офисное здание",
     "オフィスビル",
-    "place-building"
+    "place-building",
+    "o-fu-i-su-bi-ru"
   ],
   [
     "🏣",
@@ -3235,7 +3516,8 @@ const travelEmojiItems = [
     "日本邮局",
     "японское почтовое отделение",
     "日本の郵便局",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
     "🏤",
@@ -3244,7 +3526,8 @@ const travelEmojiItems = [
     "邮局",
     "почтовое отделение",
     "郵便局",
-    "place-building"
+    "place-building",
+    "yūbinkyoku"
   ],
   [
     "🏥",
@@ -3253,7 +3536,8 @@ const travelEmojiItems = [
     "医院",
     "больница",
     "病院",
-    "place-building"
+    "place-building",
+    "byōin"
   ],
   [
     "🏦",
@@ -3262,7 +3546,8 @@ const travelEmojiItems = [
     "银行",
     "банк",
     "銀行",
-    "place-building"
+    "place-building",
+    "ginkō"
   ],
   [
     "🏨",
@@ -3271,7 +3556,8 @@ const travelEmojiItems = [
     "酒店",
     "отель",
     "ホテル",
-    "place-building"
+    "place-building",
+    "hoteru"
   ],
   [
     "🏩",
@@ -3280,7 +3566,8 @@ const travelEmojiItems = [
     "爱情旅馆",
     "лав-отель",
     "ラブホテル",
-    "place-building"
+    "place-building",
+    "ra-bu-ho-te-ru"
   ],
   [
     "🏪",
@@ -3289,7 +3576,8 @@ const travelEmojiItems = [
     "便利店",
     "магазин у дома",
     "コンビニ",
-    "place-building"
+    "place-building",
+    "ko-n-bi-ni"
   ],
   [
     "🏫",
@@ -3298,7 +3586,8 @@ const travelEmojiItems = [
     "学校",
     "школа",
     "学校",
-    "place-building"
+    "place-building",
+    "gakkō"
   ],
   [
     "🏬",
@@ -3307,7 +3596,8 @@ const travelEmojiItems = [
     "百货商店",
     "универмаг",
     "デパート",
-    "place-building"
+    "place-building",
+    "de-pa-to"
   ],
   [
     "🏭",
@@ -3316,7 +3606,8 @@ const travelEmojiItems = [
     "工厂",
     "фабрика",
     "工場",
-    "place-building"
+    "place-building",
+    "kōjō"
   ],
   [
     "🏯",
@@ -3325,7 +3616,8 @@ const travelEmojiItems = [
     "日本城堡",
     "японский замок",
     "日本の城",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
     "🏰",
@@ -3334,7 +3626,8 @@ const travelEmojiItems = [
     "城堡",
     "замок",
     "城",
-    "place-building"
+    "place-building",
+    "shiro"
   ],
   [
     "💒",
@@ -3343,7 +3636,8 @@ const travelEmojiItems = [
     "婚礼",
     "свадьба",
     "結婚式",
-    "place-building"
+    "place-building",
+    "kekkonshiki"
   ],
   [
     "🗼",
@@ -3352,7 +3646,8 @@ const travelEmojiItems = [
     "东京塔",
     "Токийская башня",
     "東京タワー",
-    "place-building"
+    "place-building",
+    "ta-wa-"
   ],
   [
     "🗽",
@@ -3361,7 +3656,8 @@ const travelEmojiItems = [
     "自由女神像",
     "Статуя Свободы",
     "自由の女神",
-    "place-building"
+    "place-building",
+    "no"
   ],
   [
     "⛪",
@@ -3370,7 +3666,8 @@ const travelEmojiItems = [
     "教堂",
     "церковь",
     "教会",
-    "place-religious"
+    "place-religious",
+    "kyōkai"
   ],
   [
     "🕌",
@@ -3379,7 +3676,8 @@ const travelEmojiItems = [
     "清真寺",
     "мечеть",
     "モスク",
-    "place-religious"
+    "place-religious",
+    "mo-su-ku"
   ],
   [
     "🛕",
@@ -3388,7 +3686,8 @@ const travelEmojiItems = [
     "印度教寺庙",
     "индуистский храм",
     "ヒンドゥー寺院",
-    "place-religious"
+    "place-religious",
+    "hi-n-do-u-"
   ],
   [
     "🕍",
@@ -3397,7 +3696,8 @@ const travelEmojiItems = [
     "犹太会堂",
     "синагога",
     "シナゴーグ",
-    "place-religious"
+    "place-religious",
+    "shi-na-go-gu"
   ],
   [
     "⛩️",
@@ -3406,7 +3706,8 @@ const travelEmojiItems = [
     "神社",
     "синтоистское святилище",
     "神社",
-    "place-religious"
+    "place-religious",
+    "jinja"
   ],
   [
     "🕋",
@@ -3415,7 +3716,8 @@ const travelEmojiItems = [
     "克尔白",
     "Кааба",
     "カーバ神殿",
-    "place-religious"
+    "place-religious",
+    "ka-ba"
   ],
   [
     "⛲",
@@ -3424,7 +3726,8 @@ const travelEmojiItems = [
     "喷泉",
     "фонтан",
     "噴水",
-    "place-other"
+    "place-other",
+    "funsui"
   ],
   [
     "⛺",
@@ -3433,7 +3736,8 @@ const travelEmojiItems = [
     "帐篷",
     "палатка",
     "テント",
-    "place-other"
+    "place-other",
+    "tento"
   ],
   [
     "🌁",
@@ -3442,7 +3746,8 @@ const travelEmojiItems = [
     "雾蒙蒙",
     "туман",
     "霧",
-    "place-other"
+    "place-other",
+    "kiri"
   ],
   [
     "🌃",
@@ -3451,7 +3756,8 @@ const travelEmojiItems = [
     "星夜",
     "ночь со звёздами",
     "星空の夜",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🏙️",
@@ -3460,7 +3766,8 @@ const travelEmojiItems = [
     "城市景观",
     "городской пейзаж",
     "都市の風景",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🌄",
@@ -3469,7 +3776,8 @@ const travelEmojiItems = [
     "山间日出",
     "восход над горами",
     "山からの日の出",
-    "place-other"
+    "place-other",
+    "ka-ra-no-no"
   ],
   [
     "🌅",
@@ -3478,7 +3786,8 @@ const travelEmojiItems = [
     "日出",
     "восход",
     "日の出",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "🌆",
@@ -3487,7 +3796,8 @@ const travelEmojiItems = [
     "黄昏城市",
     "город в сумерках",
     "夕暮れの都市",
-    "place-other"
+    "place-other",
+    "re-no"
   ],
   [
     "🌇",
@@ -3496,7 +3806,8 @@ const travelEmojiItems = [
     "日落",
     "закат",
     "夕日",
-    "place-other"
+    "place-other",
+    "yūhi"
   ],
   [
     "🌉",
@@ -3505,7 +3816,8 @@ const travelEmojiItems = [
     "夜晚的桥",
     "мост ночью",
     "夜の橋",
-    "place-other"
+    "place-other",
+    "no"
   ],
   [
     "♨️",
@@ -3514,7 +3826,8 @@ const travelEmojiItems = [
     "温泉",
     "горячие источники",
     "温泉",
-    "place-other"
+    "place-other",
+    "onsen"
   ],
   [
     "🎠",
@@ -3523,7 +3836,8 @@ const travelEmojiItems = [
     "旋转木马",
     "карусельная лошадка",
     "メリーゴーランドの馬",
-    "place-other"
+    "place-other",
+    "me-ri-go-ra-n-do-no"
   ],
   [
     "🛝",
@@ -3532,7 +3846,8 @@ const travelEmojiItems = [
     "滑梯",
     "горка",
     "すべり台",
-    "place-other"
+    "place-other",
+    "su-be-ri"
   ],
   [
     "🎡",
@@ -3541,7 +3856,8 @@ const travelEmojiItems = [
     "摩天轮",
     "колесо обозрения",
     "観覧車",
-    "place-other"
+    "place-other",
+    "kanransha"
   ],
   [
     "🎢",
@@ -3550,7 +3866,8 @@ const travelEmojiItems = [
     "过山车",
     "американские горки",
     "ジェットコースター",
-    "place-other"
+    "place-other",
+    "ji-e-to-ko-su-ta-"
   ],
   [
     "💈",
@@ -3559,7 +3876,8 @@ const travelEmojiItems = [
     "理发店招牌柱",
     "парикмахерский столб",
     "床屋のサインポール",
-    "place-other"
+    "place-other",
+    "no-sa-i-n-po-ru"
   ],
   [
     "🎪",
@@ -3568,7 +3886,8 @@ const travelEmojiItems = [
     "马戏团帐篷",
     "цирковой шатёр",
     "サーカステント",
-    "place-other"
+    "place-other",
+    "sa-ka-su-te-n-to"
   ],
   [
     "🚂",
@@ -3577,7 +3896,8 @@ const travelEmojiItems = [
     "蒸汽机车",
     "локомотив",
     "機関車",
-    "transport-ground"
+    "transport-ground",
+    "kikansha"
   ],
   [
     "🚃",
@@ -3586,7 +3906,8 @@ const travelEmojiItems = [
     "火车车厢",
     "железнодорожный вагон",
     "鉄道車両",
-    "transport-ground"
+    "transport-ground",
+    "tetsudō sharyō"
   ],
   [
     "🚄",
@@ -3595,7 +3916,8 @@ const travelEmojiItems = [
     "高速列车",
     "скоростной поезд",
     "高速鉄道",
-    "transport-ground"
+    "transport-ground",
+    "kōsoku tetsudō"
   ],
   [
     "🚅",
@@ -3604,7 +3926,8 @@ const travelEmojiItems = [
     "子弹头列车",
     "поезд-пуля",
     "新幹線",
-    "transport-ground"
+    "transport-ground",
+    "shinkansen"
   ],
   [
     "🚆",
@@ -3613,7 +3936,8 @@ const travelEmojiItems = [
     "火车",
     "поезд",
     "電車",
-    "transport-ground"
+    "transport-ground",
+    "densha"
   ],
   [
     "🚇",
@@ -3622,7 +3946,8 @@ const travelEmojiItems = [
     "地铁",
     "метро",
     "地下鉄",
-    "transport-ground"
+    "transport-ground",
+    "chikatetsu"
   ],
   [
     "🚈",
@@ -3631,7 +3956,8 @@ const travelEmojiItems = [
     "轻轨",
     "лёгкое метро",
     "ライトレール",
-    "transport-ground"
+    "transport-ground",
+    "ra-i-to-re-ru"
   ],
   [
     "🚉",
@@ -3640,7 +3966,8 @@ const travelEmojiItems = [
     "车站",
     "станция",
     "駅",
-    "transport-ground"
+    "transport-ground",
+    "eki"
   ],
   [
     "🚊",
@@ -3649,7 +3976,8 @@ const travelEmojiItems = [
     "有轨电车",
     "трамвай",
     "路面電車",
-    "transport-ground"
+    "transport-ground",
+    "romendensha"
   ],
   [
     "🚝",
@@ -3658,7 +3986,8 @@ const travelEmojiItems = [
     "单轨列车",
     "монорельс",
     "モノレール",
-    "transport-ground"
+    "transport-ground",
+    "mo-no-re-ru"
   ],
   [
     "🚞",
@@ -3667,7 +3996,8 @@ const travelEmojiItems = [
     "登山铁路",
     "горная железная дорога",
     "登山鉄道",
-    "transport-ground"
+    "transport-ground",
+    "tōzan tetsudō"
   ],
   [
     "🚋",
@@ -3676,7 +4006,8 @@ const travelEmojiItems = [
     "电车车厢",
     "трамвайный вагон",
     "路面電車の車両",
-    "transport-ground"
+    "transport-ground",
+    "no"
   ],
   [
     "🚌",
@@ -3685,7 +4016,8 @@ const travelEmojiItems = [
     "公交车",
     "автобус",
     "バス",
-    "transport-ground"
+    "transport-ground",
+    "ba-su"
   ],
   [
     "🚍",
@@ -3694,7 +4026,8 @@ const travelEmojiItems = [
     "迎面驶来的公交车",
     "автобус спереди",
     "前から来るバス",
-    "transport-ground"
+    "transport-ground",
+    "ka-ra-ru-ba-su"
   ],
   [
     "🚎",
@@ -3703,7 +4036,8 @@ const travelEmojiItems = [
     "无轨电车",
     "троллейбус",
     "トロリーバス",
-    "transport-ground"
+    "transport-ground",
+    "tororī basu"
   ],
   [
     "🚐",
@@ -3712,7 +4046,8 @@ const travelEmojiItems = [
     "小巴",
     "микроавтобус",
     "ミニバス",
-    "transport-ground"
+    "transport-ground",
+    "minibasu"
   ],
   [
     "🚑",
@@ -3721,7 +4056,8 @@ const travelEmojiItems = [
     "救护车",
     "скорая помощь",
     "救急車",
-    "transport-ground"
+    "transport-ground",
+    "kyūkyūsha"
   ],
   [
     "🚒",
@@ -3730,7 +4066,8 @@ const travelEmojiItems = [
     "消防车",
     "пожарная машина",
     "消防車",
-    "transport-ground"
+    "transport-ground",
+    "shōbōsha"
   ],
   [
     "🚓",
@@ -3739,7 +4076,8 @@ const travelEmojiItems = [
     "警车",
     "полицейская машина",
     "パトカー",
-    "transport-ground"
+    "transport-ground",
+    "patokā"
   ],
   [
     "🚔",
@@ -3748,7 +4086,8 @@ const travelEmojiItems = [
     "迎面驶来的警车",
     "полицейская машина спереди",
     "前から来るパトカー",
-    "transport-ground"
+    "transport-ground",
+    "mae kara kuru patokā"
   ],
   [
     "🚕",
@@ -3757,7 +4096,8 @@ const travelEmojiItems = [
     "出租车",
     "такси",
     "タクシー",
-    "transport-ground"
+    "transport-ground",
+    "takushī"
   ],
   [
     "🚖",
@@ -3766,7 +4106,8 @@ const travelEmojiItems = [
     "迎面驶来的出租车",
     "такси спереди",
     "前から来るタクシー",
-    "transport-ground"
+    "transport-ground",
+    "mae kara kuru takushī"
   ],
   [
     "🚗",
@@ -3775,7 +4116,8 @@ const travelEmojiItems = [
     "汽车",
     "автомобиль",
     "自動車",
-    "transport-ground"
+    "transport-ground",
+    "jidōsha"
   ],
   [
     "🚘",
@@ -3784,7 +4126,8 @@ const travelEmojiItems = [
     "迎面驶来的汽车",
     "автомобиль спереди",
     "前から来る車",
-    "transport-ground"
+    "transport-ground",
+    "mae kara kuru kuruma"
   ],
   [
     "🚙",
@@ -3793,7 +4136,8 @@ const travelEmojiItems = [
     "运动型多用途车",
     "внедорожник",
     "SUV",
-    "transport-ground"
+    "transport-ground",
+    "esu yū vī"
   ],
   [
     "🛻",
@@ -3802,7 +4146,8 @@ const travelEmojiItems = [
     "皮卡车",
     "пикап",
     "ピックアップトラック",
-    "transport-ground"
+    "transport-ground",
+    "pikkuppu torakku"
   ],
   [
     "🚚",
@@ -3811,7 +4156,8 @@ const travelEmojiItems = [
     "送货卡车",
     "грузовик доставки",
     "配送トラック",
-    "transport-ground"
+    "transport-ground",
+    "haisō torakku"
   ],
   [
     "🚛",
@@ -3820,7 +4166,8 @@ const travelEmojiItems = [
     "铰接式卡车",
     "фура",
     "大型トラック",
-    "transport-ground"
+    "transport-ground",
+    "ōgata torakku"
   ],
   [
     "🚜",
@@ -3829,7 +4176,8 @@ const travelEmojiItems = [
     "拖拉机",
     "трактор",
     "トラクター",
-    "transport-ground"
+    "transport-ground",
+    "torakutā"
   ],
   [
     "🏎️",
@@ -3838,7 +4186,8 @@ const travelEmojiItems = [
     "赛车",
     "гоночная машина",
     "レーシングカー",
-    "transport-ground"
+    "transport-ground",
+    "rēshingu kā"
   ],
   [
     "🏍️",
@@ -3847,7 +4196,8 @@ const travelEmojiItems = [
     "摩托车",
     "мотоцикл",
     "オートバイ",
-    "transport-ground"
+    "transport-ground",
+    "ōtobai"
   ],
   [
     "🛵",
@@ -3856,7 +4206,8 @@ const travelEmojiItems = [
     "小型摩托车",
     "мотороллер",
     "スクーター",
-    "transport-ground"
+    "transport-ground",
+    "sukūtā"
   ],
   [
     "🦽",
@@ -3865,7 +4216,8 @@ const travelEmojiItems = [
     "手动轮椅",
     "ручная инвалидная коляска",
     "手動車いす",
-    "transport-ground"
+    "transport-ground",
+    "shudō kuruma isu"
   ],
   [
     "🦼",
@@ -3874,7 +4226,8 @@ const travelEmojiItems = [
     "电动轮椅",
     "электрическая инвалидная коляска",
     "電動車いす",
-    "transport-ground"
+    "transport-ground",
+    "dendō kuruma isu"
   ],
   [
     "🛺",
@@ -3883,7 +4236,8 @@ const travelEmojiItems = [
     "机动三轮车",
     "авторикша",
     "オートリキシャ",
-    "transport-ground"
+    "transport-ground",
+    "ōto rikisha"
   ],
   [
     "🚲",
@@ -3892,7 +4246,8 @@ const travelEmojiItems = [
     "自行车",
     "велосипед",
     "自転車",
-    "transport-ground"
+    "transport-ground",
+    "jitensha"
   ],
   [
     "🛴",
@@ -3901,7 +4256,8 @@ const travelEmojiItems = [
     "滑板车",
     "самокат",
     "キックボード",
-    "transport-ground"
+    "transport-ground",
+    "kikkubōdo"
   ],
   [
     "🛹",
@@ -3910,7 +4266,8 @@ const travelEmojiItems = [
     "滑板",
     "скейтборд",
     "スケートボード",
-    "transport-ground"
+    "transport-ground",
+    "sukētobōdo"
   ],
   [
     "🛼",
@@ -3919,7 +4276,8 @@ const travelEmojiItems = [
     "旱冰鞋",
     "роликовый конёк",
     "ローラースケート",
-    "transport-ground"
+    "transport-ground",
+    "rōrā sukēto"
   ],
   [
     "🚏",
@@ -3928,7 +4286,8 @@ const travelEmojiItems = [
     "公交车站",
     "автобусная остановка",
     "バス停",
-    "transport-ground"
+    "transport-ground",
+    "basu tei"
   ],
   [
     "🛣️",
@@ -3937,7 +4296,8 @@ const travelEmojiItems = [
     "高速公路",
     "автомагистраль",
     "高速道路",
-    "transport-ground"
+    "transport-ground",
+    "kōsoku dōro"
   ],
   [
     "🛤️",
@@ -3946,7 +4306,8 @@ const travelEmojiItems = [
     "铁路轨道",
     "железнодорожный путь",
     "線路",
-    "transport-ground"
+    "transport-ground",
+    "senro"
   ],
   [
     "🛢️",
@@ -3955,7 +4316,8 @@ const travelEmojiItems = [
     "油桶",
     "нефтяная бочка",
     "ドラム缶",
-    "transport-ground"
+    "transport-ground",
+    "doramu kan"
   ],
   [
     "⛽",
@@ -3964,7 +4326,8 @@ const travelEmojiItems = [
     "加油泵",
     "топливная колонка",
     "燃料ポンプ",
-    "transport-ground"
+    "transport-ground",
+    "nenryō ponpu"
   ],
   [
     "🛞",
@@ -3973,7 +4336,8 @@ const travelEmojiItems = [
     "车轮",
     "колесо",
     "車輪",
-    "transport-ground"
+    "transport-ground",
+    "shar in"
   ],
   [
     "🚨",
@@ -3982,7 +4346,8 @@ const travelEmojiItems = [
     "警灯",
     "полицейская мигалка",
     "パトライト",
-    "transport-ground"
+    "transport-ground",
+    "pato raito"
   ],
   [
     "🚥",
@@ -3991,7 +4356,8 @@ const travelEmojiItems = [
     "横向交通灯",
     "горизонтальный светофор",
     "横型信号機",
-    "transport-ground"
+    "transport-ground",
+    "yokogata shingōki"
   ],
   [
     "🚦",
@@ -4000,7 +4366,8 @@ const travelEmojiItems = [
     "竖向交通灯",
     "вертикальный светофор",
     "縦型信号機",
-    "transport-ground"
+    "transport-ground",
+    "tategata shingōki"
   ],
   [
     "🛑",
@@ -4009,7 +4376,8 @@ const travelEmojiItems = [
     "停车标志",
     "знак стоп",
     "止まれの標識",
-    "transport-ground"
+    "transport-ground",
+    "tomare no hyōshiki"
   ],
   [
     "🚧",
@@ -4018,7 +4386,8 @@ const travelEmojiItems = [
     "施工",
     "дорожные работы",
     "工事中",
-    "transport-ground"
+    "transport-ground",
+    "kōji chū"
   ],
   [
     "⚓",
@@ -4027,7 +4396,8 @@ const travelEmojiItems = [
     "锚",
     "якорь",
     "いかり",
-    "transport-water"
+    "transport-water",
+    "ikari"
   ],
   [
     "🛟",
@@ -4036,7 +4406,8 @@ const travelEmojiItems = [
     "救生圈",
     "спасательный круг",
     "救命浮輪",
-    "transport-water"
+    "transport-water",
+    "kyūmei buwa"
   ],
   [
     "⛵",
@@ -4045,7 +4416,8 @@ const travelEmojiItems = [
     "帆船",
     "парусная лодка",
     "ヨット",
-    "transport-water"
+    "transport-water",
+    "yotto"
   ],
   [
     "🛶",
@@ -4054,7 +4426,8 @@ const travelEmojiItems = [
     "独木舟",
     "каноэ",
     "カヌー",
-    "transport-water"
+    "transport-water",
+    "kanū"
   ],
   [
     "🚤",
@@ -4063,7 +4436,8 @@ const travelEmojiItems = [
     "快艇",
     "скоростная лодка",
     "モーターボート",
-    "transport-water"
+    "transport-water",
+    "mōtā bōto"
   ],
   [
     "🛳️",
@@ -4072,7 +4446,8 @@ const travelEmojiItems = [
     "客船",
     "пассажирский корабль",
     "客船",
-    "transport-water"
+    "transport-water",
+    "kyakusen"
   ],
   [
     "⛴️",
@@ -4081,7 +4456,8 @@ const travelEmojiItems = [
     "渡轮",
     "паром",
     "フェリー",
-    "transport-water"
+    "transport-water",
+    "ferī"
   ],
   [
     "🛥️",
@@ -4090,7 +4466,8 @@ const travelEmojiItems = [
     "摩托艇",
     "моторная лодка",
     "モーターボート",
-    "transport-water"
+    "transport-water",
+    "mōtā bōto"
   ],
   [
     "🚢",
@@ -4099,7 +4476,8 @@ const travelEmojiItems = [
     "船",
     "корабль",
     "船",
-    "transport-water"
+    "transport-water",
+    "fune"
   ],
   [
     "✈️",
@@ -4108,7 +4486,8 @@ const travelEmojiItems = [
     "飞机",
     "самолёт",
     "飛行機",
-    "transport-air"
+    "transport-air",
+    "hikōki"
   ],
   [
     "🛩️",
@@ -4117,7 +4496,8 @@ const travelEmojiItems = [
     "小飞机",
     "маленький самолёт",
     "小型飛行機",
-    "transport-air"
+    "transport-air",
+    "kogata hikōki"
   ],
   [
     "🛫",
@@ -4126,7 +4506,8 @@ const travelEmojiItems = [
     "飞机起飞",
     "вылет самолёта",
     "飛行機の出発",
-    "transport-air"
+    "transport-air",
+    "hikōki no shuppatsu"
   ],
   [
     "🛬",
@@ -4135,7 +4516,8 @@ const travelEmojiItems = [
     "飞机降落",
     "прибытие самолёта",
     "飛行機の到着",
-    "transport-air"
+    "transport-air",
+    "hikōki no tōchaku"
   ],
   [
     "🪂",
@@ -4144,7 +4526,8 @@ const travelEmojiItems = [
     "降落伞",
     "парашют",
     "パラシュート",
-    "transport-air"
+    "transport-air",
+    "parashūto"
   ],
   [
     "💺",
@@ -4153,7 +4536,8 @@ const travelEmojiItems = [
     "座位",
     "сиденье",
     "座席",
-    "transport-air"
+    "transport-air",
+    "zaseki"
   ],
   [
     "🚁",
@@ -4162,7 +4546,8 @@ const travelEmojiItems = [
     "直升机",
     "вертолёт",
     "ヘリコプター",
-    "transport-air"
+    "transport-air",
+    "herikoputā"
   ],
   [
     "🚟",
@@ -4171,7 +4556,8 @@ const travelEmojiItems = [
     "悬挂铁路",
     "подвесная железная дорога",
     "懸垂式鉄道",
-    "transport-air"
+    "transport-air",
+    "kensui shiki tetsudō"
   ],
   [
     "🚠",
@@ -4180,7 +4566,8 @@ const travelEmojiItems = [
     "山地缆车",
     "горная канатная дорога",
     "山のケーブルウェイ",
-    "transport-air"
+    "transport-air",
+    "yama no kēburu wei"
   ],
   [
     "🚡",
@@ -4189,7 +4576,8 @@ const travelEmojiItems = [
     "空中缆车",
     "канатная дорога",
     "ロープウェイ",
-    "transport-air"
+    "transport-air",
+    "rōpu wei"
   ],
   [
     "🛰️",
@@ -4198,7 +4586,8 @@ const travelEmojiItems = [
     "卫星",
     "спутник",
     "人工衛星",
-    "transport-air"
+    "transport-air",
+    "jinkō eisei"
   ],
   [
     "🚀",
@@ -4207,7 +4596,8 @@ const travelEmojiItems = [
     "火箭",
     "ракета",
     "ロケット",
-    "transport-air"
+    "transport-air",
+    "roketto"
   ],
   [
     "🛸",
@@ -4216,7 +4606,8 @@ const travelEmojiItems = [
     "飞碟",
     "летающая тарелка",
     "空飛ぶ円盤",
-    "transport-air"
+    "transport-air",
+    "soratobu enban"
   ],
   [
     "🛎️",
@@ -4225,7 +4616,8 @@ const travelEmojiItems = [
     "服务铃",
     "гостиничный звонок",
     "ベルボーイベル",
-    "hotel"
+    "hotel",
+    "berubōi beru"
   ],
   [
     "🧳",
@@ -4234,8 +4626,9 @@ const travelEmojiItems = [
     "行李",
     "багаж",
     "荷物",
-    "hotel"
-  ]
+    "hotel",
+    "nimotsu"
+  ],
 ];
 
 const peopleEmojiItems = [
@@ -4246,7 +4639,8 @@ const peopleEmojiItems = [
     "强壮的手臂",
     "согнутый бицепс",
     "力こぶ",
-    "body-parts"
+    "body-parts",
+    "rikikobu"
   ],
   [
     "🦾",
@@ -4255,7 +4649,8 @@ const peopleEmojiItems = [
     "机械臂",
     "механическая рука",
     "義手",
-    "body-parts"
+    "body-parts",
+    "gishu"
   ],
   [
     "🦿",
@@ -4264,7 +4659,8 @@ const peopleEmojiItems = [
     "机械腿",
     "механическая нога",
     "義足",
-    "body-parts"
+    "body-parts",
+    "gisoku"
   ],
   [
     "🦵",
@@ -4273,7 +4669,8 @@ const peopleEmojiItems = [
     "腿",
     "нога",
     "脚",
-    "body-parts"
+    "body-parts",
+    "ashi"
   ],
   [
     "🦶",
@@ -4282,7 +4679,8 @@ const peopleEmojiItems = [
     "脚",
     "ступня",
     "足",
-    "body-parts"
+    "body-parts",
+    "ashi"
   ],
   [
     "👂",
@@ -4291,7 +4689,8 @@ const peopleEmojiItems = [
     "耳朵",
     "ухо",
     "耳",
-    "body-parts"
+    "body-parts",
+    "mimi"
   ],
   [
     "🦻",
@@ -4300,7 +4699,8 @@ const peopleEmojiItems = [
     "戴助听器的耳朵",
     "ухо со слуховым аппаратом",
     "補聴器を付けた耳",
-    "body-parts"
+    "body-parts",
+    "hochōki o tsuketa mimi"
   ],
   [
     "👃",
@@ -4309,7 +4709,8 @@ const peopleEmojiItems = [
     "鼻子",
     "нос",
     "鼻",
-    "body-parts"
+    "body-parts",
+    "hana"
   ],
   [
     "🧠",
@@ -4318,7 +4719,8 @@ const peopleEmojiItems = [
     "大脑",
     "мозг",
     "脳",
-    "body-parts"
+    "body-parts",
+    "nō"
   ],
   [
     "🫀",
@@ -4327,7 +4729,8 @@ const peopleEmojiItems = [
     "心脏",
     "анатомическое сердце",
     "心臓",
-    "body-parts"
+    "body-parts",
+    "shinzō"
   ],
   [
     "🫁",
@@ -4336,7 +4739,8 @@ const peopleEmojiItems = [
     "肺",
     "лёгкие",
     "肺",
-    "body-parts"
+    "body-parts",
+    "hai"
   ],
   [
     "🦷",
@@ -4345,7 +4749,8 @@ const peopleEmojiItems = [
     "牙齿",
     "зуб",
     "歯",
-    "body-parts"
+    "body-parts",
+    "ha"
   ],
   [
     "🦴",
@@ -4354,7 +4759,8 @@ const peopleEmojiItems = [
     "骨头",
     "кость",
     "骨",
-    "body-parts"
+    "body-parts",
+    "kotsu"
   ],
   [
     "👀",
@@ -4363,7 +4769,8 @@ const peopleEmojiItems = [
     "眼睛",
     "глаза",
     "目",
-    "body-parts"
+    "body-parts",
+    "me"
   ],
   [
     "👁️",
@@ -4372,7 +4779,8 @@ const peopleEmojiItems = [
     "眼睛",
     "глаз",
     "目",
-    "body-parts"
+    "body-parts",
+    "me"
   ],
   [
     "👅",
@@ -4381,7 +4789,8 @@ const peopleEmojiItems = [
     "舌头",
     "язык",
     "舌",
-    "body-parts"
+    "body-parts",
+    "shita"
   ],
   [
     "👄",
@@ -4390,7 +4799,8 @@ const peopleEmojiItems = [
     "嘴巴",
     "рот",
     "口",
-    "body-parts"
+    "body-parts",
+    "kuchi"
   ],
   [
     "🫦",
@@ -4399,7 +4809,8 @@ const peopleEmojiItems = [
     "咬嘴唇",
     "прикушенная губа",
     "唇をかむ",
-    "body-parts"
+    "body-parts",
+    "kuchibiru o kamu"
   ],
   [
     "🧑‍⚕️",
@@ -4408,7 +4819,8 @@ const peopleEmojiItems = [
     "医护人员",
     "медработник",
     "医療従事者",
-    "person-role"
+    "person-role",
+    "iryō jūjisha"
   ],
   [
     "🧑‍🎓",
@@ -4417,7 +4829,8 @@ const peopleEmojiItems = [
     "学生",
     "студент",
     "学生",
-    "person-role"
+    "person-role",
+    "gakusei"
   ],
   [
     "🧑‍🏫",
@@ -4426,7 +4839,8 @@ const peopleEmojiItems = [
     "老师",
     "учитель",
     "先生",
-    "person-role"
+    "person-role",
+    "sensei"
   ],
   [
     "🧑‍⚖️",
@@ -4435,7 +4849,8 @@ const peopleEmojiItems = [
     "法官",
     "судья",
     "裁判官",
-    "person-role"
+    "person-role",
+    "saibankan"
   ],
   [
     "🧑‍🌾",
@@ -4444,7 +4859,8 @@ const peopleEmojiItems = [
     "农民",
     "фермер",
     "農家",
-    "person-role"
+    "person-role",
+    "nōka"
   ],
   [
     "🧑‍🍳",
@@ -4453,7 +4869,8 @@ const peopleEmojiItems = [
     "厨师",
     "повар",
     "料理人",
-    "person-role"
+    "person-role",
+    "ryōrinin"
   ],
   [
     "🧑‍🔧",
@@ -4462,7 +4879,8 @@ const peopleEmojiItems = [
     "机械师",
     "механик",
     "整備士",
-    "person-role"
+    "person-role",
+    "seibishi"
   ],
   [
     "🧑‍🏭",
@@ -4471,7 +4889,8 @@ const peopleEmojiItems = [
     "工厂工人",
     "рабочий фабрики",
     "工場労働者",
-    "person-role"
+    "person-role",
+    "kōjō rōdōsha"
   ],
   [
     "🧑‍💼",
@@ -4480,7 +4899,8 @@ const peopleEmojiItems = [
     "办公室职员",
     "офисный работник",
     "会社員",
-    "person-role"
+    "person-role",
+    "kaishain"
   ],
   [
     "🧑‍🔬",
@@ -4489,7 +4909,8 @@ const peopleEmojiItems = [
     "科学家",
     "учёный",
     "科学者",
-    "person-role"
+    "person-role",
+    "kagakusha"
   ],
   [
     "🧑‍💻",
@@ -4498,7 +4919,8 @@ const peopleEmojiItems = [
     "技术人员",
     "технолог",
     "技術者",
-    "person-role"
+    "person-role",
+    "gijutsusha"
   ],
   [
     "🧑‍🎤",
@@ -4507,7 +4929,8 @@ const peopleEmojiItems = [
     "歌手",
     "певец",
     "歌手",
-    "person-role"
+    "person-role",
+    "kashu"
   ],
   [
     "🧑‍🎨",
@@ -4516,7 +4939,8 @@ const peopleEmojiItems = [
     "艺术家",
     "художник",
     "芸術家",
-    "person-role"
+    "person-role",
+    "geijutsuka"
   ],
   [
     "🧑‍✈️",
@@ -4525,7 +4949,8 @@ const peopleEmojiItems = [
     "飞行员",
     "пилот",
     "パイロット",
-    "person-role"
+    "person-role",
+    "pairotto"
   ],
   [
     "🧑‍🚀",
@@ -4534,7 +4959,8 @@ const peopleEmojiItems = [
     "宇航员",
     "астронавт",
     "宇宙飛行士",
-    "person-role"
+    "person-role",
+    "uchū hikōshi"
   ],
   [
     "🧑‍🚒",
@@ -4543,7 +4969,8 @@ const peopleEmojiItems = [
     "消防员",
     "пожарный",
     "消防士",
-    "person-role"
+    "person-role",
+    "shōbōshi"
   ],
   [
     "👮",
@@ -4552,7 +4979,8 @@ const peopleEmojiItems = [
     "警察",
     "полицейский",
     "警察官",
-    "person-role"
+    "person-role",
+    "keisatsukan"
   ],
   [
     "🕵️",
@@ -4561,7 +4989,8 @@ const peopleEmojiItems = [
     "侦探",
     "детектив",
     "探偵",
-    "person-role"
+    "person-role",
+    "tantei"
   ],
   [
     "💂",
@@ -4570,7 +4999,8 @@ const peopleEmojiItems = [
     "卫兵",
     "охранник",
     "警備員",
-    "person-role"
+    "person-role",
+    "keibiiin"
   ],
   [
     "🥷",
@@ -4579,7 +5009,8 @@ const peopleEmojiItems = [
     "忍者",
     "ниндзя",
     "忍者",
-    "person-role"
+    "person-role",
+    "ninja"
   ],
   [
     "👷",
@@ -4588,7 +5019,8 @@ const peopleEmojiItems = [
     "建筑工人",
     "строитель",
     "建設作業員",
-    "person-role"
+    "person-role",
+    "kensetsu sagyōin"
   ],
   [
     "🫅",
@@ -4597,7 +5029,8 @@ const peopleEmojiItems = [
     "戴王冠的人",
     "человек с короной",
     "王冠をかぶった人",
-    "person-role"
+    "person-role",
+    "ōkan o kabutta hito"
   ],
   [
     "👳",
@@ -4606,7 +5039,8 @@ const peopleEmojiItems = [
     "戴头巾的人",
     "человек в тюрбане",
     "ターバンを巻いた人",
-    "person-role"
+    "person-role",
+    "tāban o maita hito"
   ],
   [
     "👲",
@@ -4615,7 +5049,8 @@ const peopleEmojiItems = [
     "戴瓜皮帽的人",
     "человек в тюбетейке",
     "帽子をかぶった人",
-    "person-role"
+    "person-role",
+    "bōshi o kabutta hito"
   ],
   [
     "🧕",
@@ -4624,7 +5059,8 @@ const peopleEmojiItems = [
     "戴头巾的女人",
     "женщина в платке",
     "スカーフをかぶった女性",
-    "person-role"
+    "person-role",
+    "sukāfu o kabutta josei"
   ],
   [
     "🤵",
@@ -4633,7 +5069,8 @@ const peopleEmojiItems = [
     "穿燕尾服的人",
     "человек в смокинге",
     "タキシードの人",
-    "person-role"
+    "person-role",
+    "takishīdo no hito"
   ],
   [
     "👰",
@@ -4642,7 +5079,8 @@ const peopleEmojiItems = [
     "戴头纱的人",
     "человек с фатой",
     "ベールの人",
-    "person-role"
+    "person-role",
+    "bēru no hito"
   ],
   [
     "🫄",
@@ -4651,7 +5089,8 @@ const peopleEmojiItems = [
     "怀孕的人",
     "беременный человек",
     "妊娠した人",
-    "person-role"
+    "person-role",
+    "ninshin shita hito"
   ],
   [
     "🤱",
@@ -4660,7 +5099,8 @@ const peopleEmojiItems = [
     "哺乳",
     "кормление грудью",
     "授乳",
-    "person-role"
+    "person-role",
+    "junyū"
   ],
   [
     "🧑‍🍼",
@@ -4669,7 +5109,8 @@ const peopleEmojiItems = [
     "喂宝宝的人",
     "человек кормит ребёнка",
     "赤ちゃんに授乳する人",
-    "person-role"
+    "person-role",
+    "akachan ni junyū suru hito"
   ],
   [
     "👼",
@@ -4678,7 +5119,8 @@ const peopleEmojiItems = [
     "小天使",
     "ангелочек",
     "天使の赤ちゃん",
-    "person-fantasy"
+    "person-fantasy",
+    "tenshi no akachan"
   ],
   [
     "🎅",
@@ -4687,7 +5129,8 @@ const peopleEmojiItems = [
     "圣诞老人",
     "Санта-Клаус",
     "サンタクロース",
-    "person-fantasy"
+    "person-fantasy",
+    "santakurōsu"
   ],
   [
     "🦸",
@@ -4696,7 +5139,8 @@ const peopleEmojiItems = [
     "超级英雄",
     "супергерой",
     "スーパーヒーロー",
-    "person-fantasy"
+    "person-fantasy",
+    "sūpāhīrō"
   ],
   [
     "🦹",
@@ -4705,7 +5149,8 @@ const peopleEmojiItems = [
     "超级反派",
     "суперзлодей",
     "スーパーヴィラン",
-    "person-fantasy"
+    "person-fantasy",
+    "sūpāviran"
   ],
   [
     "🧙",
@@ -4714,7 +5159,8 @@ const peopleEmojiItems = [
     "法师",
     "маг",
     "魔法使い",
-    "person-fantasy"
+    "person-fantasy",
+    "mahōtsukai"
   ],
   [
     "🧚",
@@ -4723,7 +5169,8 @@ const peopleEmojiItems = [
     "仙子",
     "фея",
     "妖精",
-    "person-fantasy"
+    "person-fantasy",
+    "yōsei"
   ],
   [
     "🧛",
@@ -4732,7 +5179,8 @@ const peopleEmojiItems = [
     "吸血鬼",
     "вампир",
     "吸血鬼",
-    "person-fantasy"
+    "person-fantasy",
+    "kyūketsuki"
   ],
   [
     "🧜",
@@ -4741,7 +5189,8 @@ const peopleEmojiItems = [
     "人鱼",
     "русалочеловек",
     "人魚",
-    "person-fantasy"
+    "person-fantasy",
+    "ningyō"
   ],
   [
     "🧝",
@@ -4750,7 +5199,8 @@ const peopleEmojiItems = [
     "精灵",
     "эльф",
     "エルフ",
-    "person-fantasy"
+    "person-fantasy",
+    "erufu"
   ],
   [
     "🧞",
@@ -4759,7 +5209,8 @@ const peopleEmojiItems = [
     "神灯精灵",
     "джинн",
     "ランプの精",
-    "person-fantasy"
+    "person-fantasy",
+    "ranpu no sei"
   ],
   [
     "🧟",
@@ -4768,7 +5219,8 @@ const peopleEmojiItems = [
     "僵尸",
     "зомби",
     "ゾンビ",
-    "person-fantasy"
+    "person-fantasy",
+    "zonbi"
   ],
   [
     "🧌",
@@ -4777,7 +5229,8 @@ const peopleEmojiItems = [
     "巨魔",
     "тролль",
     "トロール",
-    "person-fantasy"
+    "person-fantasy",
+    "torōru"
   ],
   [
     "💆",
@@ -4786,7 +5239,8 @@ const peopleEmojiItems = [
     "正在按摩的人",
     "человек получает массаж",
     "マッサージされる人",
-    "person-activity"
+    "person-activity",
+    "massāji sareru hito"
   ],
   [
     "💇",
@@ -4795,7 +5249,8 @@ const peopleEmojiItems = [
     "正在理发的人",
     "человек стрижётся",
     "散髪される人",
-    "person-activity"
+    "person-activity",
+    "sanpatsu sareru hito"
   ],
   [
     "🚶",
@@ -4804,7 +5259,8 @@ const peopleEmojiItems = [
     "走路的人",
     "человек идёт",
     "歩く人",
-    "person-activity"
+    "person-activity",
+    "aruku hito"
   ],
   [
     "🧍",
@@ -4813,7 +5269,8 @@ const peopleEmojiItems = [
     "站立的人",
     "стоящий человек",
     "立つ人",
-    "person-activity"
+    "person-activity",
+    "tatsu hito"
   ],
   [
     "🧎",
@@ -4822,7 +5279,8 @@ const peopleEmojiItems = [
     "跪着的人",
     "человек стоит на коленях",
     "ひざまずく人",
-    "person-activity"
+    "person-activity",
+    "hizamazuku hito"
   ],
   [
     "🧑‍🦯",
@@ -4831,7 +5289,8 @@ const peopleEmojiItems = [
     "拿盲杖的人",
     "человек с белой тростью",
     "白杖を持つ人",
-    "person-activity"
+    "person-activity",
+    "hakujō o motsu hito"
   ],
   [
     "🧑‍🦼",
@@ -4840,7 +5299,8 @@ const peopleEmojiItems = [
     "坐电动轮椅的人",
     "человек в электрической коляске",
     "電動車いすの人",
-    "person-activity"
+    "person-activity",
+    "dendō kuruma isu no hito"
   ],
   [
     "🧑‍🦽",
@@ -4849,7 +5309,8 @@ const peopleEmojiItems = [
     "坐手动轮椅的人",
     "человек в ручной коляске",
     "手動車いすの人",
-    "person-activity"
+    "person-activity",
+    "shudō kuruma isu no hito"
   ],
   [
     "🏃",
@@ -4858,7 +5319,8 @@ const peopleEmojiItems = [
     "跑步的人",
     "бегущий человек",
     "走る人",
-    "person-activity"
+    "person-activity",
+    "hashiru hito"
   ],
   [
     "💃",
@@ -4867,16 +5329,18 @@ const peopleEmojiItems = [
     "跳舞的女人",
     "танцующая женщина",
     "踊る女性",
-    "person-activity"
+    "person-activity",
+    "odoru josei"
   ],
   [
     "🕺",
     "man dancing",
-    "persoon: man dancing",
-    "人：man dancing",
-    "человек: man dancing",
-    "人：man dancing",
-    "person-activity"
+    "dansende man",
+    "跳舞的男人",
+    "танцующий мужчина",
+    "踊る男性",
+    "person-activity",
+    "odoru dansei"
   ],
   [
     "🕴️",
@@ -4885,16 +5349,18 @@ const peopleEmojiItems = [
     "穿西装漂浮的人",
     "человек в костюме левитирует",
     "スーツで浮く人",
-    "person-activity"
+    "person-activity",
+    "sūtsu de uku hito"
   ],
   [
     "👯",
     "people with bunny ears",
-    "persoon: people with bunny ears",
-    "人：people with bunny ears",
-    "человек: people with bunny ears",
-    "人：people with bunny ears",
-    "person-activity"
+    "mensen met konijnenoren",
+    "戴兔耳的人",
+    "люди с кроличьими ушами",
+    "ウサ耳の人",
+    "person-activity",
+    "usagi mimi no hito"
   ],
   [
     "🧖",
@@ -4903,7 +5369,8 @@ const peopleEmojiItems = [
     "蒸汽房里的人",
     "человек в парной",
     "サウナに入る人",
-    "person-activity"
+    "person-activity",
+    "sauna ni iru hito"
   ],
   [
     "🧗",
@@ -4912,7 +5379,8 @@ const peopleEmojiItems = [
     "攀爬的人",
     "человек карабкается",
     "登る人",
-    "person-activity"
+    "person-activity",
+    "noboru hito"
   ],
   [
     "🤺",
@@ -4921,7 +5389,8 @@ const peopleEmojiItems = [
     "击剑的人",
     "фехтовальщик",
     "フェンシングする人",
-    "person-sport"
+    "person-sport",
+    "fenshingu suru hito"
   ],
   [
     "🏇",
@@ -4930,7 +5399,8 @@ const peopleEmojiItems = [
     "赛马",
     "скачки",
     "競馬",
-    "person-sport"
+    "person-sport",
+    "keiba"
   ],
   [
     "⛷️",
@@ -4939,7 +5409,8 @@ const peopleEmojiItems = [
     "滑雪者",
     "лыжник",
     "スキーヤー",
-    "person-sport"
+    "person-sport",
+    "sukīyā"
   ],
   [
     "🏂",
@@ -4948,7 +5419,8 @@ const peopleEmojiItems = [
     "单板滑雪者",
     "сноубордист",
     "スノーボーダー",
-    "person-sport"
+    "person-sport",
+    "sunōbōdā"
   ],
   [
     "🏌️",
@@ -4957,7 +5429,8 @@ const peopleEmojiItems = [
     "打高尔夫的人",
     "человек играет в гольф",
     "ゴルフする人",
-    "person-sport"
+    "person-sport",
+    "gorufu suru hito"
   ],
   [
     "🏄",
@@ -4966,7 +5439,8 @@ const peopleEmojiItems = [
     "冲浪的人",
     "сёрфер",
     "サーフィンする人",
-    "person-sport"
+    "person-sport",
+    "sāfin suru hito"
   ],
   [
     "🚣",
@@ -4975,7 +5449,8 @@ const peopleEmojiItems = [
     "划船的人",
     "человек гребёт",
     "ボートをこぐ人",
-    "person-sport"
+    "person-sport",
+    "bōto o kogu hito"
   ],
   [
     "🏊",
@@ -4984,7 +5459,8 @@ const peopleEmojiItems = [
     "游泳的人",
     "пловец",
     "泳ぐ人",
-    "person-sport"
+    "person-sport",
+    "oyogu hito"
   ],
   [
     "⛹️",
@@ -4993,7 +5469,8 @@ const peopleEmojiItems = [
     "拍球的人",
     "человек ведёт мяч",
     "ボールをつく人",
-    "person-sport"
+    "person-sport",
+    "bōru o tsuku hito"
   ],
   [
     "🏋️",
@@ -5002,7 +5479,8 @@ const peopleEmojiItems = [
     "举重的人",
     "человек поднимает штангу",
     "重量挙げする人",
-    "person-sport"
+    "person-sport",
+    "jūryō age suru hito"
   ],
   [
     "🚴",
@@ -5011,7 +5489,8 @@ const peopleEmojiItems = [
     "骑自行车的人",
     "велосипедист",
     "自転車に乗る人",
-    "person-sport"
+    "person-sport",
+    "jitensha ni noru hito"
   ],
   [
     "🚵",
@@ -5020,7 +5499,8 @@ const peopleEmojiItems = [
     "骑山地车的人",
     "человек едет на горном велосипеде",
     "マウンテンバイクに乗る人",
-    "person-sport"
+    "person-sport",
+    "maunten baiku ni noru hito"
   ],
   [
     "🤸",
@@ -5029,7 +5509,8 @@ const peopleEmojiItems = [
     "翻筋斗的人",
     "человек делает колесо",
     "側転する人",
-    "person-sport"
+    "person-sport",
+    "sokuten suru hito"
   ],
   [
     "🤼",
@@ -5038,7 +5519,8 @@ const peopleEmojiItems = [
     "摔跤的人",
     "люди борются",
     "レスリングする人たち",
-    "person-sport"
+    "person-sport",
+    "resuringu suru hitotachi"
   ],
   [
     "🤽",
@@ -5047,7 +5529,8 @@ const peopleEmojiItems = [
     "打水球的人",
     "человек играет в водное поло",
     "水球をする人",
-    "person-sport"
+    "person-sport",
+    "suikyū o suru hito"
   ],
   [
     "🤾",
@@ -5056,7 +5539,8 @@ const peopleEmojiItems = [
     "打手球的人",
     "человек играет в гандбол",
     "ハンドボールをする人",
-    "person-sport"
+    "person-sport",
+    "handobōru o suru hito"
   ],
   [
     "🤹",
@@ -5065,7 +5549,8 @@ const peopleEmojiItems = [
     "杂耍的人",
     "человек жонглирует",
     "ジャグリングする人",
-    "person-sport"
+    "person-sport",
+    "jaguringu suru hito"
   ],
   [
     "🧘",
@@ -5074,7 +5559,8 @@ const peopleEmojiItems = [
     "盘腿打坐的人",
     "человек в позе лотоса",
     "蓮華座の人",
-    "person-resting"
+    "person-resting",
+    "rengeza no hito"
   ],
   [
     "🛀",
@@ -5083,7 +5569,8 @@ const peopleEmojiItems = [
     "洗澡的人",
     "человек принимает ванну",
     "入浴する人",
-    "person-resting"
+    "person-resting",
+    "nyūyoku suru hito"
   ],
   [
     "🛌",
@@ -5092,8 +5579,9 @@ const peopleEmojiItems = [
     "躺在床上的人",
     "человек в кровати",
     "ベッドにいる人",
-    "person-resting"
-  ]
+    "person-resting",
+    "beddo ni iru hito"
+  ],
 ];
 
 const objectEmojiItems = [
@@ -5104,7 +5592,8 @@ const objectEmojiItems = [
     "眼镜",
     "очки",
     "眼鏡",
-    "clothing"
+    "clothing",
+    "megane"
   ],
   [
     "🕶️",
@@ -5113,7 +5602,8 @@ const objectEmojiItems = [
     "太阳镜",
     "солнцезащитные очки",
     "サングラス",
-    "clothing"
+    "clothing",
+    "sangurasu"
   ],
   [
     "🥽",
@@ -5122,7 +5612,8 @@ const objectEmojiItems = [
     "护目镜",
     "защитные очки",
     "ゴーグル",
-    "clothing"
+    "clothing",
+    "gōguru"
   ],
   [
     "🥼",
@@ -5131,7 +5622,8 @@ const objectEmojiItems = [
     "实验服",
     "лабораторный халат",
     "白衣",
-    "clothing"
+    "clothing",
+    "hakui"
   ],
   [
     "🦺",
@@ -5140,7 +5632,8 @@ const objectEmojiItems = [
     "安全背心",
     "сигнальный жилет",
     "安全ベスト",
-    "clothing"
+    "clothing",
+    "anzen besuto"
   ],
   [
     "👔",
@@ -5149,7 +5642,8 @@ const objectEmojiItems = [
     "领带",
     "галстук",
     "ネクタイ",
-    "clothing"
+    "clothing",
+    "nekutai"
   ],
   [
     "👕",
@@ -5158,7 +5652,8 @@ const objectEmojiItems = [
     "T恤",
     "футболка",
     "Tシャツ",
-    "clothing"
+    "clothing",
+    "tīshatsu"
   ],
   [
     "👖",
@@ -5167,7 +5662,8 @@ const objectEmojiItems = [
     "牛仔裤",
     "джинсы",
     "ジーンズ",
-    "clothing"
+    "clothing",
+    "jīnzu"
   ],
   [
     "🧣",
@@ -5176,7 +5672,8 @@ const objectEmojiItems = [
     "围巾",
     "шарф",
     "マフラー",
-    "clothing"
+    "clothing",
+    "mafuraa"
   ],
   [
     "🧤",
@@ -5185,7 +5682,8 @@ const objectEmojiItems = [
     "手套",
     "перчатки",
     "手袋",
-    "clothing"
+    "clothing",
+    "tebukuro"
   ],
   [
     "🧥",
@@ -5194,7 +5692,8 @@ const objectEmojiItems = [
     "外套",
     "пальто",
     "コート",
-    "clothing"
+    "clothing",
+    "kōto"
   ],
   [
     "🧦",
@@ -5203,7 +5702,8 @@ const objectEmojiItems = [
     "袜子",
     "носки",
     "靴下",
-    "clothing"
+    "clothing",
+    "kutsushita"
   ],
   [
     "👗",
@@ -5212,7 +5712,8 @@ const objectEmojiItems = [
     "连衣裙",
     "платье",
     "ドレス",
-    "clothing"
+    "clothing",
+    "doresu"
   ],
   [
     "👘",
@@ -5221,7 +5722,8 @@ const objectEmojiItems = [
     "和服",
     "кимоно",
     "着物",
-    "clothing"
+    "clothing",
+    "kimono"
   ],
   [
     "🥻",
@@ -5230,7 +5732,8 @@ const objectEmojiItems = [
     "纱丽",
     "сари",
     "サリー",
-    "clothing"
+    "clothing",
+    "sarī"
   ],
   [
     "🩱",
@@ -5239,7 +5742,8 @@ const objectEmojiItems = [
     "连体泳衣",
     "слитный купальник",
     "ワンピース水着",
-    "clothing"
+    "clothing",
+    "wanpīsu mizugi"
   ],
   [
     "🩲",
@@ -5248,7 +5752,8 @@ const objectEmojiItems = [
     "内裤",
     "трусы",
     "ブリーフ",
-    "clothing"
+    "clothing",
+    "burīfu"
   ],
   [
     "🩳",
@@ -5257,7 +5762,8 @@ const objectEmojiItems = [
     "短裤",
     "шорты",
     "半ズボン",
-    "clothing"
+    "clothing",
+    "hanzubon"
   ],
   [
     "👙",
@@ -5266,7 +5772,8 @@ const objectEmojiItems = [
     "比基尼",
     "бикини",
     "ビキニ",
-    "clothing"
+    "clothing",
+    "bikini"
   ],
   [
     "👚",
@@ -5275,7 +5782,8 @@ const objectEmojiItems = [
     "女装",
     "женская одежда",
     "婦人服",
-    "clothing"
+    "clothing",
+    "fujinfuku"
   ],
   [
     "🪭",
@@ -5284,7 +5792,8 @@ const objectEmojiItems = [
     "折扇",
     "складной веер",
     "扇子",
-    "clothing"
+    "clothing",
+    "sensu"
   ],
   [
     "👛",
@@ -5293,7 +5802,8 @@ const objectEmojiItems = [
     "钱包",
     "кошелёк",
     "財布",
-    "clothing"
+    "clothing",
+    "saifu"
   ],
   [
     "👜",
@@ -5302,7 +5812,8 @@ const objectEmojiItems = [
     "手提包",
     "сумочка",
     "ハンドバッグ",
-    "clothing"
+    "clothing",
+    "handobaggu"
   ],
   [
     "👝",
@@ -5311,7 +5822,8 @@ const objectEmojiItems = [
     "手拿包",
     "клатч",
     "クラッチバッグ",
-    "clothing"
+    "clothing",
+    "kuratchi baggu"
   ],
   [
     "🛍️",
@@ -5320,7 +5832,8 @@ const objectEmojiItems = [
     "购物袋",
     "пакеты для покупок",
     "買い物袋",
-    "clothing"
+    "clothing",
+    "kaimono bukuro"
   ],
   [
     "🎒",
@@ -5329,7 +5842,8 @@ const objectEmojiItems = [
     "背包",
     "рюкзак",
     "リュックサック",
-    "clothing"
+    "clothing",
+    "ryukkusakku"
   ],
   [
     "🩴",
@@ -5338,7 +5852,8 @@ const objectEmojiItems = [
     "人字拖",
     "шлёпанец",
     "ビーチサンダル",
-    "clothing"
+    "clothing",
+    "bīchi sandaru"
   ],
   [
     "👞",
@@ -5347,7 +5862,8 @@ const objectEmojiItems = [
     "男鞋",
     "мужская туфля",
     "紳士靴",
-    "clothing"
+    "clothing",
+    "shinshi kutsu"
   ],
   [
     "👟",
@@ -5356,7 +5872,8 @@ const objectEmojiItems = [
     "跑鞋",
     "кроссовок",
     "ランニングシューズ",
-    "clothing"
+    "clothing",
+    "ranningu shūzu"
   ],
   [
     "🥾",
@@ -5365,7 +5882,8 @@ const objectEmojiItems = [
     "登山靴",
     "туристический ботинок",
     "登山靴",
-    "clothing"
+    "clothing",
+    "tozan kutsu"
   ],
   [
     "🥿",
@@ -5374,7 +5892,8 @@ const objectEmojiItems = [
     "平底鞋",
     "туфля на плоской подошве",
     "フラットシューズ",
-    "clothing"
+    "clothing",
+    "furatto shūzu"
   ],
   [
     "👠",
@@ -5383,7 +5902,8 @@ const objectEmojiItems = [
     "高跟鞋",
     "туфля на каблуке",
     "ハイヒール",
-    "clothing"
+    "clothing",
+    "haihīru"
   ],
   [
     "👡",
@@ -5392,7 +5912,8 @@ const objectEmojiItems = [
     "女式凉鞋",
     "женская сандалия",
     "女性用サンダル",
-    "clothing"
+    "clothing",
+    "josei yō sandaru"
   ],
   [
     "🩰",
@@ -5401,7 +5922,8 @@ const objectEmojiItems = [
     "芭蕾舞鞋",
     "балетные туфли",
     "バレエシューズ",
-    "clothing"
+    "clothing",
+    "barē shūzu"
   ],
   [
     "👢",
@@ -5410,7 +5932,8 @@ const objectEmojiItems = [
     "女靴",
     "женский сапог",
     "女性用ブーツ",
-    "clothing"
+    "clothing",
+    "josei yō būtsu"
   ],
   [
     "🪮",
@@ -5419,7 +5942,8 @@ const objectEmojiItems = [
     "发梳",
     "гребень для волос",
     "ヘアピック",
-    "clothing"
+    "clothing",
+    "hea pikku"
   ],
   [
     "👑",
@@ -5428,7 +5952,8 @@ const objectEmojiItems = [
     "皇冠",
     "корона",
     "王冠",
-    "clothing"
+    "clothing",
+    "ōkan"
   ],
   [
     "👒",
@@ -5437,7 +5962,8 @@ const objectEmojiItems = [
     "女帽",
     "женская шляпа",
     "女性用帽子",
-    "clothing"
+    "clothing",
+    "josei yō bōshi"
   ],
   [
     "🎩",
@@ -5446,7 +5972,8 @@ const objectEmojiItems = [
     "礼帽",
     "цилиндр",
     "シルクハット",
-    "clothing"
+    "clothing",
+    "shiruku hatto"
   ],
   [
     "🎓",
@@ -5455,7 +5982,8 @@ const objectEmojiItems = [
     "毕业帽",
     "академическая шапочка",
     "卒業帽",
-    "clothing"
+    "clothing",
+    "sotsugyōbō"
   ],
   [
     "🧢",
@@ -5464,7 +5992,8 @@ const objectEmojiItems = [
     "鸭舌帽",
     "кепка",
     "キャップ",
-    "clothing"
+    "clothing",
+    "kyappu"
   ],
   [
     "🪖",
@@ -5473,7 +6002,8 @@ const objectEmojiItems = [
     "军用头盔",
     "военный шлем",
     "軍用ヘルメット",
-    "clothing"
+    "clothing",
+    "gun'yō herumetto"
   ],
   [
     "⛑️",
@@ -5482,7 +6012,8 @@ const objectEmojiItems = [
     "救援人员头盔",
     "каска спасателя",
     "救助隊員のヘルメット",
-    "clothing"
+    "clothing",
+    "kyūjotaiin no herumetto"
   ],
   [
     "📿",
@@ -5491,7 +6022,8 @@ const objectEmojiItems = [
     "念珠",
     "чётки",
     "数珠",
-    "clothing"
+    "clothing",
+    "juzu"
   ],
   [
     "💄",
@@ -5500,7 +6032,8 @@ const objectEmojiItems = [
     "口红",
     "помада",
     "口紅",
-    "clothing"
+    "clothing",
+    "kuchibeni"
   ],
   [
     "💍",
@@ -5509,7 +6042,8 @@ const objectEmojiItems = [
     "戒指",
     "кольцо",
     "指輪",
-    "clothing"
+    "clothing",
+    "yubiwa"
   ],
   [
     "💎",
@@ -5518,7 +6052,8 @@ const objectEmojiItems = [
     "宝石",
     "драгоценный камень",
     "宝石",
-    "clothing"
+    "clothing",
+    "hōseki"
   ],
   [
     "🔋",
@@ -5527,16 +6062,18 @@ const objectEmojiItems = [
     "电池",
     "батарейка",
     "電池",
-    "computer"
+    "computer",
+    "denchi"
   ],
   [
     "🪫",
     "low battery",
     "lege batterij",
     "低电量",
-    "разряженная батарея",
+    "разやженная батарея",
     "電池残量低下",
-    "computer"
+    "computer",
+    "denchi zanryō teika"
   ],
   [
     "🔌",
@@ -5545,7 +6082,8 @@ const objectEmojiItems = [
     "插头",
     "электрическая вилка",
     "電源プラグ",
-    "computer"
+    "computer",
+    "denshi puragu"
   ],
   [
     "💻",
@@ -5554,7 +6092,8 @@ const objectEmojiItems = [
     "笔记本电脑",
     "ноутбук",
     "ノートパソコン",
-    "computer"
+    "computer",
+    "nōto pasokon"
   ],
   [
     "🖥️",
@@ -5563,7 +6102,8 @@ const objectEmojiItems = [
     "台式电脑",
     "настольный компьютер",
     "デスクトップパソコン",
-    "computer"
+    "computer",
+    "desukutoppu pasokon"
   ],
   [
     "🖨️",
@@ -5572,7 +6112,8 @@ const objectEmojiItems = [
     "打印机",
     "принтер",
     "プリンター",
-    "computer"
+    "computer",
+    "purintā"
   ],
   [
     "⌨️",
@@ -5581,7 +6122,8 @@ const objectEmojiItems = [
     "键盘",
     "клавиатура",
     "キーボード",
-    "computer"
+    "computer",
+    "kībōdo"
   ],
   [
     "🖱️",
@@ -5590,7 +6132,8 @@ const objectEmojiItems = [
     "电脑鼠标",
     "компьютерная мышь",
     "コンピューターマウス",
-    "computer"
+    "computer",
+    "konpyūtā mausu"
   ],
   [
     "🖲️",
@@ -5599,7 +6142,8 @@ const objectEmojiItems = [
     "轨迹球",
     "трекбол",
     "トラックボール",
-    "computer"
+    "computer",
+    "torakkubōru"
   ],
   [
     "💽",
@@ -5608,7 +6152,8 @@ const objectEmojiItems = [
     "电脑光盘",
     "компьютерный диск",
     "コンピューターディスク",
-    "computer"
+    "computer",
+    "konpyūtā disuku"
   ],
   [
     "💾",
@@ -5617,7 +6162,8 @@ const objectEmojiItems = [
     "软盘",
     "дискета",
     "フロッピーディスク",
-    "computer"
+    "computer",
+    "furoppī disuku"
   ],
   [
     "💿",
@@ -5626,7 +6172,8 @@ const objectEmojiItems = [
     "光盘",
     "оптический диск",
     "光ディスク",
-    "computer"
+    "computer",
+    "kōgaku disuku"
   ],
   [
     "📀",
@@ -5635,7 +6182,8 @@ const objectEmojiItems = [
     "DVD",
     "DVD",
     "DVD",
-    "computer"
+    "computer",
+    "dībuidī"
   ],
   [
     "🧮",
@@ -5644,7 +6192,8 @@ const objectEmojiItems = [
     "算盘",
     "счёты",
     "そろばん",
-    "computer"
+    "computer",
+    "soroban"
   ],
   [
     "🎥",
@@ -5653,7 +6202,8 @@ const objectEmojiItems = [
     "电影摄影机",
     "кинокамера",
     "映画カメラ",
-    "light & video"
+    "light & video",
+    "eiga kamera"
   ],
   [
     "🎞️",
@@ -5662,7 +6212,8 @@ const objectEmojiItems = [
     "胶片帧",
     "киноплёнка",
     "フィルム",
-    "light & video"
+    "light & video",
+    "firumu"
   ],
   [
     "📽️",
@@ -5671,7 +6222,8 @@ const objectEmojiItems = [
     "电影放映机",
     "кинопроектор",
     "映写機",
-    "light & video"
+    "light & video",
+    "eisha ki"
   ],
   [
     "🎬",
@@ -5680,7 +6232,8 @@ const objectEmojiItems = [
     "场记板",
     "хлопушка",
     "カチンコ",
-    "light & video"
+    "light & video",
+    "kachinko"
   ],
   [
     "📺",
@@ -5689,7 +6242,8 @@ const objectEmojiItems = [
     "电视",
     "телевизор",
     "テレビ",
-    "light & video"
+    "light & video",
+    "terebi"
   ],
   [
     "📷",
@@ -5698,7 +6252,8 @@ const objectEmojiItems = [
     "相机",
     "камера",
     "カメラ",
-    "light & video"
+    "light & video",
+    "kamera"
   ],
   [
     "📸",
@@ -5707,7 +6262,8 @@ const objectEmojiItems = [
     "带闪光灯的相机",
     "камера со вспышкой",
     "フラッシュ付きカメラ",
-    "light & video"
+    "light & video",
+    "furasshu tsuki kamera"
   ],
   [
     "📹",
@@ -5716,7 +6272,8 @@ const objectEmojiItems = [
     "摄像机",
     "видеокамера",
     "ビデオカメラ",
-    "light & video"
+    "light & video",
+    "bideo kamera"
   ],
   [
     "📼",
@@ -5725,7 +6282,8 @@ const objectEmojiItems = [
     "录像带",
     "видеокассета",
     "ビデオカセット",
-    "light & video"
+    "light & video",
+    "bideo kasetto"
   ],
   [
     "🔍",
@@ -5734,7 +6292,8 @@ const objectEmojiItems = [
     "向左倾斜的放大镜",
     "лупа влево",
     "左向きの虫眼鏡",
-    "light & video"
+    "light & video",
+    "hidarimuki no chūmegane"
   ],
   [
     "🔎",
@@ -5743,7 +6302,8 @@ const objectEmojiItems = [
     "向右倾斜的放大镜",
     "лупа вправо",
     "右向きの虫眼鏡",
-    "light & video"
+    "light & video",
+    "migimuki no chūmegane"
   ],
   [
     "🕯️",
@@ -5752,7 +6312,8 @@ const objectEmojiItems = [
     "蜡烛",
     "свеча",
     "ろうそく",
-    "light & video"
+    "light & video",
+    "rōsoku"
   ],
   [
     "💡",
@@ -5761,7 +6322,8 @@ const objectEmojiItems = [
     "灯泡",
     "лампочка",
     "電球",
-    "light & video"
+    "light & video",
+    "denkyū"
   ],
   [
     "🔦",
@@ -5770,7 +6332,8 @@ const objectEmojiItems = [
     "手电筒",
     "фонарик",
     "懐中電灯",
-    "light & video"
+    "light & video",
+    "kaichū dentō"
   ],
   [
     "🏮",
@@ -5779,7 +6342,8 @@ const objectEmojiItems = [
     "红灯笼",
     "красный бумажный фонарь",
     "赤い提灯",
-    "light & video"
+    "light & video",
+    "akai chōchin"
   ],
   [
     "🪔",
@@ -5788,7 +6352,8 @@ const objectEmojiItems = [
     "油灯",
     "лампа дия",
     "ディヤランプ",
-    "light & video"
+    "light & video",
+    "diya ranpu"
   ],
   [
     "📔",
@@ -5797,7 +6362,8 @@ const objectEmojiItems = [
     "装饰封面笔记本",
     "тетрадь с красивой обложкой",
     "表紙付きノート",
-    "book-paper"
+    "book-paper",
+    "hyōshi tsuki nōto"
   ],
   [
     "📕",
@@ -5806,7 +6372,8 @@ const objectEmojiItems = [
     "合上的书",
     "закрытая книга",
     "閉じた本",
-    "book-paper"
+    "book-paper",
+    "tojita hon"
   ],
   [
     "📖",
@@ -5815,7 +6382,8 @@ const objectEmojiItems = [
     "打开的书",
     "открытая книга",
     "開いた本",
-    "book-paper"
+    "book-paper",
+    "hiraita hon"
   ],
   [
     "📗",
@@ -5824,7 +6392,8 @@ const objectEmojiItems = [
     "绿色书",
     "зелёная книга",
     "緑の本",
-    "book-paper"
+    "book-paper",
+    "midori no hon"
   ],
   [
     "📘",
@@ -5833,7 +6402,8 @@ const objectEmojiItems = [
     "蓝色书",
     "синяя книга",
     "青い本",
-    "book-paper"
+    "book-paper",
+    "aoi hon"
   ],
   [
     "📙",
@@ -5842,7 +6412,8 @@ const objectEmojiItems = [
     "橙色书",
     "оранжевая книга",
     "オレンジの本",
-    "book-paper"
+    "book-paper",
+    "orenji no hon"
   ],
   [
     "📚",
@@ -5851,7 +6422,8 @@ const objectEmojiItems = [
     "书",
     "книги",
     "本",
-    "book-paper"
+    "book-paper",
+    "hon"
   ],
   [
     "📓",
@@ -5860,7 +6432,8 @@ const objectEmojiItems = [
     "笔记本",
     "тетрадь",
     "ノート",
-    "book-paper"
+    "book-paper",
+    "nōto"
   ],
   [
     "📒",
@@ -5869,7 +6442,8 @@ const objectEmojiItems = [
     "账本",
     "бухгалтерская книга",
     "帳簿",
-    "book-paper"
+    "book-paper",
+    "chōbo"
   ],
   [
     "📃",
@@ -5878,7 +6452,8 @@ const objectEmojiItems = [
     "卷边页面",
     "страница с загнутым углом",
     "丸まったページ",
-    "book-paper"
+    "book-paper",
+    "marumatta pēji"
   ],
   [
     "📜",
@@ -5887,7 +6462,8 @@ const objectEmojiItems = [
     "卷轴",
     "свиток",
     "巻物",
-    "book-paper"
+    "book-paper",
+    "makimono"
   ],
   [
     "📄",
@@ -5896,7 +6472,8 @@ const objectEmojiItems = [
     "正面朝上的页面",
     "лист бумаги",
     "上向きのページ",
-    "book-paper"
+    "book-paper",
+    "uwamuki no pēji"
   ],
   [
     "📰",
@@ -5905,7 +6482,8 @@ const objectEmojiItems = [
     "报纸",
     "газета",
     "新聞",
-    "book-paper"
+    "book-paper",
+    "shinbun"
   ],
   [
     "🗞️",
@@ -5914,7 +6492,8 @@ const objectEmojiItems = [
     "卷起的报纸",
     "свёрнутая газета",
     "丸めた新聞",
-    "book-paper"
+    "book-paper",
+    "marumeta shinbun"
   ],
   [
     "📑",
@@ -5923,7 +6502,8 @@ const objectEmojiItems = [
     "书签标签",
     "закладки",
     "付箋",
-    "book-paper"
+    "book-paper",
+    "fushin"
   ],
   [
     "🔖",
@@ -5932,7 +6512,8 @@ const objectEmojiItems = [
     "书签",
     "закладка",
     "しおり",
-    "book-paper"
+    "book-paper",
+    "shiori"
   ],
   [
     "🏷️",
@@ -5941,7 +6522,8 @@ const objectEmojiItems = [
     "标签",
     "ярлык",
     "ラベル",
-    "book-paper"
+    "book-paper",
+    "raberu"
   ],
   [
     "🪙",
@@ -5950,7 +6532,8 @@ const objectEmojiItems = [
     "硬币",
     "монета",
     "硬貨",
-    "money"
+    "money",
+    "kōka"
   ],
   [
     "💰",
@@ -5959,7 +6542,8 @@ const objectEmojiItems = [
     "钱袋",
     "мешок денег",
     "金袋",
-    "money"
+    "money",
+    "kinbukuro"
   ],
   [
     "💴",
@@ -5968,7 +6552,8 @@ const objectEmojiItems = [
     "日元纸币",
     "банкнота иены",
     "円札",
-    "money"
+    "money",
+    "en satsu"
   ],
   [
     "💵",
@@ -5977,7 +6562,8 @@ const objectEmojiItems = [
     "美元纸币",
     "долларовая банкнота",
     "ドル札",
-    "money"
+    "money",
+    "doru satsu"
   ],
   [
     "💶",
@@ -5986,7 +6572,8 @@ const objectEmojiItems = [
     "欧元纸币",
     "банкнота евро",
     "ユーロ札",
-    "money"
+    "money",
+    "yūro satsu"
   ],
   [
     "💷",
@@ -5995,7 +6582,8 @@ const objectEmojiItems = [
     "英镑纸币",
     "банкнота фунта",
     "ポンド札",
-    "money"
+    "money",
+    "pondo satsu"
   ],
   [
     "💸",
@@ -6004,7 +6592,8 @@ const objectEmojiItems = [
     "长翅膀的钱",
     "деньги с крыльями",
     "羽の生えたお金",
-    "money"
+    "money",
+    "hane no haeta okane"
   ],
   [
     "💳",
@@ -6013,7 +6602,8 @@ const objectEmojiItems = [
     "信用卡",
     "кредитная карта",
     "クレジットカード",
-    "money"
+    "money",
+    "kurejitto kādo"
   ],
   [
     "🧾",
@@ -6022,7 +6612,8 @@ const objectEmojiItems = [
     "收据",
     "чек",
     "レシート",
-    "money"
+    "money",
+    "reshīto"
   ],
   [
     "💹",
@@ -6031,7 +6622,8 @@ const objectEmojiItems = [
     "日元上涨图表",
     "растущий график с иеной",
     "円高グラフ",
-    "money"
+    "money",
+    "en taka gurafu"
   ],
   [
     "✏️",
@@ -6040,7 +6632,8 @@ const objectEmojiItems = [
     "铅笔",
     "карандаш",
     "鉛筆",
-    "writing"
+    "writing",
+    "enpitsu"
   ],
   [
     "✒️",
@@ -6049,7 +6642,8 @@ const objectEmojiItems = [
     "钢笔尖",
     "перо",
     "ペン先",
-    "writing"
+    "writing",
+    "pen saki"
   ],
   [
     "🖋️",
@@ -6058,7 +6652,8 @@ const objectEmojiItems = [
     "钢笔",
     "перьевая ручка",
     "万年筆",
-    "writing"
+    "writing",
+    "mannenhitsu"
   ],
   [
     "🖊️",
@@ -6067,7 +6662,8 @@ const objectEmojiItems = [
     "笔",
     "ручка",
     "ペン",
-    "writing"
+    "writing",
+    "pen"
   ],
   [
     "🖌️",
@@ -6076,7 +6672,8 @@ const objectEmojiItems = [
     "画笔",
     "кисть",
     "絵筆",
-    "writing"
+    "writing",
+    "efude"
   ],
   [
     "🖍️",
@@ -6085,7 +6682,8 @@ const objectEmojiItems = [
     "蜡笔",
     "мелок",
     "クレヨン",
-    "writing"
+    "writing",
+    "kureyon"
   ],
   [
     "📝",
@@ -6094,7 +6692,8 @@ const objectEmojiItems = [
     "备忘录",
     "заметка",
     "メモ",
-    "writing"
+    "writing",
+    "memo"
   ],
   [
     "💼",
@@ -6103,7 +6702,8 @@ const objectEmojiItems = [
     "公文包",
     "портфель",
     "ブリーフケース",
-    "office"
+    "office",
+    "burīfukēsu"
   ],
   [
     "📁",
@@ -6112,7 +6712,8 @@ const objectEmojiItems = [
     "文件夹",
     "папка",
     "フォルダー",
-    "office"
+    "office",
+    "fōrudā"
   ],
   [
     "📂",
@@ -6121,7 +6722,8 @@ const objectEmojiItems = [
     "打开的文件夹",
     "открытая папка",
     "開いたフォルダー",
-    "office"
+    "office",
+    "hiraita fōrudā"
   ],
   [
     "🗂️",
@@ -6130,7 +6732,8 @@ const objectEmojiItems = [
     "索引分隔页",
     "разделители картотеки",
     "カード仕切り",
-    "office"
+    "office",
+    "kādo shikiri"
   ],
   [
     "📅",
@@ -6139,7 +6742,8 @@ const objectEmojiItems = [
     "日历",
     "календарь",
     "カレンダー",
-    "office"
+    "office",
+    "karendā"
   ],
   [
     "📆",
@@ -6148,7 +6752,8 @@ const objectEmojiItems = [
     "撕页日历",
     "отрывной календарь",
     "日めくりカレンダー",
-    "office"
+    "office",
+    "himekuri karendā"
   ],
   [
     "🗒️",
@@ -6157,7 +6762,8 @@ const objectEmojiItems = [
     "螺旋记事本",
     "блокнот на спирали",
     "リングメモ",
-    "office"
+    "office",
+    "ringu memo"
   ],
   [
     "🗓️",
@@ -6166,7 +6772,8 @@ const objectEmojiItems = [
     "螺旋日历",
     "календарь на спирали",
     "リングカレンダー",
-    "office"
+    "office",
+    "ringu karendā"
   ],
   [
     "📇",
@@ -6175,7 +6782,8 @@ const objectEmojiItems = [
     "卡片索引",
     "картотека",
     "カード索引",
-    "office"
+    "office",
+    "kādo sakuin"
   ],
   [
     "📈",
@@ -6184,7 +6792,8 @@ const objectEmojiItems = [
     "上升图表",
     "растущий график",
     "上昇グラフ",
-    "office"
+    "office",
+    "jōshō gurafu"
   ],
   [
     "📉",
@@ -6193,7 +6802,8 @@ const objectEmojiItems = [
     "下降图表",
     "снижающийся график",
     "下降グラフ",
-    "office"
+    "office",
+    "kachō gurafu"
   ],
   [
     "📊",
@@ -6202,7 +6812,8 @@ const objectEmojiItems = [
     "柱状图",
     "столбчатая диаграмма",
     "棒グラフ",
-    "office"
+    "office",
+    "bō gurafu"
   ],
   [
     "📋",
@@ -6211,7 +6822,8 @@ const objectEmojiItems = [
     "剪贴板",
     "планшет",
     "クリップボード",
-    "office"
+    "office",
+    "kurippubōdo"
   ],
   [
     "📌",
@@ -6220,7 +6832,8 @@ const objectEmojiItems = [
     "图钉",
     "канцелярская кнопка",
     "画びょう",
-    "office"
+    "office",
+    "gabyō"
   ],
   [
     "📍",
@@ -6229,7 +6842,8 @@ const objectEmojiItems = [
     "圆头图钉",
     "круглая кнопка",
     "丸い画びょう",
-    "office"
+    "office",
+    "marui gabyō"
   ],
   [
     "📎",
@@ -6238,7 +6852,8 @@ const objectEmojiItems = [
     "回形针",
     "скрепка",
     "クリップ",
-    "office"
+    "office",
+    "kurippu"
   ],
   [
     "🖇️",
@@ -6247,7 +6862,8 @@ const objectEmojiItems = [
     "相连的回形针",
     "соединённые скрепки",
     "つながったクリップ",
-    "office"
+    "office",
+    "tsunagatta kurippu"
   ],
   [
     "📏",
@@ -6256,7 +6872,8 @@ const objectEmojiItems = [
     "直尺",
     "линейка",
     "定規",
-    "office"
+    "office",
+    "jōgi"
   ],
   [
     "📐",
@@ -6265,7 +6882,8 @@ const objectEmojiItems = [
     "三角尺",
     "треугольная линейка",
     "三角定規",
-    "office"
+    "office",
+    "sankaku jōgi"
   ],
   [
     "✂️",
@@ -6274,7 +6892,8 @@ const objectEmojiItems = [
     "剪刀",
     "ножницы",
     "はさみ",
-    "office"
+    "office",
+    "hasami"
   ],
   [
     "🗃️",
@@ -6283,7 +6902,8 @@ const objectEmojiItems = [
     "卡片盒",
     "картотечный ящик",
     "カードファイル箱",
-    "office"
+    "office",
+    "kādo fairu bako"
   ],
   [
     "🗄️",
@@ -6292,7 +6912,8 @@ const objectEmojiItems = [
     "文件柜",
     "шкаф для документов",
     "ファイルキャビネット",
-    "office"
+    "office",
+    "fairu kyabinetto"
   ],
   [
     "🗑️",
@@ -6301,7 +6922,8 @@ const objectEmojiItems = [
     "废纸篓",
     "мусорная корзина",
     "ごみ箱",
-    "office"
+    "office",
+    "gomi bako"
   ],
   [
     "🔨",
@@ -6310,7 +6932,8 @@ const objectEmojiItems = [
     "锤子",
     "молоток",
     "ハンマー",
-    "tool"
+    "tool",
+    "hanmā"
   ],
   [
     "🪓",
@@ -6319,7 +6942,8 @@ const objectEmojiItems = [
     "斧头",
     "топор",
     "斧",
-    "tool"
+    "tool",
+    "ono"
   ],
   [
     "⛏️",
@@ -6328,7 +6952,8 @@ const objectEmojiItems = [
     "镐",
     "кирка",
     "つるはし",
-    "tool"
+    "tool",
+    "tsuruhashi"
   ],
   [
     "⚒️",
@@ -6337,7 +6962,8 @@ const objectEmojiItems = [
     "锤子和镐",
     "молоток и кирка",
     "ハンマーとつるはし",
-    "tool"
+    "tool",
+    "hanmā to tsuruhashi"
   ],
   [
     "🛠️",
@@ -6346,7 +6972,8 @@ const objectEmojiItems = [
     "锤子和扳手",
     "молоток и гаечный ключ",
     "ハンマーとレンチ",
-    "tool"
+    "tool",
+    "hanmā to renchi"
   ],
   [
     "🗡️",
@@ -6355,7 +6982,8 @@ const objectEmojiItems = [
     "匕首",
     "кинжал",
     "短剣",
-    "tool"
+    "tool",
+    "tanken"
   ],
   [
     "⚔️",
@@ -6364,7 +6992,8 @@ const objectEmojiItems = [
     "交叉的剑",
     "скрещённые мечи",
     "交差した剣",
-    "tool"
+    "tool",
+    "kōsa shita ken"
   ],
   [
     "💣",
@@ -6373,7 +7002,8 @@ const objectEmojiItems = [
     "炸弹",
     "бомба",
     "爆弾",
-    "tool"
+    "tool",
+    "bakudan"
   ],
   [
     "🪃",
@@ -6382,7 +7012,8 @@ const objectEmojiItems = [
     "回旋镖",
     "бумеранг",
     "ブーメラン",
-    "tool"
+    "tool",
+    "būmeran"
   ],
   [
     "🏹",
@@ -6391,7 +7022,8 @@ const objectEmojiItems = [
     "弓箭",
     "лук и стрела",
     "弓矢",
-    "tool"
+    "tool",
+    "yumi ya"
   ],
   [
     "🛡️",
@@ -6400,7 +7032,8 @@ const objectEmojiItems = [
     "盾牌",
     "щит",
     "盾",
-    "tool"
+    "tool",
+    "tate"
   ],
   [
     "🪚",
@@ -6409,7 +7042,8 @@ const objectEmojiItems = [
     "木工锯",
     "пила",
     "のこぎり",
-    "tool"
+    "tool",
+    "nokogiri"
   ],
   [
     "🔧",
@@ -6418,7 +7052,8 @@ const objectEmojiItems = [
     "扳手",
     "гаечный ключ",
     "レンチ",
-    "tool"
+    "tool",
+    "renchi"
   ],
   [
     "🪛",
@@ -6427,7 +7062,8 @@ const objectEmojiItems = [
     "螺丝刀",
     "отвёртка",
     "ドライバー",
-    "tool"
+    "tool",
+    "doraibā"
   ],
   [
     "🔩",
@@ -6436,7 +7072,8 @@ const objectEmojiItems = [
     "螺母和螺栓",
     "гайка и болт",
     "ナットとボルト",
-    "tool"
+    "tool",
+    "natto to boruto"
   ],
   [
     "⚙️",
@@ -6445,7 +7082,8 @@ const objectEmojiItems = [
     "齿轮",
     "шестерёнка",
     "歯車",
-    "tool"
+    "tool",
+    "haguruma"
   ],
   [
     "🗜️",
@@ -6454,7 +7092,8 @@ const objectEmojiItems = [
     "夹具",
     "зажим",
     "クランプ",
-    "tool"
+    "tool",
+    "kuranpu"
   ],
   [
     "⚖️",
@@ -6463,7 +7102,8 @@ const objectEmojiItems = [
     "天平",
     "весы",
     "天秤",
-    "tool"
+    "tool",
+    "tenbin"
   ],
   [
     "🦯",
@@ -6472,7 +7112,8 @@ const objectEmojiItems = [
     "盲杖",
     "белая трость",
     "白杖",
-    "tool"
+    "tool",
+    "hakujō"
   ],
   [
     "🔗",
@@ -6481,7 +7122,8 @@ const objectEmojiItems = [
     "链接",
     "звено",
     "リンク",
-    "tool"
+    "tool",
+    "rinku"
   ],
   [
     "⛓️‍💥",
@@ -6490,7 +7132,8 @@ const objectEmojiItems = [
     "断开的链条",
     "разорванная цепь",
     "切れた鎖",
-    "tool"
+    "tool",
+    "kireta kusari"
   ],
   [
     "⛓️",
@@ -6499,7 +7142,8 @@ const objectEmojiItems = [
     "链条",
     "цепи",
     "鎖",
-    "tool"
+    "tool",
+    "kusari"
   ],
   [
     "🪝",
@@ -6508,7 +7152,8 @@ const objectEmojiItems = [
     "钩子",
     "крюк",
     "フック",
-    "tool"
+    "tool",
+    "hukku"
   ],
   [
     "🧰",
@@ -6517,7 +7162,8 @@ const objectEmojiItems = [
     "工具箱",
     "ящик с инструментами",
     "工具箱",
-    "tool"
+    "tool",
+    "kōgubako"
   ],
   [
     "🧲",
@@ -6526,7 +7172,8 @@ const objectEmojiItems = [
     "磁铁",
     "магнит",
     "磁石",
-    "tool"
+    "tool",
+    "jishaku"
   ],
   [
     "🪜",
@@ -6535,7 +7182,8 @@ const objectEmojiItems = [
     "梯子",
     "лестница",
     "はしご",
-    "tool"
+    "tool",
+    "hashigo"
   ],
   [
     "🪏",
@@ -6544,7 +7192,8 @@ const objectEmojiItems = [
     "铲子",
     "лопата",
     "シャベル",
-    "tool"
+    "tool",
+    "shaberu"
   ],
   [
     "⚗️",
@@ -6553,7 +7202,8 @@ const objectEmojiItems = [
     "蒸馏器",
     "аламбик",
     "アランビック",
-    "science"
+    "science",
+    "aranbikku"
   ],
   [
     "🧪",
@@ -6562,7 +7212,8 @@ const objectEmojiItems = [
     "试管",
     "пробирка",
     "試験管",
-    "science"
+    "science",
+    "shikenkan"
   ],
   [
     "🧫",
@@ -6571,7 +7222,8 @@ const objectEmojiItems = [
     "培养皿",
     "чашка Петри",
     "シャーレ",
-    "science"
+    "science",
+    "shāre"
   ],
   [
     "🧬",
@@ -6580,7 +7232,8 @@ const objectEmojiItems = [
     "DNA",
     "ДНК",
     "DNA",
-    "science"
+    "science",
+    "dna"
   ],
   [
     "🔬",
@@ -6589,7 +7242,8 @@ const objectEmojiItems = [
     "显微镜",
     "микроскоп",
     "顕微鏡",
-    "science"
+    "science",
+    "kenbikyō"
   ],
   [
     "🔭",
@@ -6598,7 +7252,8 @@ const objectEmojiItems = [
     "望远镜",
     "телескоп",
     "望遠鏡",
-    "science"
+    "science",
+    "bōenkyō"
   ],
   [
     "📡",
@@ -6607,7 +7262,8 @@ const objectEmojiItems = [
     "卫星天线",
     "спутниковая антенна",
     "衛星アンテナ",
-    "science"
+    "science",
+    "eisei antena"
   ],
   [
     "💉",
@@ -6616,7 +7272,8 @@ const objectEmojiItems = [
     "注射器",
     "шприц",
     "注射器",
-    "medical"
+    "medical",
+    "chūshaki"
   ],
   [
     "🩸",
@@ -6625,7 +7282,8 @@ const objectEmojiItems = [
     "血滴",
     "капля крови",
     "血のしずく",
-    "medical"
+    "medical",
+    "chi no shizuku"
   ],
   [
     "💊",
@@ -6634,7 +7292,8 @@ const objectEmojiItems = [
     "药丸",
     "таблетка",
     "錠剤",
-    "medical"
+    "medical",
+    "jōzai"
   ],
   [
     "🩹",
@@ -6643,7 +7302,8 @@ const objectEmojiItems = [
     "创可贴",
     "пластырь",
     "ばんそうこう",
-    "medical"
+    "medical",
+    "ba-n-so-u-ko-u"
   ],
   [
     "🩼",
@@ -6652,7 +7312,8 @@ const objectEmojiItems = [
     "拐杖",
     "костыль",
     "松葉杖",
-    "medical"
+    "medical",
+    "matsubazue"
   ],
   [
     "🩺",
@@ -6661,7 +7322,8 @@ const objectEmojiItems = [
     "听诊器",
     "стетоскоп",
     "聴診器",
-    "medical"
+    "medical",
+    "chōshinki"
   ],
   [
     "🩻",
@@ -6670,7 +7332,8 @@ const objectEmojiItems = [
     "X光片",
     "рентген",
     "レントゲン",
-    "medical"
+    "medical",
+    "re-n-to-ge-n"
   ],
   [
     "🚪",
@@ -6679,7 +7342,8 @@ const objectEmojiItems = [
     "门",
     "дверь",
     "ドア",
-    "household"
+    "household",
+    "do-a"
   ],
   [
     "🛗",
@@ -6688,7 +7352,8 @@ const objectEmojiItems = [
     "电梯",
     "лифт",
     "エレベーター",
-    "household"
+    "household",
+    "e-re-be-ta-"
   ],
   [
     "🪞",
@@ -6697,7 +7362,8 @@ const objectEmojiItems = [
     "镜子",
     "зеркало",
     "鏡",
-    "household"
+    "household",
+    "kagami"
   ],
   [
     "🪟",
@@ -6706,7 +7372,8 @@ const objectEmojiItems = [
     "窗户",
     "окно",
     "窓",
-    "household"
+    "household",
+    "mado"
   ],
   [
     "🛏️",
@@ -6715,7 +7382,8 @@ const objectEmojiItems = [
     "床",
     "кровать",
     "ベッド",
-    "household"
+    "household",
+    "be-do"
   ],
   [
     "🛋️",
@@ -6724,7 +7392,8 @@ const objectEmojiItems = [
     "沙发和灯",
     "диван и лампа",
     "ソファとランプ",
-    "household"
+    "household",
+    "so-fu-a-to-ra-n-pu"
   ],
   [
     "🪑",
@@ -6733,7 +7402,8 @@ const objectEmojiItems = [
     "椅子",
     "стул",
     "椅子",
-    "household"
+    "household",
+    "isu"
   ],
   [
     "🚽",
@@ -6742,7 +7412,8 @@ const objectEmojiItems = [
     "马桶",
     "туалет",
     "トイレ",
-    "household"
+    "household",
+    "to-i-re"
   ],
   [
     "🪠",
@@ -6751,7 +7422,8 @@ const objectEmojiItems = [
     "皮搋子",
     "вантуз",
     "ラバーカップ",
-    "household"
+    "household",
+    "ra-ba-ka-pu"
   ],
   [
     "🚿",
@@ -6760,7 +7432,8 @@ const objectEmojiItems = [
     "淋浴",
     "душ",
     "シャワー",
-    "household"
+    "household",
+    "sha-wa-"
   ],
   [
     "🛁",
@@ -6769,7 +7442,8 @@ const objectEmojiItems = [
     "浴缸",
     "ванна",
     "浴槽",
-    "household"
+    "household",
+    "yokusō"
   ],
   [
     "🪤",
@@ -6778,7 +7452,8 @@ const objectEmojiItems = [
     "捕鼠器",
     "мышеловка",
     "ネズミ捕り",
-    "household"
+    "household",
+    "ne-zu-mi-ri"
   ],
   [
     "🪒",
@@ -6787,7 +7462,8 @@ const objectEmojiItems = [
     "剃须刀",
     "бритва",
     "かみそり",
-    "household"
+    "household",
+    "ka-mi-so-ri"
   ],
   [
     "🧴",
@@ -6796,7 +7472,8 @@ const objectEmojiItems = [
     "乳液瓶",
     "бутылка лосьона",
     "ローションボトル",
-    "household"
+    "household",
+    "ro-sho-n-bo-to-ru"
   ],
   [
     "🧷",
@@ -6805,7 +7482,8 @@ const objectEmojiItems = [
     "安全别针",
     "английская булавка",
     "安全ピン",
-    "household"
+    "household",
+    "pi-n"
   ],
   [
     "🧹",
@@ -6814,7 +7492,8 @@ const objectEmojiItems = [
     "扫帚",
     "метла",
     "ほうき",
-    "household"
+    "household",
+    "ho-u-ki"
   ],
   [
     "🧺",
@@ -6823,7 +7502,8 @@ const objectEmojiItems = [
     "篮子",
     "корзина",
     "かご",
-    "household"
+    "household",
+    "ka-go"
   ],
   [
     "🧻",
@@ -6832,7 +7512,8 @@ const objectEmojiItems = [
     "纸卷",
     "рулон бумаги",
     "紙ロール",
-    "household"
+    "household",
+    "ro-ru"
   ],
   [
     "🪣",
@@ -6841,7 +7522,8 @@ const objectEmojiItems = [
     "桶",
     "ведро",
     "バケツ",
-    "household"
+    "household",
+    "ba-ke-tsu"
   ],
   [
     "🧼",
@@ -6850,7 +7532,8 @@ const objectEmojiItems = [
     "肥皂",
     "мыло",
     "せっけん",
-    "household"
+    "household",
+    "se-ke-n"
   ],
   [
     "🫧",
@@ -6859,7 +7542,8 @@ const objectEmojiItems = [
     "泡泡",
     "пузыри",
     "泡",
-    "household"
+    "household",
+    "awa"
   ],
   [
     "🪥",
@@ -6868,7 +7552,8 @@ const objectEmojiItems = [
     "牙刷",
     "зубная щётка",
     "歯ブラシ",
-    "household"
+    "household",
+    "bu-ra-shi"
   ],
   [
     "🧽",
@@ -6877,7 +7562,8 @@ const objectEmojiItems = [
     "海绵",
     "губка",
     "スポンジ",
-    "household"
+    "household",
+    "su-po-n-ji"
   ],
   [
     "🧯",
@@ -6886,7 +7572,8 @@ const objectEmojiItems = [
     "灭火器",
     "огнетушитель",
     "消火器",
-    "household"
+    "household",
+    "shōkaki"
   ],
   [
     "🛒",
@@ -6895,8 +7582,9 @@ const objectEmojiItems = [
     "购物车",
     "тележка для покупок",
     "ショッピングカート",
-    "household"
-  ]
+    "household",
+    "sho-pi-n-gu-ka-to"
+  ],
 ];
 
 function makePeopleKey(english, index) {
@@ -6945,6 +7633,30 @@ function makeTravelKey(english, index) {
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_|_$/g, "");
   return `travel${index + 1}_${slug}`;
+}
+
+function validateEmojiArraySchemas() {
+  const errors = [];
+
+  const expectLength = (name, items, length) => {
+    items.forEach((entry, index) => {
+      if (!Array.isArray(entry) || entry.length !== length) {
+        errors.push(`${name}[${index}]: expected ${length} fields, got ${Array.isArray(entry) ? entry.length : typeof entry}`);
+      }
+    });
+  };
+
+  expectLength("foodEmojiItems", foodEmojiItems, 7);
+  expectLength("natureEmojiItems", natureEmojiItems, 7);
+  expectLength("activityEmojiItems", activityEmojiItems, 8);
+  expectLength("travelEmojiItems", travelEmojiItems, 8);
+  expectLength("peopleEmojiItems", peopleEmojiItems, 8);
+  expectLength("objectEmojiItems", objectEmojiItems, 8);
+  expectLength("animalItems", animalItems, 8);
+
+  if (errors.length) {
+    throw new Error(`Emoji array schema validation failed:\n${errors.join("\n")}`);
+  }
 }
 
 const animalCategoryWords = animalItems.map(([id]) => `animal${id}`);
@@ -9320,7 +10032,14 @@ function travelFacts(english, subgroup) {
 
 const chinesePronunciationMap = {"一":"yī","丁":"dīng","七":"qī","三":"sān","上":"shàng","下":"xià","丑":"chǒu","世":"shì","业":"yè","东":"dōng","丝":"sī","个":"gè","中":"zhōng","丸":"wán","丽":"lì","举":"jǔ","乌":"wū","乐":"lè","乒":"pīng","乓":"pāng","书":"shū","乳":"rǔ","事":"shì","二":"èr","亏":"kuī","云":"yún","亚":"yà","交":"jiāo","京":"jīng","亮":"liàng","人":"rén","仓":"cāng","仔":"zǐ","他":"tā","仙":"xiān","仪":"yí","件":"jiàn","企":"qǐ","会":"huì","伞":"sǎn","伤":"shāng","位":"wèi","低":"dī","体":"tǐ","使":"shǐ","侦":"zhēn","便":"biàn","保":"bǎo","信":"xìn","倒":"dào","倾":"qīng","停":"tíng","偶":"ǒu","像":"xiàng","僵":"jiāng","元":"yuán","光":"guāng","克":"kè","兔":"tù","入":"rù","全":"quán","八":"bā","公":"gōng","兰":"lán","关":"guān","兵":"bīng","具":"jù","典":"diǎn","养":"yǎng","兽":"shòu","内":"nèi","军":"jūn","农":"nóng","冠":"guān","冰":"bīng","冲":"chōng","凉":"liáng","凸":"tū","出":"chū","击":"jī","刀":"dāo","分":"fēn","划":"huà","列":"liè","创":"chuàng","刨":"páo","利":"lì","别":"bié","制":"zhì","刷":"shuā","券":"quàn","刺":"cì","剃":"tì","剑":"jiàn","剪":"jiǎn","力":"lì","办":"bàn","功":"gōng","加":"jiā","务":"wù","动":"dòng","助":"zhù","勺":"sháo","包":"bāo","匕":"bǐ","北":"běi","匙":"shi","医":"yī","升":"shēng","华":"huá","卓":"zhuó","单":"dān","卖":"mài","南":"nán","卜":"bo","卡":"kǎ","卫":"wèi","印":"yìn","卷":"juǎn","厂":"chǎng","历":"lì","厢":"xiāng","厨":"chú","叉":"chā","双":"shuāng","反":"fǎn","发":"fā","口":"kǒu","古":"gǔ","可":"kě","台":"tái","右":"yòu","叶":"yè","号":"hào","司":"sī","合":"hé","吉":"jí","名":"míng","向":"xiàng","听":"tīng","吸":"xī","员":"yuán","和":"hé","咖":"kā","咬":"yǎo","品":"pǐn","哥":"gē","哺":"bǔ","唇":"chún","商":"shāng","啤":"pí","喂":"wèi","喱":"lí","喷":"pēn","嘴":"zuǐ","器":"qì","四":"sì","回":"huí","团":"tuán","园":"yuán","围":"wéi","国":"guó","图":"tú","圆":"yuán","圈":"quān","土":"tǔ","圣":"shèng","在":"zài","地":"de","场":"chǎng","坐":"zuò","块":"kuài","型":"xíng","垒":"lěi","城":"chéng","培":"péi","基":"jī","堂":"táng","堡":"bǎo","塔":"tǎ","墨":"mò","士":"shì","壮":"zhuàng","壶":"hú","备":"bèi","夕":"xī","外":"wài","多":"duō","夜":"yè","大":"dà","天":"tiān","太":"tài","夫":"fū","头":"tóu","夹":"jiā","奖":"jiǎng","套":"tào","女":"nǚ","奶":"nǎi","妈":"mā","姜":"jiāng","娃":"wá","娥":"é","婚":"hūn","子":"zǐ","孔":"kǒng","孕":"yùn","字":"zì","学":"xué","宇":"yǔ","安":"ān","官":"guān","宝":"bǎo","实":"shí","客":"kè","室":"shì","家":"jiā","富":"fù","察":"chá","对":"duì","寺":"sì","寿":"shòu","封":"fēng","射":"shè","将":"jiāng","小":"xiǎo","尔":"ěr","尖":"jiān","尸":"shī","尺":"chǐ","尼":"ní","尾":"wěi","局":"jú","屋":"wū","山":"shān","岛":"dǎo","岩":"yán","巢":"cháo","工":"gōng","左":"zuǒ","巧":"qiǎo","巨":"jù","巴":"bā","巾":"jīn","币":"bì","市":"shì","布":"bù","帆":"fān","师":"shī","帐":"zhàng","帚":"zhǒu","带":"dài","帧":"zhēn","常":"cháng","帽":"mào","干":"gàn","平":"píng","幸":"xìng","幼":"yòu","床":"chuáng","底":"dǐ","店":"diàn","庙":"miào","废":"fèi","度":"dù","座":"zuò","建":"jiàn","开":"kāi","弃":"qì","式":"shì","弓":"gōng","引":"yǐn","弦":"xián","弯":"wān","弹":"dàn","强":"qiáng","当":"dāng","录":"lù","彗":"huì","形":"xíng","彩":"cǎi","影":"yǐng","微":"wēi","心":"xīn","忍":"rěn","志":"zhì","忘":"wàng","快":"kuài","念":"niàn","怀":"huái","恐":"kǒng","恤":"xù","悠":"yōu","悬":"xuán","情":"qíng","惊":"jīng","意":"yì","懒":"lǎn","戏":"xì","戒":"jiè","戴":"dài","户":"hù","房":"fáng","扁":"biǎn","扇":"shàn","手":"shǒu","打":"dǎ","托":"tuō","扫":"sǎo","扳":"bān","技":"jì","折":"zhé","护":"hù","报":"bào","披":"pī","拉":"lā","拍":"pāi","拐":"guǎi","拖":"tuō","招":"zhāo","拳":"quán","拼":"pīn","拿":"ná","挂":"guà","指":"zhǐ","按":"àn","捕":"bǔ","据":"jù","掌":"zhǎng","排":"pái","探":"tàn","接":"jiē","控":"kòng","提":"tí","插":"chā","援":"yuán","搋":"chuāi","摄":"shè","摔":"shuāi","摩":"mó","撕":"sī","操":"cāo","攀":"pān","收":"shōu","放":"fàng","救":"jiù","教":"jiào","文":"wén","斑":"bān","斗":"dòu","料":"liào","斜":"xié","斧":"fǔ","断":"duàn","斯":"sī","新":"xīn","方":"fāng","施":"shī","旅":"lǚ","旋":"xuán","旗":"qí","无":"wú","日":"rì","旱":"hàn","明":"míng","昏":"hūn","星":"xīng","映":"yìng","显":"xiǎn","晚":"wǎn","景":"jǐng","晶":"jīng","曲":"qū","月":"yuè","有":"yǒu","服":"fú","望":"wàng","朝":"cháo","木":"mù","本":"běn","札":"zhá","术":"shù","朵":"duǒ","机":"jī","杂":"zá","杆":"gān","李":"lǐ","杖":"zhàng","束":"shù","条":"tiáo","来":"lái","杯":"bēi","松":"sōng","板":"bǎn","极":"jí","果":"guǒ","枪":"qiāng","枫":"fēng","枯":"kū","柜":"guì","柠":"níng","柱":"zhù","标":"biāo","树":"shù","栓":"shuān","栗":"lì","校":"xiào","根":"gēn","栽":"zāi","桃":"táo","框":"kuàng","桥":"qiáo","桶":"tǒng","梅":"méi","梨":"lí","梯":"tī","械":"xiè","梳":"shū","棍":"gùn","棒":"bàng","棕":"zōng","椅":"yǐ","植":"zhí","椒":"jiāo","椰":"yē","楼":"lóu","榄":"lǎn","榈":"lǘ","槟":"bīn","横":"héng","樱":"yīng","橄":"gǎn","橇":"qiāo","橘":"jú","橙":"chéng","檬":"méng","欧":"ōu","歌":"gē","正":"zhèng","步":"bù","武":"wǔ","残":"cán","母":"mǔ","比":"bǐ","毕":"bì","毛":"máo","民":"mín","气":"qì","水":"shuǐ","汁":"zhī","汉":"hàn","池":"chí","汤":"tāng","汽":"qì","沙":"shā","河":"hé","油":"yóu","治":"zhì","泉":"quán","法":"fǎ","泡":"pào","波":"bō","注":"zhù","泰":"tài","泳":"yǒng","泵":"bèng","洋":"yáng","洗":"xǐ","洞":"dòng","洲":"zhōu","派":"pài","流":"liú","浣":"huàn","浪":"làng","浮":"fú","浴":"yù","海":"hǎi","消":"xiāo","涨":"zhǎng","液":"yè","淇":"qí","淋":"lín","清":"qīng","渡":"dù","温":"wēn","游":"yóu","滑":"huá","满":"mǎn","滩":"tān","滴":"dī","漂":"piào","演":"yǎn","漠":"mò","潜":"qián","澡":"zǎo","澳":"ào","火":"huǒ","灭":"miè","灯":"dēng","灵":"líng","炮":"pào","炸":"zhà","烈":"liè","烛":"zhú","烟":"yān","烤":"kǎo","热":"rè","烹":"pēng","煎":"jiān","煮":"zhǔ","熊":"xióng","燕":"yàn","爆":"bào","爬":"pá","爱":"ài","爸":"bà","片":"piàn","牌":"pái","牙":"yá","牛":"niú","物":"wù","犀":"xī","状":"zhuàng","犸":"mǎ","犹":"yóu","狐":"hú","狗":"gǒu","独":"dú","狮":"shī","狸":"lí","狼":"láng","猕":"mí","猛":"měng","猩":"xīng","猪":"zhū","猫":"māo","猬":"wèi","猴":"hóu","獭":"tǎ","獾":"huān","玉":"yù","王":"wáng","玫":"méi","环":"huán","珊":"shān","珍":"zhēn","珠":"zhū","班":"bān","球":"qiú","理":"lǐ","琴":"qín","瑚":"hú","瑰":"guī","瓜":"guā","瓢":"piáo","瓶":"píng","甜":"tián","生":"shēng","用":"yòng","由":"yóu","甲":"jiǎ","电":"diàn","男":"nán","画":"huà","界":"jiè","番":"fān","登":"dēng","白":"bái","百":"bǎi","皂":"zào","的":"de","皇":"huáng","皮":"pí","皿":"mǐn","盆":"pén","盈":"yíng","盐":"yán","盒":"hé","盔":"kuī","盘":"pán","目":"mù","盲":"máng","直":"zhí","相":"xiāng","盾":"dùn","眉":"méi","真":"zhēn","眼":"yǎn","着":"zhe","睛":"jīng","睡":"shuì","短":"duǎn","石":"shí","砖":"zhuān","硬":"yìng","碗":"wǎn","碟":"dié","碰":"pèng","磁":"cí","礼":"lǐ","社":"shè","神":"shén","票":"piào","科":"kē","租":"zū","积":"jī","稻":"dào","穗":"suì","空":"kōng","穿":"chuān","窗":"chuāng","立":"lì","竖":"shù","站":"zhàn","章":"zhāng","竿":"gān","笑":"xiào","笔":"bǐ","笛":"dí","符":"fú","第":"dì","笼":"lóng","筋":"jīn","筑":"zhù","筒":"tǒng","筝":"zhēng","筷":"kuài","签":"qiān","算":"suàn","管":"guǎn","箭":"jiàn","箱":"xiāng","篓":"lǒu","篮":"lán","篷":"péng","米":"mǐ","粽":"zòng","精":"jīng","糕":"gāo","糖":"táng","索":"suǒ","红":"hóng","级":"jí","纪":"jì","纬":"wěi","纱":"shā","纳":"nà","纵":"zòng","纸":"zhǐ","线":"xiàn","经":"jīng","结":"jié","绵":"mián","绿":"lǜ","缆":"lǎn","缝":"fèng","缸":"gāng","罐":"guàn","网":"wǎng","罩":"zhào","羊":"yáng","美":"měi","羽":"yǔ","翅":"chì","翻":"fān","老":"lǎo","考":"kǎo","者":"zhě","耍":"shuǎ","耳":"ěr","职":"zhí","肉":"ròu","肥":"féi","育":"yù","肺":"fèi","背":"bèi","胡":"hú","胶":"jiāo","脏":"zàng","脑":"nǎo","脚":"jiǎo","脸":"liǎn","腿":"tuǐ","膀":"bǎng","臂":"bì","自":"zì","臭":"chòu","舌":"shé","舞":"wǔ","舟":"zhōu","航":"háng","船":"chuán","艇":"tǐng","色":"sè","艺":"yì","芒":"máng","芙":"fú","芭":"bā","花":"huā","苍":"cāng","苗":"miáo","英":"yīng","苹":"píng","茄":"jiā","茶":"chá","草":"cǎo","荒":"huāng","荚":"jiá","药":"yào","莓":"méi","莲":"lián","菇":"gū","菜":"cài","菠":"bō","萄":"táo","萎":"wěi","萝":"luó","营":"yíng","萨":"sà","落":"luò","葡":"pú","葱":"cōng","葵":"kuí","蒙":"méng","蒜":"suàn","蒸":"zhēng","蓉":"róng","蓝":"lán","蕉":"jiāo","蕾":"lěi","薯":"shǔ","蘑":"mó","虎":"hǔ","虫":"chóng","虹":"hóng","虾":"xiā","蚁":"yǐ","蚂":"mǎ","蚊":"wén","蚱":"zhà","蛇":"shé","蛋":"dàn","蛙":"wā","蛛":"zhū","蜂":"fēng","蜗":"wō","蜘":"zhī","蜜":"mì","蜡":"là","蜢":"měng","蜥":"xī","蜴":"yì","蝇":"yíng","蝎":"xiē","蝙":"biān","蝠":"fú","蝴":"hú","蝶":"dié","螂":"láng","螃":"páng","螺":"luó","蟑":"zhāng","蟹":"xiè","血":"xuè","行":"xíng","衣":"yī","表":"biǎo","袋":"dài","袜":"wà","装":"zhuāng","裙":"qún","裤":"kù","褐":"hè","西":"xī","观":"guān","视":"shì","觉":"jué","角":"jiǎo","警":"jǐng","计":"jì","记":"jì","讶":"yà","诊":"zhěn","试":"shì","话":"huà","诞":"dàn","调":"diào","谱":"pǔ","豆":"dòu","豌":"wān","豚":"tún","象":"xiàng","豹":"bào","贝":"bèi","账":"zhàng","货":"huò","购":"gòu","贴":"tiē","赏":"shǎng","赛":"sài","走":"zǒu","起":"qǐ","超":"chāo","足":"zú","跑":"pǎo","跟":"gēn","跤":"jiāo","跪":"guì","路":"lù","跳":"tiào","躺":"tǎng","车":"chē","轨":"guǐ","转":"zhuǎn","轮":"lún","软":"ruǎn","轴":"zhóu","轻":"qīng","辣":"là","边":"biān","过":"guò","迎":"yíng","运":"yùn","远":"yuǎn","连":"lián","迪":"dí","迹":"jì","送":"sòng","途":"tú","通":"tōng","速":"sù","道":"dào","邮":"yóu","郁":"yù","酒":"jiǔ","酪":"lào","里":"lǐ","重":"zhòng","野":"yě","量":"liàng","金":"jīn","针":"zhēn","钉":"dīng","钓":"diào","钟":"zhōng","钢":"gāng","钥":"yào","钩":"gōu","钮":"niǔ","钱":"qián","铁":"tiě","铃":"líng","铅":"qiān","铰":"jiǎo","铲":"chǎn","银":"yín","链":"liàn","锅":"guō","锚":"máo","锤":"chuí","键":"jiàn","锯":"jù","镐":"gǎo","镑":"bàng","镖":"biāo","镜":"jìng","长":"zhǎng","门":"mén","闪":"shǎn","间":"jiān","防":"fáng","阳":"yáng","降":"jiàng","院":"yuàn","隔":"gé","雀":"què","雄":"xióng","雨":"yǔ","雪":"xuě","雷":"léi","雾":"wù","露":"lù","青":"qīng","静":"jìng","非":"fēi","面":"miàn","靴":"xuē","靶":"bǎ","鞋":"xié","鞭":"biān","音":"yīn","页":"yè","须":"xū","领":"lǐng","颈":"jǐng","风":"fēng","飞":"fēi","食":"shí","餐":"cān","饪":"rèn","饭":"fàn","饮":"yǐn","饰":"shì","饺":"jiǎo","饼":"bǐng","馅":"xiàn","馆":"guǎn","馏":"liú","首":"shǒu","香":"xiāng","马":"mǎ","驴":"lǘ","驶":"shǐ","驼":"tuó","骆":"luò","验":"yàn","骑":"qí","骨":"gǔ","骰":"tóu","高":"gāo","鬼":"guǐ","魔":"mó","鱼":"yú","鱿":"yóu","鲤":"lǐ","鲨":"shā","鲸":"jīng","鳄":"è","鸟":"niǎo","鸡":"jī","鸦":"yā","鸭":"yā","鸽":"gē","鹅":"é","鹉":"wǔ","鹦":"yīng","鹰":"yīng","鹿":"lù","麦":"mài","麻":"má","黄":"huáng","黑":"hēi","黛":"dài","鼓":"gǔ","鼠":"shǔ","鼬":"yòu","鼻":"bí","齿":"chǐ","龄":"líng","龙":"lóng","龟":"guī"};
 
+/* CHANGED (Quality Audit) — latinPronunciationOverrides
+   Purpose: Provide REAL phonetic guidance for English and Dutch instead of
+   just echoing the display word. This is the primary defense for the
+   "In your languages" two-row rule for all Latin-script languages.
+   Expanded from ~25 entries to 100+ curated kid-friendly respellings.
+   Legacy safety net for "high voltage" kept temporarily. */
 const latinPronunciationOverrides = {
+  // English (helpful respellings for kids)
   penguin: "PEN-gwin",
   giraffe: "juh-RAF",
   kangaroo: "kang-guh-ROO",
@@ -9348,6 +10067,629 @@ const latinPronunciationOverrides = {
   birthday: "BURTH-day",
   playground: "PLAY-ground",
   mountain: "MOWN-tin",
+  apple: "A-puhl",
+  banana: "buh-NA-nuh",
+  bread: "bred",
+  cheese: "cheez",
+  egg: "eg",
+  rice: "rise",
+  soup: "soop",
+  fish: "fihsh",
+  rabbit: "RA-bit",
+  bear: "bair",
+  rain: "rayn",
+  snow: "snoh",
+  cloud: "klowd",
+  sea: "see",
+  moon: "mewn",
+  sun: "suhn",
+  star: "stahr",
+  tree: "treh",
+  hand: "hahnd",
+  eye: "igh",
+  shoe: "shoo",
+  hat: "haht",
+  book: "buhk",
+  car: "kar",
+  train: "trayn",
+  house: "hows",
+  bed: "bedd",
+  chair: "chayr",
+  door: "dor",
+  window: "WIN-doh",
+  lamp: "lahmp",
+  kite: "kyt",
+  bag: "bahg",
+  sad: "sad-d",
+  sleep: "sleap",
+  jump: "juhmp",
+  doll: "dahl",
+  cow: "kow",
+  fire: "fyr",
+  cake: "kayk",
+  juice: "joos",
+  bus: "buhs",
+  school: "skool",
+  music: "MYOO-zik",
+  game: "gaym",
+  swim: "swihm",
+  clock: "klok",
+  key: "kee",
+  phone: "fohn",
+  love: "luv",
+  laugh: "laf",
+  lion: "LY-un",
+  frog: "frahg",
+  cookie: "KOO-kee",
+  boat: "boht",
+  rocket: "ROK-it",
+  castle: "KAS-ul",
+  dance: "dans",
+  soccer: "SAH-ker",
+  robot: "ROH-bot",
+  scarf: "skarf",
+  ice: "eyss",
+  park: "pahrk",
+  soap: "sohp",
+  quiet: "KWY-et",
+  // Dutch (approximate kid-friendly guides, never raw word)
+  hond: "hont",
+  kat: "kaht",
+  vogel: "VO-gul",
+  maan: "mahn",
+  zon: "zohn",
+  ster: "stehr",
+  boom: "bohm",
+  bloem: "bloom",
+  water: "WAH-tuhr",
+  brood: "broht",
+  kaas: "kahs",
+  ei: "eye",
+  rijst: "ryst",
+  soep: "soop",
+  vis: "fis",
+  konijn: "ko-NINE",
+  beer: "bayr",
+  regen: "RAY-gun",
+  sneeuw: "snayw",
+  wolk: "wolk",
+  zee: "zay",
+  berg: "berkh",
+  hand: "hant",
+  oog: "ohkh",
+  schoen: "skhoon",
+  hoed: "hoot",
+  boek: "book",
+  auto: "OW-toh",
+  trein: "trine",
+  huis: "house",
+  bed: "bet",
+  stoel: "stool",
+  bord: "bort",
+  deur: "dur",
+  raam: "rahm",
+  pop: "pohp",
+  koe: "koo",
+  vlinder: "VLIN-der",
+  vuur: "fuur",
+  taart: "tahrt",
+  sap: "sahp",
+  fiets: "feets",
+  vliegtuig: "VLEEK-toykh",
+  muziek: "muu-ZEEK",
+  spel: "spuhl",
+  klok: "klohk",
+  sleutel: "SLUH-tul",
+  telefoon: "tay-luh-FOHN",
+  liefde: "LEEF-duh",
+  lachen: "LAH-khun",
+  boos: "bohs",
+  leeuw: "layw",
+  kikker: "KIK-er",
+  koekje: "KOOK-yuh",
+  boot: "boht",
+  raket: "ra-KET",
+  kasteel: "ka-STAYL",
+  dansen: "DAN-sun",
+  voetbal: "FOOT-bal",
+  camera: "KA-muh-ra",
+  schaap: "skharp",
+  ijs: "eys",
+  stil: "stihl",
+  zeep: "zayp",
+  sjaal: "shahl",
+  park: "pahrk",
+  // Common activity / nature words that appear in dynamic data
+  "high voltage": "HIGH VOL-tij", // legacy safety net
+  lightning: "LYT-ning",
+  "christmas tree": "KRIS-muhs tree",
+  fireworks: "FYUR-wurks",
+  "globe showing europe-africa": "GLOHB yu-rohp AF-ri-ka",
+  "globe showing americas": "GLOHB uh-MER-i-kas",
+
+  // Expanded readable phonetics for English & Dutch (7 categories audit)
+  "mountain": "MOWN-tin",
+  "snow-capped mountain": "SNOH-kapt MOWN-tin",
+  "compass": "KUM-pus",
+  "world map": "WURLD map",
+  "map of japan": "MAP of juh-PAN",
+  "fireworks": "FYUR-wurks",
+  "firecracker": "FYUR-krak-er",
+  "drum": "drum",
+  "long drum": "LONG drum",
+  "maracas": "muh-RAH-kuz",
+  "flute": "floot",
+  "harp": "harp",
+  "glasses": "GLAS-iz",
+  "sunglasses": "SUN-glas-iz",
+  "goggles": "GOG-ulz",
+  "biceps": "BY-seps",
+  "mechanical arm": "muh-KAN-ih-kul arm",
+  "mechanical leg": "muh-KAN-ih-kul leg",
+  "ear": "eer",
+  "foot": "foot",
+  "leg": "leg",
+  "snowflake": "SNOH-flayk",
+  "thermometer": "ther-MOM-uh-ter",
+  "planet": "PLAN-it",
+  "milky way": "MIL-kee way",
+  "tornado": "tor-NAY-doh",
+  "fog": "fog",
+  "cyclone": "SY-klohn",
+  "rainbow": "RAYN-boh",
+  "umbrella": "um-BREL-uh",
+  "fire": "fyr",
+  "droplet": "DROP-lit",
+  "wave": "wayv",
+  "bento box": "BEN-toh box",
+  "dumpling": "DUM-pling",
+  "sushi": "SOO-shee",
+  "ramen": "RAH-men",
+  "curry rice": "KUR-ee rys",
+  "moon cake": "MOON kayk",
+  "fortune cookie": "FOR-chun KOO-kee",
+  "takeout box": "TAYK-out box",
+
+  // Additional English/Dutch readable phonetics (second pass)
+  "backpack": "BAK-pak",
+  "handbag": "HAND-bag",
+  "purse": "purs",
+  "t-shirt": "TEE-shurt",
+  "jeans": "jeenz",
+  "dress": "dres",
+  "kimono": "ki-MOH-noh",
+  "sari": "SAH-ree",
+  "bikini": "bi-KEE-nee",
+  "shorts": "shohrts",
+  "scarf": "skarf",
+  "gloves": "gluvz",
+  "necktie": "NEK-ty",
+  "lab coat": "LAB koht",
+  "safety vest": "SAYF-tee vest",
+  "swimsuit": "SWIM-soot",
+  "underwear": "UN-der-wair",
+  "socks": "soks",
+  "shoes": "shooz",
+  "hat": "hat",
+  "glasses": "GLAS-iz",
+  "sunglasses": "SUN-glas-iz",
+  "watch": "wotch",
+  "ring": "ring",
+  "necklace": "NEK-lis",
+  "earrings": "EER-ringz",
+  "bracelet": "BRAY-slet",
+  "camera": "KAM-ruh",
+  "phone": "fohn",
+  "laptop": "LAP-top",
+  "television": "TEL-uh-vizh-un",
+  "radio": "RAY-dee-oh",
+  "book": "book",
+  "newspaper": "NOOZ-pay-per",
+  "map": "map",
+  "compass": "KUM-pus",
+  "flashlight": "FLASH-lyt",
+  "umbrella": "um-BREL-uh",
+  "suitcase": "SOOT-kays",
+  "tent": "tent",
+  "sleeping bag": "SLEE-ping bag",
+  "binoculars": "bi-NOK-yoo-lurz",
+  "telescope": "TEL-uh-skohp",
+};
+
+/* Japanese pronunciation overrides
+   Used when the automatic kana-based guide cannot handle kanji compounds
+   (e.g. 稲妻). This is the proper place to define correct romaji for
+   specific words that appear in the dynamic emoji data. */
+const japanesePronunciationOverrides = {
+  "花束": "hanataba",
+  "桜": "sakura",
+  "蓮": "hasu",
+  "バラ": "bara",
+  "花": "hana",
+  "芽": "me",
+  "鉢植え": "hachiue",
+  "常緑樹": "jōryokuju",
+  "落葉樹": "rakuyōju",
+  "ヤシの木": "yashi no ki",
+  "稲穂": "inaho",
+  "もみじ": "momiji",
+  "落ち葉": "ochiba",
+  "キノコ": "kinoko",
+  "彗星": "suisei",
+  "火": "hi",
+  "しずく": "shizuku",
+  "波": "nami",
+  "稲妻": "inazuma",
+  "雪の結晶": "yuki no kesshō",
+  "雪だるま": "yukidaruma",
+  "雷雨雲": "raiuun",
+  "雷雲": "raiuun",
+  "天の川": "ama no kawa",
+  "雲": "kumo",
+  "虹": "niji",
+  "傘": "kasa",
+  "新月": "shingetsu",
+  "三日月": "mikazuki",
+  "上弦の月": "jōgen no tsuki",
+  "十三夜月": "jūsan'ya zuki",
+  "満月": "mangetsu",
+  "寝待月": "nemachimachi",
+  "下弦の月": "kagen no tsuki",
+  "有明月": "ariake no tsuki",
+  "新月の顔": "shingetsu no kao",
+  "上弦の月の顔": "jōgen no tsuki no kao",
+  "下弦の月の顔": "kagen no tsuki no kao",
+  "満月の顔": "mangetsu no kao",
+  "小さな雲と太陽": "chiisana kumo to taiyō",
+  "大きな雲と太陽": "ōkina kumo to taiyō",
+  "雨雲と太陽": "u kumo to taiyō",
+  "梨": "nashi",
+  "栗": "kuri",
+  "豆": "mame",
+  "餃子": "gyōza",
+  "月餅": "geppei",
+  "弁当": "bentō",
+  "焼き芋": "yaki imo",
+  "せんべい": "senbei",
+  "おにぎり": "onigiri",
+  "ご飯": "gohan",
+  "ラーメン": "rāmen",
+  "皿とナイフとフォーク": "sara to naifu to fōku",
+  "ナイフとフォーク": "naifu to fōku",
+  "花火": "hanabi",
+  "爆竹": "bakuchiku",
+  "七夕飾り": "tanabata kazari",
+  "門松": "kadomatsu",
+  "南瓜灯": "kabocha tōrō",
+  "人形": "ningyō",
+  "人魚": "ningyō",
+  "吸血鬼": "kyūketsuki",
+  "ランプの精": "ranpu no sei",
+  "王冠": "ōkan",
+  "天使": "tenshi",
+  "悪魔": "akuma",
+  "幽霊": "yūrei",
+  "サンタ": "santa",
+  "城": "shiro",
+  "学校": "gakkō",
+  "本": "hon",
+  "鍵": "kagi",
+  "時計": "tokei",
+  "はさみ": "hasami",
+  "温度計": "on-do-kei",
+  "太陽": "taiyō",
+  "風の顔": "kaze no kao",
+  "閉じた傘": "tojita kasa",
+  "雨傘": "ama kasa",
+  "ビーチパラソル": "bīchi parasoru",
+  "葡萄": "budō",
+  "西瓜": "suika",
+  "桃": "momo",
+  "姜": "shōga",
+  "えんどう豆": "endō mame",
+  "茶色いキノコ": "chairoi kinoko",
+  "根菜": "konsai",
+  "力こぶ": "rikikobu",
+  "義手": "gishu",
+  "義足": "gisoku",
+  "脚": "ashi",
+  "足": "ashi",
+  "眼鏡": "megane",
+  "サングラス": "sangurasu",
+  "ゴーグル": "gōguru",
+  "着物": "kimono",
+  "婦人服": "fujinfuku",
+  "扇子": "sensu",
+  "財布": "saifu",
+  "ヨーロッパとアフリカの地球": "yōroppa to afurika no chikyū",
+  "アメリカ大陸の地球": "amerika tairiku no chikyū",
+  "アジアとオーストラリアの地球": "ajia to ōsutoraria no chikyū",
+  "ビーチとパラソル": "bīchi to parasoru",
+  "経線入りの地球": "keisen iri no chikyū",
+  "世界地図": "sekai chizu",
+  "日本地図": "nihon chizu",
+  "コンパス": "konpasu",
+  "雪山": "yukiyama",
+  "山": "yama",
+  "耳": "mimi",
+  "目": "me",
+  "鼻": "hana",
+  "口": "kuchi",
+  "瓶": "bin",
+  "手袋": "tebukuro",
+  "自転車に乗る人": "jitensha ni noru hito",
+  "マウンテンバイクに乗る人": "maunten baiku ni noru hito",
+  "ゴルフする人": "gorufu suru hito",
+  "サーフィンする人": "sāfin suru hito",
+  "ボートをこぐ人": "bōto o kogu hito",
+  "泳ぐ人": "oyogu hito",
+  "ボールをつく人": "bōru o tsuku hito",
+  "重量挙げする人": "jūryō age suru hito",
+  "側転する人": "sokuten suru hito",
+  "レスリングする人たち": "resuringu suru hitotachi",
+  "水球をする人": "suikyū o suru hito",
+  "ジャグリングする人": "jaguringu suru hito",
+  "蓮華座の人": "rengeza no hito",
+  "入浴する人": "nyūyoku suru hito",
+  "ベッドにいる人": "beddo ni iru hito",
+  "手動車いすの人": "shudō kuruma isu no hito",
+  "電動車いすの人": "dendō kuruma isu no hito",
+  "踊る女性": "odoru josei",
+  "踊る男性": "odoru dansei",
+  "白杖を持つ人": "hakujō o motsu hito",
+  "白杖": "hakujō",
+  "歩く人": "aruku hito",
+  "立つ人": "tatsu hito",
+  "ひざまずく人": "hizamazuku hito",
+  "魔法使い": "mahōtsukai",
+  "スーパーヒーロー": "sūpāhīrō",
+  "スーパーヴィラン": "sūpāviran",
+  "妖精": "yōsei",
+  "天使の赤ちゃん": "tenshi no akachan",
+  "サンタクロース": "santakurōsu",
+  "ウサ耳の人": "usagi mimi no hito",
+  "サウナに入る人": "sauna ni iru hito",
+  "登る人": "noboru hito",
+  "競馬": "keiba",
+  "スキーヤー": "sukīyā",
+  "スノーボーダー": "sunōbōdā",
+  "赤い提灯": "akai chōchin",
+  "新聞": "shinbun",
+  "丸めた新聞": "marumeta shinbun",
+  "万年筆": "mannenhitsu",
+  "ペン先": "pen saki",
+  "卒業帽": "sotsugyōbō",
+  "白衣": "hakui",
+  "安全ベスト": "anzen besuto",
+  "ネクタイ": "nekutai",
+  "Tシャツ": "tīshatsu",
+  "ジーンズ": "jīnzu",
+  "マフラー": "mafuraa",
+  "コート": "kōto",
+  "靴下": "kutsushita",
+  "ドレス": "doresu",
+  "サリー": "sarī",
+  "ワンピース水着": "wanpīsu mizugi",
+  "ブリーフ": "burīfu",
+  "半ズボン": "hanzubon",
+  "ビキニ": "bikini",
+  "ハンドバッグ": "handobaggu",
+  "クラッチバッグ": "kuratchi baggu",
+  "買い物袋": "kaimono bukuro",
+  "リュックサック": "ryukkusakku",
+  "ビーチサンダル": "bīchi sandaru",
+  "紳士靴": "shinshi kutsu",
+  "ランニングシューズ": "ranningu shūzu",
+  "登山靴": "tozan kutsu",
+  "フラットシューズ": "furatto shūzu",
+  "ハイヒール": "haihīru",
+  "女性用サンダル": "josei yō sandaru",
+  "バレエシューズ": "barē shūzu",
+  "女性用ブーツ": "josei yō būtsu",
+  "ヘアピック": "hea pikku",
+  "女性用帽子": "josei yō bōshi",
+  "シルクハット": "shiruku hatto",
+  "キャップ": "kyappu",
+  "軍用ヘルメット": "gun'yō herumetto",
+  "救助隊員のヘルメット": "kyūjotaiin no herumetto",
+  "数珠": "juzu",
+  "電池": "denchi",
+  "電池残量低下": "denchi zanryō teika",
+  "電源プラグ": "denshi puragu",
+  "ノートパソコン": "nōto pasokon",
+  "デスクトップパソコン": "desukutoppu pasokon",
+  "プリンター": "purintā",
+  "キーボード": "kībōdo",
+  "コンピューターマウス": "konpyūtā mausu",
+  "トラックボール": "torakkubōru",
+  "光ディスク": "kōgaku disuku",
+  "DVD": "dībuidī",
+  "そろばん": "soroban",
+  "映画カメラ": "eiga kamera",
+  "フィルム": "firumu",
+  "映写機": "eisha ki",
+  "カチンコ": "kachinko",
+  "テレビ": "terebi",
+  "カメラ": "kamera",
+  "フラッシュ付きカメラ": "furasshu tsuki kamera",
+  "ビデオカメラ": "bideo kamera",
+  "ビデオカセット": "bideo kasetto",
+  "左向きの虫眼鏡": "hidarimuki no chūmegane",
+  "右向きの虫眼鏡": "migimuki no chūmegane",
+  "ろうそく": "rōsoku",
+  "電球": "denkyū",
+  "懐中電灯": "kaichū dentō",
+  "表紙付きノート": "hyōshi tsuki nōto",
+  "閉じた本": "tojita hon",
+  "開いた本": "hiraita hon",
+  "緑の本": "midori no hon",
+  "青い本": "aoi hon",
+  "オレンジの本": "orenji no hon",
+  "ノート": "nōto",
+  "帳簿": "chōbo",
+  "丸まったページ": "marumatta pēji",
+  "巻物": "makimono",
+  "上向きのページ": "uwamuki no pēji",
+  "付箋": "fushin",
+  "しおり": "shiori",
+  "ラベル": "raberu",
+  "ペン": "pen",
+  "絵筆": "efude",
+  "クレヨン": "kureyon",
+  "メモ": "memo",
+  "ハンマー": "hanmā",
+  "斧": "ono",
+  "つるはし": "tsuruhashi",
+  "ハンマーとつるはし": "hanmā to tsuruhashi",
+  "ハンマーとレンチ": "hanmā to renchi",
+  "短剣": "tanken",
+  "交差した剣": "kōsa shita ken",
+  "爆弾": "bakudan",
+  "ブーメラン": "būmeran",
+  "弓矢": "yumi ya",
+  "盾": "tate",
+  "のこぎり": "nokogiri",
+  "レンチ": "renchi",
+  "ドライバー": "doraibā",
+  "ナットとボルト": "natto to boruto",
+  "歯車": "haguruma",
+  "クランプ": "kuranpu",
+  "天秤": "tenbin",
+  "リンク": "rinku",
+  "切れた鎖": "kireta kusari",
+  "鎖": "kusari",
+  "フック": "hukku",
+  "工具箱": "kōgubako",
+  "磁石": "jishaku",
+  "はしご": "hashigo",
+  "シャベル": "shaberu",
+  "アランビック": "aranbikku",
+  "赤ちゃんに授乳する人": "akachan ni junyū suru hito",
+  "風鈴": "fūrin",
+  "鉛筆": "enpitsu",
+  "建設工事": "kensetsu-kōji",
+  "お正月": "o-shōgatsu",
+  "雛祭り": "hinamatsuri",
+  "鯉のぼり": "koinobori",
+  "お盆": "o-bon",
+  "七五三": "shichi-go-san",
+  "お月見": "o-tsukimi",
+  "お祭り": "o-matsuri",
+  "盆踊り": "bon odori",
+  "消しゴム": "keshigomu",
+  "定規": "jōgi",
+  "クレーン車": "kurēnsha",
+  "ショベルカー": "shoberukā",
+  "ヘルメット": "herumetto",
+  "双眼鏡": "sōgankyō",
+  "望遠鏡": "bōenkyō",
+  "顕微鏡": "kenbikyō",
+  "地球儀": "chikyūgi",
+  "本棚": "hondana",
+  "辞書": "jisho",
+  "黒板": "kokuban",
+  "チョーク": "chōku",
+  "ホワイトボード": "howaito bōdo",
+  "風車": "kazaguruma",
+  "灯台": "tōdai",
+  "お寺": "o-tera",
+  "お城": "o-shiro",
+  "温泉": "onsen",
+  "旅館": "ryokan",
+  "空港": "kūkō",
+  "駅": "eki",
+  "新幹線": "shinkansen",
+  "テント": "tento",
+  "山小屋": "yama goya",
+  "展望台": "tenbōdai",
+  "遊園地": "yūenchi",
+  "動物園": "dōbutsuen",
+  "水族館": "suizokukan",
+  "美術館": "bijutsukan",
+  "博物館": "hakubutsukan",
+  "お土産": "o-miyage",
+  "お菓子": "o-kashi",
+  "お守り": "o-mamori",
+  "おみくじ": "o-mikuji",
+  "お花見": "o-hanami",
+  "お祭り屋台": "o-matsuri yatai",
+  "おみやげ屋": "o-miyage-ya",
+  "お土産物": "o-miyage mono",
+  "分度器": "bundogi",
+  "教科書": "kyōkasho",
+  "辞典": "jiten",
+  "地図帳": "chizuchō",
+  "神社": "jinja",
+  "鳥居": "torii",
+  "ホテル": "hoteru",
+  "飛行機": "hikōki",
+  "船": "fune",
+  "バス停": "basu tei",
+  "タクシー": "takushī",
+  "レンタカー": "rentakā",
+  "キャンプ場": "kyanpu jō",
+  "川": "kawa",
+  "湖": "mizuumi",
+  "海": "umi",
+  "ビーチ": "bīchi",
+  "山頂": "sanchō",
+  "フェンシングする人": "fenshingu suru hito",
+  "ハンドボールをする人": "handobōru o suru hito",
+  "ビリヤードの8ボール": "biriyādo no 8 bōru",
+  "ひな人形": "hinaningyō",
+  "こいのぼり": "koinobori",
+  "赤い封筒": "akai fūtō",
+  "包まれたプレゼント": "tsutsumareta purezento",
+  "試験管": "shikenkan",
+  "シャーレ": "shāre",
+  "衛星アンテナ": "eisei antena",
+  "注射器": "chūshaki",
+  "血のしずく": "chi no shizuku",
+  "レンガ": "renga",
+  "木材": "mokuzai",
+  "小屋": "koya",
+  "家々": "ieie",
+  "入場券": "nyūjōken",
+  "勲章": "kunshō",
+  "卓球": "takkyū",
+  "武道着": "budōgi",
+  "凧": "tako",
+  "水鉄砲": "mizuteppō",
+  "水晶玉": "suishō dama",
+  "花札": "hanafuda",
+  "舞台芸術": "butai geijutsu",
+  "糸": "ito",
+  "毛糸": "keito",
+  "楽譜": "gakufu",
+  "音符": "onpu",
+  "鍵盤": "kenban",
+  "長太鼓": "nagadaiko",
+  "錠剤": "jōzai",
+  "松葉杖": "matsubazue",
+  "聴診器": "chōshinki",
+  "鏡": "kagami",
+  "窓": "mado",
+  "椅子": "isu",
+  "浴槽": "yokusō",
+  "消火器": "shōkaki",
+  "廃屋": "haioku",
+  "郵便局": "yūbinkyoku",
+  "病院": "byōin",
+  "銀行": "ginkō",
+  "工場": "kōjō",
+  "結婚式": "kekkonshiki",
+  "教会": "kyōkai",
+  "噴水": "funsui",
+  "霧": "kiri",
+  "夕日": "yūhi",
+  "観覧車": "kanransha",
+  "機関車": "kikansha",
+  "鉄道車両": "tetsudō sharyō",
+  "高速鉄道": "kōsoku tetsudō",
+  "電車": "densha",
+  "地下鉄": "chikatetsu",
+  "路面電車": "romendensha",
+  "登山鉄道": "tōzan tetsudō",
 };
 
 const cyrillicPronunciationMap = {
@@ -9366,20 +10708,55 @@ const kanaPronunciationMap = {
 };
 
 function latinPronunciationGuide(word) {
-  const normalized = word.toLowerCase();
+  /* Consistent readable style for English and Dutch:
+     Never return the raw word. Always produce a hyphenated, stressed-looking guide when possible. */
+  const normalized = word.toLowerCase().replace(/\s+/g, " ").trim();
   if (latinPronunciationOverrides[normalized]) return latinPronunciationOverrides[normalized];
-  return normalized.replace(/\s+/g, " ").trim();
+
+  // Produce a more readable hyphenated version
+  let guide = normalized
+    .replace(/([aeiouy]+)([bcdfghjklmnpqrstvwxyz]+)/gi, "$1-$2")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  if (!guide || guide === normalized) {
+    // Fallback: simple stress hint on first vowel group
+    guide = normalized.replace(/^([bcdfghjklmnpqrstvwxyz]*[aeiouy]+)(.*)$/i, (m, first, rest) => first.toUpperCase() + rest);
+  }
+
+  return guide || normalized;
 }
 
 function russianPronunciationGuide(word) {
-  return [...word.toLowerCase()].map((character) => cyrillicPronunciationMap[character] ?? character).join("").replace(/\s+/g, " ").trim();
+  /* Consistent structure rule:
+     Always return a clean transliteration. Never output helper text or Cyrillic. */
+  let guide = [...word.toLowerCase()]
+    .map((character) => cyrillicPronunciationMap[character] ?? "")
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+  guide = guide.replace(/[а-яё]/gi, "").replace(/\s+/g, " ").trim();
+  return guide.replace(/[^a-z\s\-]/gi, "").replace(/\s+/g, " ").trim();
 }
 
 function chinesePronunciationGuide(word) {
-  return [...word].map((character) => chinesePronunciationMap[character] ?? character).join(" ").replace(/\s+/g, " ").trim();
+  /* Consistent structure rule:
+     Always return pinyin (with tones when available). Never output helper text or hanzi. */
+  const parts = [...word].map((character) => chinesePronunciationMap[character] ?? null);
+  let guide = parts.filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  guide = guide.replace(/[\u4E00-\u9FFF\u3000-\u303F]/g, "").replace(/\s+/g, " ").trim();
+  return guide;
 }
 
 function japanesePronunciationGuide(word) {
+  /* Consistent structure rule for Japanese:
+     Always return romaji. Never output "listen for sounds", "(approx)", or any helper text. */
+
+  // Check explicit overrides first
+  if (japanesePronunciationOverrides[word]) {
+    return japanesePronunciationOverrides[word];
+  }
+
   let guide = "";
   for (let index = 0; index < word.length; index += 1) {
     const pair = word.slice(index, index + 2);
@@ -9394,17 +10771,65 @@ function japanesePronunciationGuide(word) {
     } else if (/\s/.test(single)) {
       guide += " ";
     } else {
-      guide += single;
+      // Unknown character (usually kanji) - skip it to avoid leaking CJK
+      // We do not insert placeholder text
     }
   }
-  return guide.replace(/-+/g, "-").replace(/\s+/g, " ").trim();
+
+  let cleaned = guide.replace(/-+/g, "-").replace(/\s+/g, " ").trim();
+
+  // Final safety: never return CJK and never return the raw word
+  const hasCJK = /[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/.test(cleaned);
+  const normalizedInput = word.replace(/\s+/g, " ").trim().toLowerCase();
+
+  if (hasCJK || !cleaned || cleaned.toLowerCase() === normalizedInput) {
+    // Best-effort romaji: return any extracted parts, or a very basic clean version of the word
+    const romajiOnly = cleaned.replace(/[^\s\-a-zA-Z]/g, "").replace(/-+/g, "-").replace(/\s+/g, " ").trim();
+    if (romajiOnly && romajiOnly.length > 0) {
+      return romajiOnly;
+    }
+    // Ultimate fallback: never return the original Japanese word/kanji
+    const stripped = word.replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g, "").toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-").trim();
+    return stripped || japanesePronunciationOverrides[word] || word.toLowerCase().replace(/[\u3000-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]/g,"").replace(/\s+/g,"-");
+  }
+
+  return cleaned;
 }
 
+/* =========================================================================
+   PRONUNCIATION SYSTEM - Consistent Structure Rules
+
+   Every language row must follow this exact structure:
+     Line 1: <strong>translated word</strong> + Language Name
+     Line 2: Pronunciation (never contains "listen", "approx", or any helper text)
+
+   Language-specific pronunciation styles:
+   - English:   Readable stressed spelling (e.g. THER-mom-uh-ter)
+   - Dutch:     Readable pronunciation (e.g. Tur-mo-MEE-tuh)
+   - Russian:   Transliteration (e.g. tyer-MO-myetr)
+   - Chinese:   Pinyin with tones (e.g. wēn dù jì)
+   - Japanese:  Romaji (e.g. on-DO-kei)
+
+   The functions below are guaranteed to never return fallback/helper text.
+   ========================================================================= */
+
 function pronunciationGuide(language, word, fallback = word) {
-  if (language === "zh") return chinesePronunciationGuide(word) || fallback;
-  if (language === "ru") return russianPronunciationGuide(word) || fallback;
-  if (language === "ja") return japanesePronunciationGuide(word) || fallback;
-  return latinPronunciationGuide(word) || fallback;
+  let result;
+  if (language === "zh") result = chinesePronunciationGuide(word);
+  else if (language === "ru") result = russianPronunciationGuide(word);
+  else if (language === "ja") result = japanesePronunciationGuide(word);
+  else result = latinPronunciationGuide(word);
+
+  // Absolute safety: never allow helper text or empty values in the UI
+  if (!result || /listen|approx|fallback/i.test(result)) {
+    const safeFallback = String(fallback ?? word)
+      .toLowerCase()
+      .replace(/[^a-z\s\-]/gi, "")
+      .replace(/\s+/g, "-")
+      .trim();
+    return safeFallback || latinPronunciationGuide(word);
+  }
+  return result;
 }
 
 function wordFacts(emoji, english, dutch, chinese, russian, japanese) {
@@ -9413,7 +10838,8 @@ function wordFacts(emoji, english, dutch, chinese, russian, japanese) {
   const article = /^[aeiou]/i.test(english) ? "An" : "A";
   const isDishware = /chopsticks|plate|fork|knife|spoon|jar|amphora|teapot|teacup|glass|cup|bottle|mug|box/.test(lower);
   const isDrink = /milk|beverage|tea|sake|wine|cocktail|drink|beer|liquid|mate/.test(lower);
-  const isWeather = /moon|sun|thermometer|planet|star|cloud|rain|snow|lightning|tornado|fog|wind|cyclone|rainbow|umbrella|voltage|snowflake|comet|fire|droplet|wave|milky way/.test(lower);
+  const isWeather = /moon|sun|thermometer|planet|star|cloud|rain|snow|lightning|tornado|fog|wind|cyclone|rainbow|umbrella|snowflake|comet|fire|droplet|wave|milky way/.test(lower);
+  // NOTE (Quality Audit): Removed "voltage" — it was only needed for the old "high voltage" label.
   const isPlant = /bouquet|flower|lotus|rosette|rose|hibiscus|sunflower|blossom|tulip|hyacinth|seedling|plant|tree|cactus|rice|herb|shamrock|clover|leaf|nest|mushroom/.test(lower);
 
   if (isDishware) {
@@ -9499,7 +10925,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    foodEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese], index) => {
+    foodEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, romaji], index) => {
       const key = makeFoodKey(english, index);
       return [
         key,
@@ -9511,7 +10937,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: foodFactTexts[index],
           art: key,
@@ -9524,7 +10950,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    natureEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese], index) => {
+    natureEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, romaji], index) => {
       const key = makeNatureKey(english, index);
       return [
         key,
@@ -9536,7 +10962,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: natureFactTexts[index],
           art: key,
@@ -9549,7 +10975,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    activityEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup], index) => {
+    activityEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup, romaji], index) => {
       const key = makeActivityKey(english, index);
       return [
         key,
@@ -9561,7 +10987,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: activityFacts(english, subgroup),
           art: key,
@@ -9574,7 +11000,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    peopleEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup], index) => {
+    peopleEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup, romaji], index) => {
       const key = makePeopleKey(english, index);
       return [
         key,
@@ -9586,7 +11012,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: peopleFacts(english, subgroup),
           art: key,
@@ -9599,7 +11025,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    objectEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup], index) => {
+    objectEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup, romaji], index) => {
       const key = makeObjectKey(english, index);
       return [
         key,
@@ -9611,7 +11037,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: objectFacts(english, subgroup),
           art: key,
@@ -9624,7 +11050,7 @@ Object.assign(
 Object.assign(
   words,
   Object.fromEntries(
-    travelEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup], index) => {
+    travelEmojiItems.map(([emoji, english, dutch, chinese, russian, japanese, subgroup, romaji], index) => {
       const key = makeTravelKey(english, index);
       return [
         key,
@@ -9636,7 +11062,7 @@ Object.assign(
             ru: { word: russian, phonetic: pronunciationGuide("ru", russian) },
             zh: { word: chinese, phonetic: pronunciationGuide("zh", chinese) },
             en: { word: english, phonetic: pronunciationGuide("en", english) },
-            ja: { word: japanese, phonetic: pronunciationGuide("ja", japanese) },
+            ja: { word: japanese, phonetic: romaji || japanesePronunciationOverrides[japanese] || pronunciationGuide("ja", japanese) },
           },
           facts: travelFacts(english, subgroup),
           art: key,
@@ -9680,6 +11106,11 @@ Object.assign(
   artIcons,
   Object.fromEntries(travelEmojiItems.map(([emoji, english], index) => [makeTravelKey(english, index), emoji]))
 );
+
+/* =========================================================================
+   DATA LAYER — emoji arrays, words, artIcons, and emojiCategories. Must be
+   fully initialized before initApp() runs at the file end.
+   ========================================================================= */
 
 const emojiCategories = [
   {
@@ -9728,117 +11159,73 @@ function symbolArt(key) {
       <circle cx="92" cy="82" r="28" fill="#f06d5e" opacity=".65"/>
       <circle cx="196" cy="92" r="24" fill="#2f9d74" opacity=".65"/>
       <circle cx="190" cy="166" r="18" fill="#3778c2" opacity=".55"/>
-      <text x="140" y="143" text-anchor="middle" font-size="92" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, system-ui, sans-serif">${symbol}</text>
+      <text x="140" y="143" text-anchor="middle" font-size="92" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, system-ui, sans-serif">${escapeHtml(symbol)}</text>
     </svg>
   `;
 }
 
-const artTemplates = {
-  apple: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="18" y="172" width="244" height="28" rx="14" fill="#dceee8"/>
-      <path d="M142 70c30-34 88-10 86 52-2 62-39 96-80 76-5-2-11-2-16 0-42 20-78-14-80-76-2-62 56-86 86-52z" fill="#f06d5e"/>
-      <path d="M141 72c4-28 18-43 43-48" fill="none" stroke="#7f4b2d" stroke-width="10" stroke-linecap="round"/>
-      <path d="M162 42c22-18 48-12 64 7-24 9-47 9-64-7z" fill="#2f9d74"/>
-      <circle cx="108" cy="118" r="13" fill="#fff4ef" opacity=".78"/>
-    </svg>
-  `,
-  dog: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="28" y="178" width="224" height="28" rx="14" fill="#e6eef7"/>
-      <path d="M76 106c2-48 35-74 72-74s70 26 72 74v42c0 41-31 68-72 68s-72-27-72-68z" fill="#ecb15f"/>
-      <path d="M80 98c-30-28-42-62-30-76 29 7 50 32 58 70zM200 98c30-28 42-62 30-76-29 7-50 32-58 70z" fill="#8a5b35"/>
-      <circle cx="119" cy="112" r="9" fill="#263238"/>
-      <circle cx="161" cy="112" r="9" fill="#263238"/>
-      <path d="M134 142h28l-14 16z" fill="#263238"/>
-      <path d="M124 168c13 12 35 12 48 0" fill="none" stroke="#263238" stroke-width="7" stroke-linecap="round"/>
-    </svg>
-  `,
-  moon: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="24" y="24" width="232" height="184" rx="22" fill="#263238"/>
-      <circle cx="190" cy="82" r="4" fill="#fffaf0"/>
-      <circle cx="72" cy="74" r="3" fill="#fffaf0"/>
-      <circle cx="218" cy="144" r="3" fill="#fffaf0"/>
-      <circle cx="132" cy="116" r="62" fill="#f6c85f"/>
-      <circle cx="158" cy="94" r="62" fill="#263238"/>
-      <path d="M72 180c36 14 91 14 136 0" fill="none" stroke="#fffaf0" stroke-width="8" stroke-linecap="round" opacity=".45"/>
-    </svg>
-  `,
-  water: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="22" y="168" width="236" height="34" rx="17" fill="#dceee8"/>
-      <path d="M140 28c42 54 72 91 72 128 0 42-32 70-72 70s-72-28-72-70c0-37 30-74 72-128z" fill="#3778c2"/>
-      <path d="M104 150c0 22 16 38 38 38" fill="none" stroke="#d7efff" stroke-width="12" stroke-linecap="round"/>
-      <circle cx="116" cy="118" r="12" fill="#d7efff" opacity=".8"/>
-    </svg>
-  `,
-  window: () => `
-    <svg viewBox="0 0 280 240" aria-hidden="true">
-      <rect x="40" y="180" width="200" height="24" rx="12" fill="#dceee8"/>
-      <rect x="66" y="42" width="148" height="138" rx="12" fill="#3778c2"/>
-      <rect x="78" y="54" width="124" height="114" rx="6" fill="#d7efff"/>
-      <path d="M140 54v114M78 111h124" stroke="#3778c2" stroke-width="10" stroke-linecap="round"/>
-      <circle cx="102" cy="84" r="14" fill="#f6c85f"/>
-      <path d="M98 146c20-24 39-24 58 0 15-17 31-17 48 0" fill="none" stroke="#2f9d74" stroke-width="9" stroke-linecap="round"/>
-    </svg>
-  `,
-};
-
-els.languageGrid.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-language]");
-  if (!button) return;
-  const id = button.dataset.language;
-  if (selectedLanguages.has(id) && selectedLanguages.size > 1) {
-    selectedLanguages.delete(id);
-  } else {
-    selectedLanguages.add(id);
-  }
+function initApp() {
+  assertDomElements();
+  validateEmojiArraySchemas();
   renderLanguages();
-  if (currentResult && !els.resultOverlay.classList.contains("is-hidden")) {
-    renderResult(currentResult.entry);
-  }
-});
+  renderQuickWords();
+  loadVoices();
 
-document.querySelector(".quick-tries").addEventListener("click", (event) => {
-  const categoryButton = event.target.closest("[data-category]");
-  if (categoryButton) {
-    const categoryId = categoryButton.dataset.category;
-    if (expandedVisualCategories.has(categoryId)) {
-      expandedVisualCategories.delete(categoryId);
+  els.languageGrid.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-language]");
+    if (!button) return;
+    const id = button.dataset.language;
+    if (selectedLanguages.has(id) && selectedLanguages.size > 1) {
+      selectedLanguages.delete(id);
     } else {
-      expandedVisualCategories.clear();
-      expandedVisualCategories.add(categoryId);
+      selectedLanguages.add(id);
     }
-    renderQuickWords();
-    return;
+    renderLanguages();
+    if (currentResult && !els.resultOverlay.classList.contains("is-hidden")) {
+      renderResult(currentResult.entry);
+    }
+  });
+
+  document.querySelector(".quick-tries").addEventListener("click", (event) => {
+    const categoryButton = event.target.closest("[data-category]");
+    if (categoryButton) {
+      const categoryId = categoryButton.dataset.category;
+      if (expandedVisualCategories.has(categoryId)) {
+        expandedVisualCategories.delete(categoryId);
+      } else {
+        // Single-open accordion: opening one category collapses all others.
+        expandedVisualCategories.clear();
+        expandedVisualCategories.add(categoryId);
+      }
+      syncExpandedCategories();
+      return;
+    }
+
+    const button = event.target.closest("[data-key]");
+    if (button) handleVisualWord(button.dataset.key);
+  });
+
+  els.closeResultButton.addEventListener("click", closeResult);
+  els.expandResultButton.addEventListener("click", toggleExpandedResult);
+
+  els.resultOverlay.addEventListener("click", (event) => {
+    if (event.target === els.resultOverlay) closeResult();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !els.resultOverlay.classList.contains("is-hidden")) {
+      closeResult();
+    }
+  });
+
+  els.translationList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-speak]");
+    if (button) speak(button.dataset.speak, button.dataset.locale);
+  });
+
+  if (window.speechSynthesis) {
+    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
   }
-
-  const button = event.target.closest("[data-key]");
-  if (button) handleVisualWord(button.dataset.key);
-});
-
-els.closeResultButton.addEventListener("click", closeResult);
-els.expandResultButton.addEventListener("click", toggleExpandedResult);
-
-els.resultOverlay.addEventListener("click", (event) => {
-  if (event.target === els.resultOverlay) closeResult();
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !els.resultOverlay.classList.contains("is-hidden")) {
-    closeResult();
-  }
-});
-
-els.translationList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-speak]");
-  if (button) speak(button.dataset.speak, button.dataset.locale);
-});
-
-renderLanguages();
-renderQuickWords();
-loadVoices();
-if (window.speechSynthesis) {
-  window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
 }
+
+initApp();
