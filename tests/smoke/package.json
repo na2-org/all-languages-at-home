@@ -1,0 +1,11 @@
+{
+  "name": "all-languages-at-home-smoke-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "smoke-test": "node smoke-test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.52.0"
+  }
+}
